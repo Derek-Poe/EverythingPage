@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body,.custStatus{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      #div_loginInfo,#in_username{
+        margin-left: 5px;
+      }
+      #lab_pwd{
+        margin-right: 10px;
+      }
+	  #div_intro{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background-color: #000000;
+	  	display: none;
+	  }
+	  #div_introCont{
+	  	position: absolute;
+	  	left: 50%;
+	  	top: 50%;
+	  	transform: translate(-50%, -50%);
+	  }
+	  #span_intoText{
+	  	font-family: monospace;
+	  	font-size: -webkit-xxx-large;
+	  }
+	  #frame_mainPage{
+	  	position: absolute;
+	  	left: 0px;
+	  	top: 0px;
+	  	width: 100%;
+	  	height: 100%;
+	  	overflow: hidden;
+	  	display: none;
+	  }
+    </style>
+  </head>
+  <body>  
+    <title>The Everything Page</title>
+    <div id="div_intro">
+      <div id="div_introCont">
+        <span id="span_intoText">Developed by Derek Poe</span>
+      </div>
+    </div>
+	<div id="div_main">
+      <h1 id="header_title">Everything Page</h1>
+      <div id="div_loginInfo">
+        <label id="lab_username">Username:</label><input id="in_username"><br><br>
+        <label id="lab_pwd">Password:</label><input id="in_pwd" type="password"><br><br>
+        <button id="btn_login" onclick="loginAttempt()">Login</button>
+      </div><br>
+      <span id="span_status"></span>
+	</div>
+	<iframe frameborder="0" width="100%" height="100%" id="frame_mainPage"></iframe>
+    <script>
+
+      document.querySelector("#in_pwd").onkeyup = function(e){if(e.keyCode == 13){loginAttempt()}};
+      window.addEventListener("message", e => messageEvent(e));
+      let loggedIn = false;
+      
+      function messageEvent(e){
+      	// if(e.origin === "https://tc11.ctcis.local:9748"){
+      	//   if(e.data === "logout"){
+      	//   	document.querySelector("#frame_mainPage").style.display = "none";
+      	//   	document.querySelector("#div_main").style.display = "block";
+      	//   	document.querySelector("#span_status").innerText = "Session Timed Out.";
+        //      document.querySelector("#span_status").style.display = "block";
+      	//   }
+      	// }
+		switch(e.data){
+		  case "pageRefresh":
+			window.location.reload();
+			break;
+		}
+      }
+
+      function loginAttempt(){
+        loginPost = new XMLHttpRequest();
+        loginPost.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+          	if(loginPost.responseText !== "ILA"){
+              document.cookie = `ipuSess=${(loginPost.responseText)};path=/;`;
+              if(!(loggedIn)){
+				//getOTAPage();
+                getEverythingPage();
+              }
+              else{
+      	    	document.querySelector("#div_main").style.display = "none";
+              	document.querySelector("#frame_mainPage").style.display = "block";
+              }
+          	}
+          	else{
+          	  document.querySelector("#span_status").innerText = "Invalid Login";
+          	}
+          }
+        };
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        loginPost.open("POST", "login", true);
+        loginPost.send(`${document.querySelector("#in_username").value},${document.querySelector("#in_pwd").value}`);
+      }
+
+      function getOTAPage(){
+      	pageGet = new XMLHttpRequest();
+        pageGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loggedIn = true;
+            document.querySelector("#in_pwd").value = "";
+            document.querySelector("#frame_mainPage").srcdoc = pageGet.response;
+            document.body.style.height = `${window.innerHeight}px`;
+            document.body.style.overflow = "hidden";
+            document.querySelector("#frame_mainPage").width = window.innerWidth;
+            document.querySelector("#frame_mainPage").height = window.innerHeight;
+            document.querySelector("#frame_mainPage").style.display = "block";
+            document.querySelector("#div_main").style.display = "none";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        pageGet.open("PUT", "v29b4v293uhgfqy/getEverythingPage", true);
+        pageGet.send();
+      }
+
+	  function getEverythingPage(){
+		  loggedIn = true;
+          document.querySelector("#in_pwd").value = "";
+          //document.querySelector("#frame_mainPage").src = "https://net-admin-tc215:1320/v29b4v293uhgfqy/getEverythingPage";
+          document.querySelector("#frame_mainPage").src = "v29b4v293uhgfqy/getEverythingPage";
+          document.body.style.height = `${window.innerHeight}px`;
+          document.body.style.overflow = "hidden";
+          document.querySelector("#frame_mainPage").width = window.innerWidth;
+          document.querySelector("#frame_mainPage").height = window.innerHeight;
+          document.querySelector("#frame_mainPage").style.display = "block";
+          document.querySelector("#div_main").style.display = "none";
+          document.querySelector("#span_status").style.display = "none";
+	  }
+      
+	  function intro(){
+      	document.cookie = "intro=shown;";
+      	document.querySelector("#div_intro").style.display = "block";
+        document.querySelector("#div_main").style.opacity = 0;
+        let i;
+        let ii;
+        let iii;
+        i = 1;
+        ii = 1;
+        iii = 0;
+        let iCatch = false;
+        let fadeIntro = () => {
+          if(i > 0){
+            document.querySelector("#div_intro").style.backgroundColor = `rgba(0,0,0,${i})`;
+            document.querySelector("#span_intoText").style.color = `rgba(255,255,255,${ii})`;
+            if(ii >= 0.5){
+              i -= 0.05;
+            }
+            else if(ii >= 0.25){
+              if(!(iCatch)){
+              	ii = i;
+              	iCatch = true;
+              }
+              ii -= 0.25;
+            }
+            else{
+              ii -= 0.1;
+            }
+            if(i <= 0.50){
+              document.querySelector("#div_main").style.opacity = iii;
+              iii += 0.25;
+            }
+            i -= 0.05;
+            setTimeout(fadeIntro,50);
+          }
+          else{
+          	document.querySelector("#div_intro").style.display = "none";
+          }
+        }
+        setTimeout(fadeIntro,1000);
+      }
+	  function checkForIntro(){
+        try{
+          if(!(/intro=shown/i.test(document.cookie))){
+            intro();
+          }
+          else{
+          	document.querySelector("#div_main").style.opacity = 1;
+          }
+        }
+        catch{
+          document.querySelector("#div_main").style.opacity = 1;
+        }
+      }
+      checkForIntro();
+
+      function checkForLogin(){
+      	lcGet = new XMLHttpRequest();
+        lcGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            document.querySelector("#span_status").style.display = "none";
+            if(lcGet.responseText === "LI"){
+              getEverythingPage();
+            }
+          }
+        };
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        lcGet.open("PUT", "lc", true);
+        lcGet.send();
+      }
+      checkForLogin();
+    </script>
+  </body>
+</html>

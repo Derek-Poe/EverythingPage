@@ -1,0 +1,231 @@
+<html>
+  <head>
+    <style>
+      body {
+      	background-color: black;
+      	color: white;
+      }
+      #div_trackingLog {
+      	float: left;
+      }
+      #div_IPUInfo {
+      	float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="div_Stats">
+      <span id="span_stats"></span><br/><br/>
+    </div>
+    <div id="div_trackingLog">
+      <span id="span_trackingLog"></span>
+    </div>
+    <div id="div_IPUInfo">
+      <span id="span_ipuList">
+    </div>
+    <script src="stomp.js"></script>
+	<script>
+	  let loadingData = false;
+	  let receivingMessages = false;
+	  let uuids = [];
+	  let msgCount = 0;
+	  let msgTotalCount = 0;
+	  let msgLength = 0;
+	  let execTime;
+	  let resetExecTime = true;
+	  let ipus = [];
+	  let logMessages = [];
+	  //let totalSec = 0;
+
+	  function connectAndSubscribe(){
+	  	ws = new WebSocket("wss://s-lctia4-101:15671/ws");
+	    cli = Stomp.over(ws);
+	    cli.debug = null;
+	    cli.heartbeat.incoming = 10000;
+	    cli.heartbeat.outgoing = 10000;
+	    let conHeaders = {
+  	      login:'stompuser',
+  	      passcode:'CPMCTIAIS@sv101!',
+  	      'accept-version':'1.1,1.0',
+  	      'heart-beat':'50000,0'
+	    }
+	    let subHeaders = {
+	  	  'x-max-length':'20000',
+          'id':'sub-0'
+	    }
+	    cli.connect(conHeaders,conn => {
+  	      if(conn.command === "CONNECTED"){
+    	    //cli.subscribe("/exchange/instrumentation_json/#.InstrumentationUpdatedMessage",msg => msgAct(msg.body));
+    	    //cli.subscribe('/exchange/instrumentation_json/#.InstrumentationUpdatedMessage',msg => {msgAct(msg/*.body*/)},subHeaders);
+    	    cli.subscribe('/exchange/instrumentation_json/#',msg => {msgAct(msg/*.body*/)},subHeaders);
+            if(resetExecTime){
+    	      execTime = (new Date).getTime();
+    	      resetExecTime = false;
+            }
+    	    //setTimeout(()=>{execTime++},1000);
+  	      }
+	    });
+	  }
+
+	  function sendToController(msgData){
+	  	let conSendPut = new XMLHttpRequest();
+        conSendPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            if(logMessages.length >= 10){
+              logMessages.splice(1,1);
+            }
+            logMessages.push(conSendPut.responseText);
+            document.querySelector("#span_trackingLog").innerText = "";
+            for(let msg of logMessages){
+              document.querySelector("#span_trackingLog").innerText += msg;
+            }
+            //document.querySelector("#span_trackingLog").innerText = logMessages;
+          }
+        };
+        loadingData = true;
+        conSendPut.open("PUT", "09faswerdf9qg/conSend", true);
+        conSendPut.send(msgData + "~~~~" + new Date);
+	  }
+
+	  function msgAct(msg){
+	  	//IPU-0012769
+  	    //let data = JSON.parse(msg.body);
+  	    //if(data.instrumentation[0].current.id.uuid === "fd51de9b-1c14-4edf-9a7a-c59a428f3ee7"){
+  	    
+        //if((msg.body).match("software")){
+        //  console.log(JSON.parse(msg.body));
+        //}
+
+        if(uuids.length > 0){
+          for(let ipu of uuids){
+  	        if((msg.body).match(ipu)){
+  	          //sendToController(msg.body);
+  	          sendToController(ipu);
+  	        }
+          }
+	    }
+  	    //console.log(msg);
+  	    msgLength += parseInt(msg.headers["content-length"]);
+  	    msgCount++;
+  	    msgTotalCount++;
+  	    let time;
+  	    let totalSec = Math.round(((new Date).getTime() - execTime) / 1000);
+  	    /*
+  	    let sec = totalSec % 60;
+  	    let min = 0;
+  	    let hr = 0;
+  	    let day = 0;
+  	    if(sec === 0 && totalSec >= 60){
+          min = (min + 1) % 60;
+  	    }
+  	    if(min === 0 && totalSec >= 3600){
+  	      hr = (hr + 1) % 60;
+  	    }
+  	    if(hr === 0 && totalSec >= 86400){
+  	      day++;
+  	    }
+  	    if(sec < 10){
+  	      sec = "0" + sec;
+  	    }
+  	    if(min < 10){
+          min = "0" + min;
+  	    }
+  	    if(hr < 10){
+          hr = "0" + hr;
+  	    }
+  	    if(day < 10){
+  	      day = "0" + day;
+  	    }
+  	    time = `${day}+${hr}:${min}:${sec}`;
+  	    */
+  	    time = `${totalSec}s`;
+  	    let divisor;
+  	    let dataLabel;
+  	    if(msgLength >= 1000000000){
+  	      divisor = 1000000000;
+  	      dataLabel = "GB";
+  	    }
+  	    else if(msgLength >= 1000000){
+  	      divisor = 1000000;
+  	      dataLabel = "MB";
+  	    }
+  	    else if(msgLength >= 1000){
+  	      divisor = 1000;
+  	      dataLabel = "KB";
+  	    }
+  	    else{
+  	      divisor = 1;
+  	      dataLabel = "B";
+  	    }
+  	    document.querySelector("#span_stats").innerText = `Time:${time} -- Messages:${msgTotalCount} -- Data:${Math.round((msgLength / divisor) * 100) / 100}${dataLabel} \r\n`;
+  	    if(msgCount > 3000 && receivingMessages){
+  	      msgCount = 0;
+  	      cli.disconnect();
+  	      ws.close();
+  	      connectAndSubscribe();
+  	    }
+	  }
+
+      /*
+	  function stompManage(){
+        if(uuids.length < 1 && receivingMessages){
+          cli.unsubscribe();
+          receivingMessages = false;
+        }
+        else if(uuids.length > 0 &&!(receivingMessages)){
+          connectAndSubscribe();
+          receivingMessages = true;
+        }
+        setTimeout(()=>{stompManage()},500);
+	  }
+      stompManage();
+      */
+
+      //function timeCheck(){
+      //  totalSec = Math.round(((new Date).getTime() - execTime) / 1000);
+      //  setTimeout(timeCheck(),10000);
+      //}
+      //timeCheck();
+
+	  function checkIn(){
+	    let checkInGet = new XMLHttpRequest();
+        checkInGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            if(checkInGet.responseText !== "..."){
+              if(uuids.join(",") !== checkInGet.responseText){
+                uuids = checkInGet.responseText.split("|")[1].split(",");
+                ipus = checkInGet.responseText.split("|")[0].split(",");
+                document.querySelector("#span_ipuList").innerText = "IPUs:\r\n";
+                for(let ipu of ipus){
+                  document.querySelector("#span_ipuList").innerText += `${ipu}\r\n`;
+                }
+              }
+            }
+            else{
+              uuids = [];
+            }
+            if(uuids.length < 1 && receivingMessages){
+              cli.unsubscribe();
+              receivingMessages = false;
+              //console.log("unsubscribe");
+              resetExecTime = true;
+            }
+            else if(uuids.length > 0 && !(receivingMessages)){
+              connectAndSubscribe();
+              receivingMessages = true;
+              //console.log("subscribe");
+            }
+            setTimeout(()=>{checkIn()},2000);
+          }
+        };
+        loadingData = true;
+        checkInGet.open("GET", "09faswerdf9qg/checkIn", true);
+        checkInGet.send();
+	  }
+	  checkIn();
+
+	</script>
+  </body>
+</html>

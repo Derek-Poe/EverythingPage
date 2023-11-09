@@ -1,0 +1,130 @@
+"AlertObjectID","AlertID","EntityCaption","EntityDetailsUrl","RelatedNodeCaption","RelatedNodeDetailsUrl","TriggeredCount","LastTriggeredDateTime","AlertNote"
+"524","112","D-LPGSQLPB-102","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:52","D-LPGSQLPB-102","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:52","48","3/15/2023 3:54:25 PM","To be decommissioned"
+"530","112","D-LPGSQLCS-102","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:50","D-LPGSQLCS-102","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:50","31","3/15/2023 3:54:25 PM","To be decommissioned"
+"1041","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:145","CS009-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:145","32","5/6/2023 12:11:13 PM","No active alarm on Siteboss.  Reviewed log history and do not see a triggered alert for the DC controller.  Will continue to monitor and outside plant is tracking.  01 Dec. 2021
+No active alarm on Siteboss.  Reviewed log history and do not see a triggered alert for the DC controller.  Will continue to monitor and outside plant is tracking.  01 Dec. 2021
+No active alarm on Siteboss.  Reviewed log history and do not see a triggered alert for the DC controller.  Will continue to monitor and outside plant is tracking.  18 Jan. 2022
+Reported to Edwin, tracking. 
+Outside plant is tracking
+No active alarm on Siteboss.  Reviewed log history and do not see a triggered alert for the DC controller.
+No active alerts observed on Siteboss - 7July2022
+No active alerts observed on Siteboss.  Outside plant is tracking.  16 Sept. 2022
+No active alerts observed on Siteboss.  Outside plant is tracking
+No active alerts observed on Siteboss.  Outside plant is tracking
+No active alerts observed on Siteboss.  03 Feb. 2023"
+"1043","244","BAT DISC Breaker","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:104","CS11A-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:104","40","5/2/2023 4:35:11 PM","Site boss alert is enabled and alarm status is closed.  Will continue to monitor.
+Site boss alert is enabled and alarm status is closed.  Will continue to monitor.
+Site boss alert is enabled and alarm status is closed.  Will continue to monitor.  01 Dec. 2021
+False positive reading.  Outside plant is tracking
+Outside plant is tracking
+Site boss alert is enabled and alarm status is closed.  Will continue to monitor.
+Outside plant is tracking site boss alert is enabled and alarm status is closed.
+Outside plant is tracking site boss alert is normal, not active in logs, and status is green.  ATS Main Power 118.6 V. 11 May 2022
+No active alert for Battery Disconnect.  Reviewed logs and no triggers alarms or messages.  
+No active alert for Battery Disconnect"
+"1211","125","SITE-27-MAIN-SWITCH","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:169","SITE-27-MAIN-SWITCH","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:169","48","4/14/2023 7:34:04 PM","Gi1/0/7 up up 10M Fronthaul
+restarted switch for IA IOS update
+Gi1/0/7 up up 10M Fronthaul
+Gi1/0/7 up up 10M Fronthaul
+Fronthaul is back up
+Gi1/0/7 up up 10M Fronthaul
+Fronthaul is back up
+Gi1/0/7 up up 10M Fronthaul 13 May 2022
+Fronthaul is back up
+Gi1/0/7 up up 10M Fronthaul 03 June 2022
+Fronthaul is back up
+Gi1/0/7 up up 10M Fronthaul 22 June 2022
+Gi1/0/7 up up 10M Fronthaul 03 Aug. 2022
+Gi1/0/7 up up 10M Fronthaul 03 Aug. 2022
+GigabitEthernet1/0/7, changed state to up 17 AUG 2022
+GigabitEthernet1/0/7, changed state to up, 17 AUG 2022 - 1745
+GigabitEthernet1/0/7, changed state to up, BGP neighbor is up.  29 AUG 202
+Gi1/0/7 up up
+GigabitEthernet1/0/7, changed state to up, BGP neighbor is up.  8 Nov. 202
+Gi1/0/7 up up
+GigabitEthernet1/0/7, changed state to up, BGP neighbor is up.  04 Jan. 2023
+Gi1/0/7 up up
+GigabitEthernet1/0/7, changed state to up, BGP neighbor is up.  16 Feb. 2023
+Gi1/0/7 up up
+GigabitEthernet1/0/7, changed state to up, BGP neighbor is up.  10 April  2023"
+"1371","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:104","CS11A-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:104","12","5/2/2023 4:35:13 PM","False Positive alert identified by outside plant.  
+False Positive alert identified by outside plant.  18 Nov. 2022"
+"1405","210","Rack #2 DC Power A","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:131","CS02A-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:131","66","5/5/2023 5:40:30 AM","Outside plant tested rack power. Switched of rack B and rack A held power.   Alert is a false positive.  
+Outside plant tested rack power. Switched of rack B and rack A held power.   Alert is a false positive.  
+Outside plant tested rack power. Switched of rack B and rack A held power.   Alert is a false positive. 
+Outside plant tested rack power. Switched of rack B and rack A held power.   Alert is a false positive.  LED will not illuminate.  Outside plant is tracking
+Reported to Edwin, tracking. 
+Outside plant is tracking
+No active alerts observed on Siteboss - 7July2022
+No active alerts observed on Siteboss - 29 Aug 2022
+No active alerts observed on Siteboss or notifications in logs - 19 Sept. 2022
+No active alerts.  Outside plant is tracking
+No active alerts.  Outside plant is tracking
+No active alerts.  Outside plant is tracking
+No active alerts.  Outside plant is tracking
+Outside plant is tracking false positive alert.  12 Jan. 2023"
+"1588","161","Low Temperature","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","CS045-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","11","5/15/2023 11:20:27 AM","Indoor temp reading is @ 64 degrees. The Event Sensor Low alert is set to 50 degrees. Event Sensor 7 is green on the site boss. The Low Temp alert is from the 64C card. Notified outside plant.
+Indoor temp reading is @ 64 degrees. The Event Sensor Low alert is set to 50 degrees. Event Sensor 7 is green on the site boss. The Low Temp alert is from the 64C card. Notified outside plant.
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor. 18 Jan. 2022
+Indoor temp reading is @ 71 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 18 May 2022
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 11 July 2022
+Indoor temp reading is @ 70 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 21 Aug. 2022
+Indoor temp reading is @ 67 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 15 May 2023"
+"1589","229","Low Temperature","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","CS045-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","11","5/15/2023 11:20:29 AM","Indoor temp reading is @ 64 degrees. The Event Sensor Low alert is set to 50 degrees. Event Sensor 7 is green on the site boss. The Low Temp alert is from the 64C card. Notified outside plant.
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor.
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor. 01 Dec. 2021
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor. 18 Jan. 2022
+Indoor temp reading is @ 71 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 18 May 2022
+Indoor temp reading is @ 69 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 11 July 2022
+Indoor temp reading is @ 70 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 21 Aug. 2022
+Indoor temp reading is @ 67 degrees. The Event Sensor Low alert is set to 40 degrees. Event Sensor is green on the site boss. Will continue to monitor and notify outside plant. 15 May 2023"
+"1945","129","SAM Components","","","","1","5/24/2022 6:33:45 PM",""
+"2179","21","Memory Usage","/Orion/View.aspx?NetObject=AM:3603","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2180","21","Messages in Queues","/Orion/View.aspx?NetObject=AM:3604","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2181","21","Connections","/Orion/View.aspx?NetObject=AM:3605","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2182","21","Exchanges","/Orion/View.aspx?NetObject=AM:3606","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2183","21","Bindings","/Orion/View.aspx?NetObject=AM:3607","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2184","21","Channels","/Orion/View.aspx?NetObject=AM:3608","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2185","21","Consumers","/Orion/View.aspx?NetObject=AM:3609","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2186","21","RabbitMQ Health Check","/Orion/View.aspx?NetObject=AM:3610","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2187","11","CTC-IS CTIA4 Playback RabbitMQ","/Orion/View.aspx?NetObject=AA:54","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:43 PM","Known Issue. SAM License overage."
+"2188","11","CTC-IS CTIA4 RabbitMQ (1)","/Orion/View.aspx?NetObject=AA:55","S-LCTIA4-101","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:26","3","4/17/2023 4:52:43 PM","Known Issue. SAM License overage."
+"2189","21","Memory Usage","/Orion/View.aspx?NetObject=AM:3593","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2190","21","Messages in Queues","/Orion/View.aspx?NetObject=AM:3594","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2191","21","Connections","/Orion/View.aspx?NetObject=AM:3595","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2192","21","Exchanges","/Orion/View.aspx?NetObject=AM:3596","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2193","21","Bindings","/Orion/View.aspx?NetObject=AM:3597","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2194","21","Channels","/Orion/View.aspx?NetObject=AM:3598","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"2195","21","Consumers","/Orion/View.aspx?NetObject=AM:3599","S-LCTIA4-105","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:30","3","4/17/2023 4:52:45 PM","Known Issue. SAM License overage."
+"10023","264","INVERTER MAJOR ALARM","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","CS045-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","6","5/15/2023 11:05:56 AM","Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  Waiting on network module.  12 Jan. 2023"
+"10024","264","INVERTER MAJOR ALARM","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","CS046-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","2","2/27/2023 4:16:20 PM","Outside Plant is tracking. 10 Jan. 2023
+Edwin notified and advised to disable alarm until he can access the network module to reset  27 FEB 2023"
+"10025","265","INVERTER MINOR ALARM","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","CS045-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","7","5/17/2023 4:30:51 AM","Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  Waiting on network module.  12 Jan. 2023"
+"10026","265","INVERTER MINOR ALARM","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","CS046-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","10","5/17/2023 5:51:02 AM","Outside Plant is tracking. 10 Jan. 2023
+Edwin notified and advised to disable alarm until he can access the network module to reset  27 FEB 2023"
+"10030","266","INVERTER AC INPUT PWR FAIL","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","CS045-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159","7","5/17/2023 4:30:49 AM","Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  Waiting on network module.  12 Jan. 2023"
+"10031","266","INVERTER AC INPUT PWR FAIL","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","CS046-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161","8","5/17/2023 5:51:00 AM","Outside Plant is tracking. 10 Jan. 2023
+Edwin notified and advised to disable alarm until he can access the network module to reset  27 FEB 2023"
+"10324","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:149","CSE32-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:149","8","4/9/2023 4:23:40 PM","Outside plant is tracking.  False positive alert.  Will continue to monitor."
+"10325","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129","CSE01-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129","9","5/15/2023 3:50:37 PM","Outside plant is tracking.  False positive alert.  Will continue to monitor.  12 Jan. 2023
+
+False positive alert. Will continue to monitor."
+"11062","265","Inverter Minor Alarm","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129","CSE01-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129","10","5/17/2023 2:50:41 PM","notified outside plant 01/17/2023"
+"11673","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114","CS015-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114","3","4/2/2023 5:07:38 AM","False positive alert. Will continue to monitor.
+False positive alert. Will continue to monitor.
+False positive alert. Will continue to monitor."
+"11675","173","AC Surge Arrestor","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:105","CSE34-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:105","1","1/21/2023 10:25:32 PM","False positive alert. Will continue to monitor.
+False positive alert. Will continue to monitor."
+"11676","242","DC Controller","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:105","CSE34-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:105","2","3/12/2023 11:51:29 AM","False positive alert. Will continue to monitor.
+False positive alert. Will continue to monitor."
+"14425","264","INVERTER MAJOR ALARM","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114","CS015-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114","3","5/16/2023 1:05:27 PM",""
+"23008","245","Rack #3 DC Power B","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:141","CS07A-SBOSS1-INT","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:141","5","5/5/2023 3:20:25 PM",""
+"27392","81","GigabitEthernet1/0/3 - Gi1/0/3","/Orion/View.aspx?NetObject=I:1087","1560_OPERATIONS.is-u.jrtc.army.mil","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:254","1","5/10/2023 1:09:36 PM",""
+"27393","81","GigabitEthernet1/0/14 - Gi1/0/14","/Orion/View.aspx?NetObject=I:1095","1560_OPERATIONS.is-u.jrtc.army.mil","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:254","1","5/10/2023 1:10:36 PM",""
+"28428","81","GigabitEthernet1/0/22 - Gi1/0/22","/Orion/View.aspx?NetObject=I:1372","8213_OC_ACADEMY.is-u.jrtc.army.mil","/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:268","1","5/17/2023 3:13:08 PM",""

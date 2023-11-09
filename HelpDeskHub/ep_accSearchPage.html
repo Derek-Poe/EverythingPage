@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      #in_username{
+        margin-left: 5px;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #span_status,#div_accSearch{
+        display: none;
+      }
+      #btn_manageAcc{
+        margin-top: 5px;
+      }
+      .ep_hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>  
+    <title>Account Search</title>  
+    <h1 class="ep_hide" id="header_title">Account Search</h1>
+    <div id="div_content">
+      <div id="div_getUser">
+        <label id="lab_username">Search:</label><input id="in_username"><br><br>
+        <button id="btn_getData" onclick="getAccData()">Submit</button>
+      </div>
+      <div id="div_accSearch">
+        <table id="table_accInfo"></table>
+        <button id="btn_back" onclick="goBack()">Back</button><button id="btn_manageAcc" onclick="manageAcc()">Manage Account</button>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <script>
+
+      let accData;
+      document.querySelector("#in_username").onkeyup = function(e){if(e.keyCode == 13){getAccData()}};
+      
+      function getAccData(){
+        accDataPut = new XMLHttpRequest();
+        accDataPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(accDataPut.responseText == "NH"){
+              document.querySelector("#table_accInfo").innerHTML = "No Users Found";
+              document.querySelector("#span_status").innerText = "No Users Found";
+              document.querySelector("#div_getUser").style.display = "block";
+            }
+            else{
+              accData = JSON.parse(accDataPut.responseText);
+              if(!(Array.isArray(accData))){
+                accData = [accData];
+              }
+              buildAccTable();
+              fillAccountTable();
+              document.querySelector("#div_accSearch").style.display = "block";
+              document.querySelector("#span_status").style.display = "none";
+            }
+          }
+        };
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";
+        document.querySelector("#div_accSearch").style.display = "none";
+        document.querySelector("#div_getUser").style.display = "none";
+        accDataPut.open("PUT", "ad/asGet", true);
+        accDataPut.send(document.querySelector("#in_username").value);
+      }
+
+      function buildAccTable(){
+        let tableRows = Object.keys(accData).length + 1;
+        let tableColumns = 8;
+        let tableHeaders = [
+          "First Name",
+          "MI",
+          "Last Name",
+          "Display Name",
+          "Logon",
+          "Taskforce",
+          "Description",
+          ""
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 0){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               if(ii == 7){
+                 rowCont += `<td><input type="checkbox" onclick="checkSelect()"></td>`;
+               }
+               else{
+                 rowCont += "<td></td>";
+               }
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_accInfo").innerHTML = tableCont;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_accInfo > tbody > tr:nth-child(1)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+            //document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i}) > td:nth-child(9)`).childNodes[0].style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillAccountTable(){
+        for(let i = 0; i < accData.length; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          row.childNodes[0].innerText = accData[i].fname;
+          row.childNodes[1].innerText = accData[i].mi;
+          row.childNodes[2].innerText = accData[i].lname;
+          row.childNodes[3].innerText = accData[i].dname;
+          row.childNodes[4].innerText = accData[i].logon;
+          row.childNodes[5].innerText = accData[i].taskforce;
+          row.childNodes[6].innerText = accData[i].description;
+        }
+        if(accData.length === 1){
+          document.querySelector("#table_accInfo > tbody > tr:nth-child(2) > td:nth-child(8) > input").checked = true;
+        }
+      }
+
+      function checkSelect(){
+        let userNotSelected = true;
+        for(let i = 0; i < accData.length; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          if(row.childNodes[7].childNodes[0].checked){
+            if(userNotSelected){
+              row.style.backgroundColor = "#4e4917";
+              userNotSelected = false;
+            }
+            else{
+              if(i % 2 == 0){
+                row.style.backgroundColor = "#333333";
+              }
+              else{
+                row.style.backgroundColor = "#000000";
+              }
+            }
+          }
+          else{
+            if(i % 2 == 0){
+              row.style.backgroundColor = "#333333";
+            }
+            else{
+              row.style.backgroundColor = "#000000";
+            }
+          }
+        }
+      }
+
+      function goBack(){
+        document.querySelector("#div_accSearch").style.display = "none";
+        document.querySelector("#div_getUser").style.display = "block";
+      }
+
+      function manageAcc(){
+        let acc;
+        let itemChecked = false;
+        for(let i = 0; i < accData.length; i++){
+          let cbox = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2}) > td:nth-child(8) > input`).checked;
+          if(cbox){
+            acc = accData[i];
+            itemChecked = true;
+            break;
+          }
+        }
+        if(itemChecked && acc.logon != ""){
+          window.parent.postMessage(`Account Management,${acc.logon}`);
+//           window.open(`https://${window.location.hostname}:1497/AccountManagement?${acc.logon}`);
+        }
+        else{
+          window.parent.postMessage("Account Management,");
+//           window.open(`https://${window.location.hostname}:1497/AccountManagement`);
+        }
+      }
+
+      function logout(){
+        logoutGet = new XMLHttpRequest();
+        logoutGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            let a = document.createElement("a");
+            a.href = `https://${window.location.hostname}:1497/loginSite`;
+            a.id = "a_logout";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+          }
+        };
+        logoutGet.open("GET", "logout", true);
+        logoutGet.send();
+      }
+
+      function addLogoutButton(){
+        let btn = document.createElement("button");
+        btn.id = "btn_logout";
+        btn.onclick = logout;
+        btn.innerText = "Logout";
+        btn.style.position = "absolute";
+        document.body.appendChild(btn);
+        resizeMovements();
+      }
+
+      function resizeMovements(){
+        document.querySelector("#btn_logout").style.left = (window.innerWidth - document.querySelector("#btn_logout").clientWidth - 4) + "px";
+        document.querySelector("#btn_logout").style.top = (window.innerHeight - document.querySelector("#btn_logout").clientHeight - 4) + "px";
+      }
+
+      //addLogoutButton();
+      //window.onresize = resizeMovements;
+
+      function checkURL(){
+        let search = window.location.search;
+        if(search != ""){
+          search = search.slice(1,search.length);
+          document.querySelector("#in_username").value = decodeURIComponent(decodeURIComponent(search));
+          getAccData();
+        }
+      }
+      checkURL();
+
+    </script>
+  </body>
+</html>

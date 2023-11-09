@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #span_status,#div_summary,#a_downloadReport{
+        display: none;
+      }
+      div_summary{
+        display: inline-block;
+      }
+      #div_ipus{
+        float: right;
+      }
+      .selectableRow:hover{
+        color: yellow;
+      }
+    </style>
+  </head>
+  <body>  
+    <title>IPU Reporting Rates</title>  
+    <h1 id="header_title">IPU Reporting Rates</h1>
+    <div id="div_content">
+      <div id="div_summary">
+        <table id="table_summary"></table>
+        <span id="span_summaryUpdateTime"></span><br>
+        <button id="button_refreshData" onclick="refreshData()">Refresh</button>
+        <button id="btn_downloadReport" onclick="startReportDownload()">Download Report</button>
+      </div>
+      <div id="div_ipus">
+        <table id="table_ipus"></table>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <a id="a_downloadReport"></a>
+    <script>
+      
+      let summaryData;
+      let ipuData;
+      let rate = "";
+      let downloadingReport = false;
+      let loadingData = false;
+
+      document.querySelector("#table_summary").addEventListener("click", e => {
+        if(!(loadingData) && e.target.parentNode.sectionRowIndex > 1){
+          rate = e.target.parentNode.firstChild.innerText;
+          getIPUData(rate);
+          getSummaryData();
+        }
+      });
+
+      function getSummaryData(){
+        summaryDataGet = new XMLHttpRequest();
+        summaryDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            summaryData = JSON.parse(summaryDataGet.responseText);
+            buildSummaryTable();
+            fillSummaryTable();
+            document.querySelector("#span_summaryUpdateTime").innerText = `Last Updated: ${summaryData["Time"]}`;
+            document.querySelector("#div_summary").style.display = "inline-block";
+            document.querySelector("#button_refreshData").innerText = "Refresh";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#button_refreshData").innerText = "Loading...";
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        summaryDataGet.open("GET", "16dsfSFfgsf3/IPURRSummaryData", true);
+        summaryDataGet.send();
+      }
+
+      function getIPUData(rate){
+        //console.log(rate);
+        ipuDataGet = new XMLHttpRequest();
+        ipuDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(ipuDataGet.responseText !== "NF"){
+              ipuData = JSON.parse(ipuDataGet.responseText);
+              if(!(Array.isArray(ipuData))){
+                ipuData = [ipuData];
+              }
+              buildIPUTable();
+              fillIPUTable();
+              //document.querySelector("#span_summaryUpdateTime").innerText = `Last Updated: ${summaryData["Time"]}`;
+              //document.querySelector("#div_summary").style.display = "inline-block";
+              //document.querySelector("#button_refreshData").innerText = "Refresh";
+              document.querySelector("#span_status").style.display = "none";
+          
+              //console.log(ipuData);
+            }
+            else{
+              document.querySelector("#span_status").innerText = "No Data Found; Refresh Summary Data...";
+            }
+          }
+        };
+        //document.querySelector("#button_refreshData").innerText = "Loading...";
+        loadingData = true;
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";      
+        ipuDataGet.open("GET", `16dsfSFfgsf3/IPURRRateData/${rate}`, true);
+        ipuDataGet.send();
+      }
+
+      function buildSummaryTable(){
+        let tableRows = Object.keys(summaryData).length + 1;
+        let tableColumns = 2;
+        let tableHeaders = [
+          "- Reporting Rate -",
+          "- IPUs -"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "";
+          if(i < 2){
+            rowCont += "<tr>";
+          }
+          else{
+            rowCont += `<tr class="selectableRow">`;
+          }
+          for(let ii = 0; ii < tableColumns; ii++){
+            if(i === 1){ 
+              rowCont += "<th></th>";
+            }
+            else{
+              rowCont += "<td></td>";
+            }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_summary").innerHTML = tableCont;
+        document.querySelector("#table_summary > tbody > tr:first-child").innerHTML = `<th colspan="2">Summary</th>`;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_summary > tbody > tr:nth-child(2)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_summary > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillSummaryTable(){
+        for(let i = 0; i < Object.keys(summaryData).length - 1; i++){
+          let row = document.querySelector(`#table_summary > tbody > tr:nth-child(${i+3})`);
+          row.childNodes[0].innerText = Object.keys(summaryData)[i]
+          row.childNodes[1].innerText = Object.values(summaryData)[i]
+        }
+      }
+
+      function buildIPUTable(){
+        let tableRows = Object.keys(ipuData).length + 2;
+        let tableColumns = 10;
+        let tableHeaders = [
+          "IPU Name",
+          "Rate",
+          "Distance",
+          "Battery",
+          "Created",
+          "EPE",
+          "Heading",
+          "Msg #",
+          "Serial",
+          "Speed"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 1){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               rowCont += "<td></td>";
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_ipus").innerHTML = tableCont;
+        document.querySelector("#table_ipus > tbody > tr:first-child").innerHTML = `<th colspan="10">Reporting Rate -- ${rate}</th>`;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_ipus > tbody > tr:nth-child(2)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_ipus > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillIPUTable(){
+        for(let i = 0; i < ipuData.length; i++){
+          let row = document.querySelector(`#table_ipus > tbody > tr:nth-child(${i+3})`);
+          row.childNodes[0].innerText = ipuData[i]["IPUName"];
+          row.childNodes[1].innerText = ipuData[i]["Time"];
+          row.childNodes[2].innerText = ipuData[i]["Distance"];
+          row.childNodes[3].innerText = ipuData[i]["Battery"];
+          let time = (new Date(parseInt(`${ipuData[i]["Created"]}000`)));
+          row.childNodes[4].innerText = `${time.toLocaleDateString("en-US",{timeZone: "America/Chicago"})} ${time.toLocaleTimeString("en-US",{timeZone: "America/Chicago"})}`;
+          row.childNodes[5].innerText = ipuData[i]["EPE"];
+          row.childNodes[6].innerText = ipuData[i]["Heading"];
+          row.childNodes[7].innerText = ipuData[i]["MsgNum"];
+          row.childNodes[8].innerText = ipuData[i]["Serial"];
+          row.childNodes[9].innerText = ipuData[i]["Speed"];
+        }
+      }
+
+      function refreshData(){
+        getSummaryData();
+        if(document.querySelector("#table_ipus").innerHTML !== ""){
+          getIPUData(rate);
+        }
+      }
+
+      function s2ab(s){
+      	let buf =  new ArrayBuffer(s.length);
+      	let view = new Uint8Array(buf);
+      	for(let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+      	return buf
+      }
+
+      function startReportDownload(){
+      	let btn = document.querySelector("#btn_downloadReport");
+        if(!(downloadingReport)){
+          downloadingReport = true;
+          btn.innerText = "Loading...";
+          rGet = new XMLHttpRequest();
+          rGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              finishReportDownload();
+            }
+          };
+          rGet.open("GET", "16dsfSFfgsf3/IPURRReport", true);
+          rGet.send();
+        }
+      }
+
+      function finishReportDownload(){
+        //console.log("start finish: " + rGet.responseText);
+        let link = document.querySelector("#a_downloadReport");
+      	let btn = document.querySelector("#btn_downloadReport");
+        if(rGet.responseText !== "offline"){
+          //console.log("start report");
+          rDateGet = new XMLHttpRequest();
+          rDateGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              let blob = new Blob ([s2ab(atob(rGet.response))],{type: ''});
+              link.href =  URL.createObjectURL(blob);
+      	      link.download = `${rDateGet.responseText} - IPU Reporting Rates.xlsx`;
+         	  link.click();
+         	  btn.innerText = "Download Report";
+         	  downloadingReport = false;
+            }
+          };
+          rDateGet.open("GET", "16dsfSFfgsf3/IPURRReportDate", true);
+          rDateGet.send();
+        }
+        else{
+          btn.innerText = "Download Report (Offline)";
+        }
+      }
+      
+      getSummaryData();
+
+    </script>
+  </body>
+</html>

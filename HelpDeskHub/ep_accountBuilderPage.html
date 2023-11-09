@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .ep_hide{
+        display: none;
+      }
+      body,.custStatus{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      #div_userInfoCon,#div_pwdInput{
+        margin-left: 8px;
+      }
+      #lab_fname,#lab_lname,#lab_expDate,#lab_pwd,
+      #in_pwd,#in_pwdConfirm,#lab_description{
+        margin-right: 5px;
+      }
+      #lab_mi{
+        margin-right: 56px;
+      }
+      #lab_dname{
+        margin-right: 16px;
+      }
+      #lab_logon{
+        margin-right: 23px;
+      }
+      #lab_expDate{
+        margin-right: 6px;
+      }
+      #in_expDate{
+        width: 173px;
+      }
+      #div_userInfo1{
+        width: 280px;
+        float: left;
+      }
+      #div_userInfo2{
+        width: 311px;
+        float: left;
+      }
+      #div_userInfo3{
+        width: 300px;
+        float: left;
+      }
+      #div_mainContent{
+        width: 1000px;
+      }
+      #lab_pwdConfirm{
+        margin-right: 12px;
+      }
+      /*
+      #header_group,#div_group,#div_pwd,#header_pwd,#header_confirmation,
+      #header_samTran{
+        clear: both;
+      }
+      */
+      /*#div_confirm > table > tbody > tr > td:nth-child(1),
+      #div_confirm > table > tbody > tr > td:nth-child(3){
+        text-align: right;
+      }*/
+      #div_confirm,#div_results,#div_samTran,#div_crmCon,
+      #table_crm > tbody > tr:nth-child(1) > th:nth-child(7),
+      #table_crm > tbody > tr > td:nth-child(7){
+        display: none;
+      }
+      #span_status{
+        margin-top: 10px;
+        display: none;
+      }
+      #header_title{
+        width: 600px;
+/*         display: inline; */
+      }
+      #header_group{
+        clear: left;
+      }
+      #div_backendStatus{
+        float: right;
+        display: none;
+      }
+      #cir_backendStatus{
+        cx: 10; 
+        cy: 12;
+        r: 6;
+        fill: white;
+      }
+      #div_content{
+        width: 700px;
+      }
+      #div_crm{
+        float: right;
+        background-color: #222222;
+        height: 630px;
+        overflow: auto;
+      }
+      #lab_newCustCount{
+        margin-left: 10px;
+        display: none;
+      }
+      #span_newCustCount{
+        margin-left: 5px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="div_extras">
+      <h1 class="ep_hide" id="header_title">Account Builder</h1>
+      <div id="div_backendStatus">
+        <span>Backend</span>
+        <svg width="17" height="19">
+          <circle id="cir_backendStatus"/>
+        </svg><br><br>
+        <button id="btn_showCrm" onclick="showCrm()">CRM</button><label id="lab_newCustCount">New Customers After Refresh:</label><span id="span_newCustCount">0</span><br><br>
+        <div id="div_crmCon">
+          <div id="div_crm">
+            <table id="table_crm"></table>
+          </div><br><br>
+          <button id="btn_crmFill" style="margin-top: 10px;" onclick="fillCustData()">Fill</button><button id="btn_crmRefresh" style="margin-left: 5px; margin-right: 5px;" onclick="refreshCrmTable()">Refresh</button><button id="btn_crmUpdate" onclick="updateCustStatus()">Update</button>
+        </div>
+      </div>
+    </div>
+    <div id="div_content">
+      <div id="div_mainContent">
+        <div id="div_userInput">
+          <h3 id="header_accInfo">Account Info</h3>
+          <div id="div_userInfoCon">
+            <div id="div_userInfo1">
+              <label id="lab_fname">First Name:</label><input id="in_fname" oninput="buildNames()"><br><br>
+              <label id="lab_mi">MI:</label><input id="in_mi" oninput="buildNames()"><br><br>
+              <label id="lab_lname">Last Name:</label><input id="in_lname" oninput="buildNames()"><br><br>
+            </div>
+            <div id="div_userInfo2">
+              <label id="lab_expDate">Expiration Date:</label><input id="in_expDate" type="date"><br><br>
+              <label id="lab_dname">Display Name:</label><input id="in_dname"><br><br>
+              <label id="lab_logon">Logon Name:</label><input id="in_logon"><br><br>
+            </div>
+            <div id="div_userInfo3">
+              <label id="lab_description">Description:</label><input id="in_description"><br><br>
+            </div>
+          </div>
+          <h3 id="header_group">Group</h3>
+          <div id="div_group">
+            <table id="table_group">
+              <tr><td><input type="radio"></td><td>Task Force 1</td><td><input type="radio"></td><td>Task Force BMC</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force 2</td><td><input type="radio"></td><td>Task Force FireSupport</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force 3</td><td><input type="radio"></td><td>Task Force SOTD</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force 4</td><td><input type="radio"></td><td>OpFor</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force 5</td><td><input type="radio"></td><td>Valiant</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force Sustainment</td><td><input type="radio"></td><td>LiveFire</td></tr>
+              <tr><td><input type="radio"></td><td>Task Force Aviation</td></tr>
+            </table>
+          </div>
+          <h3 id="header_accSettings">Account Settings</h3>
+          <div id="div_accSettings">
+            <table id="table_accSettings">
+              <tr><td><input type="checkbox"></td><td>Account Enabled</td></tr>
+              <tr><td><input type="checkbox"></td><td>Smartcard Required</td></tr>
+            </table>
+          </div>
+          <h3 id="header_pwd">Password</h3>
+          <div id="div_pwd">
+            <table>
+              <tr><td><input id="in_defaultPwd" type="checkbox" oninput="hidePwd()"></td><td>Use Default Password</td></tr>
+            </table><br>
+            <div id="div_pwdInput">
+              <label id="lab_pwd">Password:</label><input type="password" id="in_pwd" oninput="checkPwdAll()"><span id="span_pwd"></span><br><br>
+              <label id="lab_pwdConfirm">Confirm:</label><input type="password" id="in_pwdConfirm" oninput="checkPwdAll()"><span id="span_pwdConfirm"></span><br><br>
+            </div>
+          </div><br>
+          <button id="btn_next" onclick="checkLogon()">Next</button>
+        </div>
+        <div id="div_confirm">
+          <h3 id="header_confirmation">Confirmation</h3>
+          <table>
+            <tr><td>First Name:</td><td id="confirm_fname"></td><td>Display Name:</td><td id="confirm_dname"></td></tr>
+            <tr><td>MI:</td><td id="confirm_mi"></td><td>Logon Name:</td><td id="confirm_logon"></td></tr>
+            <tr><td>Last Name:</td><td id="confirm_lname"></td><td>Expiration Date:</td><td id="confirm_expDate"></td></tr>
+            <tr><td>Account Enabled:</td><td id="confirm_enabled"></td></tr>
+            <tr><td>Smartcard Required:</td><td id="confirm_smartcard"></td></tr>
+            <tr><td>Group:</td><td id="confirm_group"></td></tr>
+            <tr><td>Password:</td><td id="confirm_defaultPwd"></td></tr>
+          </table><br>
+          <button id="btn_back" onclick="backToInput()">Back</button>
+          <button id="btn_confirm" onclick="submit()">Submit</button>
+        </div>
+        <div id="div_samTran">
+          <h3 id="header_samTran">Password Set</h3>
+          <span id="span_samTran"></span><br><br>
+          <button id="btn_setPwd" onclick="setPwd()">Submit</button>
+        </div>
+        <div id="div_results">
+          <h3 id="header_results">Results</h3>
+          <table>
+            <tr><td>First Name:</td><td id="results_fname"></td><td>Display Name:</td><td id="results_dname"></td></tr>
+            <tr><td>MI:</td><td id="results_mi"></td><td>Logon Name:</td><td id="results_logon"></td></tr>
+            <tr><td>Last Name:</td><td id="results_lname"></td><td>Expiration Date:</td><td id="results_expDate"></td></tr>
+            <tr><td>Account Enabled:</td><td id="results_enabled"></td><td>Exchange:</td><td id="results_mb"></td></tr>
+            <tr><td>Smartcard Required:</td><td id="results_smartcard"></td><td>Lync:</td><td id="results_ly"></td></tr>
+            <tr><td>Group:</td><td id="results_group"></td></tr>
+            <tr><td>Password:</td><td id="results_pwd"></td></tr>
+          </table><br>
+          <button id="btn_reloadPage" onclick="reloadPage()">Create New Account</button>
+        </div>
+      </div>
+      <span id="span_status"></span>
+    </div>
+
+    <script>
+      let useDefaultPwd = false;
+      let passChecked = false;
+      let pwdReady = false;
+      let groupRadios = [];
+      let groupSelect = "";
+      let accSettingsChecks = [];
+      let buildingAni;
+      let buildResponse;
+      let userPwd;
+      let backendBusy = false;
+      let crmOpen = false;
+      let custData;
+      let custTableData;
+      let updatingCrm;
+      let newCustCount = 0;
+      let accSettings = {
+        AccountEnabled: true,
+        SmartcardRequired: false
+      };
+      let packedData = {};
+
+      class custStatusData {
+        constructor(cust){
+          this.id = cust.ID;
+          this.status = cust.serviceStatus;
+        }
+      }
+
+      document.querySelector("#in_fname").onblur = autoCap;
+      document.querySelector("#in_mi").onblur = autoCap;
+      document.querySelector("#in_lname").onblur = autoCap;
+      document.querySelector("#in_expDate").onchange = updateDescription;
+
+      for(let row of document.querySelectorAll("#table_group > tbody > tr")){
+        row.childNodes[0].childNodes[0].oninput = checkRadios;
+        row.childNodes[0].childNodes[0].id = "in_rad_" + row.childNodes[1].innerText;
+        groupRadios.push(row.childNodes[0].childNodes[0]);
+        if(row.childNodes.length > 2){
+          row.childNodes[2].childNodes[0].oninput = checkRadios;
+          row.childNodes[2].childNodes[0].id = "in_rad_" + row.childNodes[3].innerText;
+          groupRadios.push(row.childNodes[2].childNodes[0]);
+        }
+      }
+
+      for(let row of document.querySelectorAll("#table_accSettings > tbody > tr")){
+        row.childNodes[0].childNodes[0].oninput = checkAccSettings;
+        accSettingsChecks.push(row.childNodes[0].childNodes[0]);
+      }
+      accSettingsChecks[0].checked = true;
+      accSettingsChecks[1].checked = true;
+
+      function buildNames(){
+        let fname = document.querySelector("#in_fname").value;
+        let mi = document.querySelector("#in_mi").value;
+        let lname = document.querySelector("#in_lname").value;
+        let dname = fname.slice(0,1).toUpperCase() + fname.slice(1,fname.length) + " " + mi.toUpperCase() + " " + lname.slice(0,1).toUpperCase() + lname.slice(1,lname.length);
+        dname = dname.replace(/\s+/g, " ");
+        let logon = (fname.toLowerCase() + "." + lname.toLowerCase()).replace(/\s+/g,"");
+        document.querySelector("#in_dname").value = dname;
+        document.querySelector("#in_logon").value = logon;
+      }
+
+      function autoCap(e){
+        e.path[0].value = e.path[0].value.slice(0,1).toUpperCase() + e.path[0].value.slice(1,e.path[0].value.length);
+      }
+
+      function updateDescription(){
+        document.querySelector("#in_description").value = `Cyber Awareness Exp ${document.querySelector("#in_expDate").value}`;
+      }
+
+      function checkRadios(e){
+        for(let radio of groupRadios){
+          if(radio !== e.path[0]){
+            radio.checked = false;
+          }
+        }
+        groupSelect = e.path[0].parentNode.nextSibling.childNodes[0].nodeValue;
+      }
+
+      function checkAccSettings(){
+        for(let i = 0; i < accSettingsChecks.length; i++){
+          switch(i){
+            case 0:
+              accSettings.AccountEnabled = accSettingsChecks[i].checked;
+              break;
+            case 1:
+              accSettings.SmartcardRequired = accSettingsChecks[i].checked;
+              break;
+          }
+        }
+      }
+      checkAccSettings();
+
+      function hidePwd(){
+        if(document.querySelector("#div_pwd > table > tbody > tr > td:nth-child(1) > input").checked == true){
+          document.querySelector("#div_pwdInput").style.display = "none";
+          useDefaultPwd = true;
+        }
+        else{
+          document.querySelector("#div_pwdInput").style.display = "block";
+          useDefaultPwd = false;
+        }
+      }
+
+      function checkPwd(){
+        let pwd = document.querySelector("#in_pwd").value;
+        let low;
+        let up;
+        let num;
+        let spec;
+        let len;
+        let spaces;
+        
+        try{
+          low = (pwd.match(/[a-z]/g).length > 1);
+        }
+        catch{
+          low = false;
+        }
+        try{
+          up = (pwd.match(/[A-Z]/g).length > 1);
+        }
+        catch{
+          up = false;
+        }
+        try{
+          num = (pwd.match(/[0-9]/g).length > 1);
+        }
+        catch{
+          num = false;
+        }
+        try{
+          spec = (pwd.match(/[^a-zA-Z\d]/g).length > 1);
+        }
+        catch{
+          spec = false;
+        }
+        try{
+          len = (pwd.length > 13 && pwd.length < 21);
+        }
+        catch{
+          len = false;
+        }
+        try{
+          spaces = (pwd.match(/\s/g).length > 1);
+        }
+        catch{
+          spaces = false;
+        }
+
+        if(
+          low == true &&
+          up == true &&
+          num == true &&
+          spec == true &&
+          len == true &&
+          spaces == false
+        ){
+          //console.log("Req. Met");
+          document.querySelector("#span_pwd").style.color = "#00e000";
+          document.querySelector("#span_pwd").innerText = "Password Requirements Met";
+          document.querySelector("#span_pwd").style.display = "inline";
+          passChecked = true;
+        }
+        else{
+          //console.log(
+          //  "Low: " + low + "\r\n" +
+          //  "Up: " + up + "\r\n" +
+          //  "Num: " + num + "\r\n" +
+          //  "Spec: " + spec + "\r\n" +
+          //  "Len: " + len + "\r\n" +
+          //  "Spaces: " + spaces 
+          //);
+          document.querySelector("#span_pwd").innerText = "";
+          document.querySelector("#span_pwd").style.display = "none";
+          passChecked = false;
+        }
+      }
+      function checkConfirm(){  
+        let pwd = document.querySelector("#in_pwd").value;
+        let confirm = document.querySelector("#in_pwdConfirm").value;
+        let confirmCheck = false;
+        if(pwd === confirm){
+          confirmCheck = true;
+        }
+        else{
+          confirmCheck = false;
+        }
+        //console.log(pwd + " " + confirm + " " + confirmCheck);
+        if(confirmCheck == true && passChecked == true && pwd != ""){
+          document.querySelector("#span_pwdConfirm").style.color = "#00e000";
+          document.querySelector("#span_pwdConfirm").innerText = "Passwords Match";
+          document.querySelector("#span_pwdConfirm").style.display = "inline";
+          pwdReady = true;
+        }
+        else{
+          document.querySelector("#span_pwdConfirm").innerText = "";
+          document.querySelector("#span_pwdConfirm").style.display = "none";
+          pwdReady = false;
+        }
+      }
+
+      function checkPwdAll(){
+        checkPwd();
+        checkConfirm();
+      }
+
+      function packData(){
+        packedData.fname = document.querySelector("#in_fname").value;
+        packedData.mi = document.querySelector("#in_mi").value;
+        packedData.lname = document.querySelector("#in_lname").value;
+        packedData.dname = document.querySelector("#in_dname").value;
+        packedData.logon = document.querySelector("#in_logon").value;
+        packedData.expDate = document.querySelector("#in_expDate").value;
+        packedData.description = document.querySelector("#in_description").value;
+        packedData.enabled = accSettings.AccountEnabled;
+        packedData.smartcard = accSettings.SmartcardRequired;
+        packedData.group = groupSelect;
+        packedData.defaultPwd = useDefaultPwd;
+        packedData.pwd = "default";
+        userPwd = document.querySelector("#in_pwd").value;
+      }
+
+      function updateConfirmation(){
+        document.querySelector("#confirm_fname").innerText = packedData.fname;
+        document.querySelector("#confirm_mi").innerText = packedData.mi;
+        document.querySelector("#confirm_lname").innerText = packedData.lname;
+        document.querySelector("#confirm_dname").innerText = packedData.dname;
+        document.querySelector("#confirm_logon").innerText = packedData.logon;
+        document.querySelector("#confirm_expDate").innerText = packedData.expDate;
+        if(packedData.enabled){
+          document.querySelector("#confirm_enabled").innerText = "Enabled";
+        }
+        else{
+          document.querySelector("#confirm_enabled").innerText = "Disabled";
+        }
+        if(packedData.smartcard){
+          document.querySelector("#confirm_smartcard").innerText = "Required";
+        }
+        else{
+          document.querySelector("#confirm_smartcard").innerText = "Not Required";
+        }
+        document.querySelector("#confirm_group").innerText = packedData.group;
+        if(packedData.defaultPwd){
+          document.querySelector("#confirm_defaultPwd").innerText = "Default";
+        }
+        else{
+          document.querySelector("#confirm_defaultPwd").innerText = "User Input";
+        }
+      }
+
+      function checkLogon(){
+         if(
+          (pwdReady == true || useDefaultPwd == true) && 
+          document.querySelector("#in_fname").value != "" &&
+          document.querySelector("#in_lname").value != "" &&
+          document.querySelector("#in_dname").value != "" &&
+          document.querySelector("#in_logon").value != "" &&
+          document.querySelector("#in_expDate").value != ""
+        ){
+          document.querySelector("#span_status").style.color = "yellow";
+          document.querySelector("#span_status").innerText = "Processing...";
+          document.querySelector("#span_status").style.display = "block";
+            
+          xhttpPut = new XMLHttpRequest();
+          xhttpPut.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              if(xhttpPut.responseText == "notFound"){
+                confirmation();
+              }
+              else{
+                if(document.querySelector("#in_logon").value.slice(document.querySelector("#in_logon").value.length-1,document.querySelector("#in_logon").value.length).match("[0-9]") == null){
+                  document.querySelector("#in_logon").value = document.querySelector("#in_logon").value + "2";
+                }
+                else{
+                  document.querySelector("#in_logon").value = document.querySelector("#in_logon").value.slice(0,document.querySelector("#in_logon").value.length-1) + (parseInt(document.querySelector("#in_logon").value.slice(document.querySelector("#in_logon").value.length-1,document.querySelector("#in_logon").value.length)) + 1);
+                }
+                confirmation();
+                document.querySelector("#span_status").style.color = "Yellow";
+                document.querySelector("#span_status").innerText = "Logon Name in Use; Changed to New Name.";
+                document.querySelector("#span_status").style.display = "block";
+              }
+            }
+          };
+          xhttpPut.open("PUT", "ad/abUserCheck", true);
+          xhttpPut.send(document.querySelector("#in_logon").value);
+        }
+        else{
+          document.querySelector("#span_status").style.color = "red";
+          document.querySelector("#span_status").innerText = "Missing Info";
+          document.querySelector("#span_status").style.display = "block";
+        }
+      }
+
+      function confirmation(){
+        packData();
+        updateConfirmation();
+        document.querySelector("#span_status").style.display = "none";
+        document.querySelector("#div_userInput").style.display = "none";
+        document.querySelector("#div_confirm").style.display = "block";
+      }
+
+      function backToInput(){
+        document.querySelector("#div_userInput").style.display = "block";
+        document.querySelector("#div_confirm").style.display = "none";
+      }
+
+      function submit(){
+        xhttpPut = new XMLHttpRequest();
+        xhttpPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            clearInterval(buildingAni);
+            document.querySelector("#span_status").style.display = "none";
+            if(packedData.smartcard == true){
+              buildResponse = xhttpPut.responseText;
+              document.querySelector("#span_samTran").innerText = "Issue Smartcard and Set PIN, then Click Submit to Set Password.";
+              document.querySelector("#div_confirm").style.display = "none";
+              document.querySelector("#div_samTran").style.display = "block";
+            }
+            else if(packedData.defaultPwd == false){
+              buildResponse = xhttpPut.responseText;
+              document.querySelector("#span_samTran").innerText = "Click Submit to Set Password.";
+              document.querySelector("#div_confirm").style.display = "none";
+              document.querySelector("#div_samTran").style.display = "block";
+            }
+            else{
+              document.querySelector("#div_confirm").style.display = "none";
+              document.querySelector("#div_results").style.display = "block";
+              buildResults(xhttpPut.responseText);
+            }
+          }
+        };
+        xhttpPut.open("PUT", "ad/abBuild", true);
+        xhttpPut.send(JSON.stringify(packedData));
+        
+        document.querySelector("#btn_confirm").style.display = "none";
+        document.querySelector("#btn_back").style.display = "none";
+        document.querySelector("#span_status").style.display = "block";
+        document.querySelector("#span_status").style.color = "yellow";
+        document.querySelector("#span_status").innerText = "Building";
+        buildingAni = setInterval(function(){
+          if(document.querySelector("#span_status").innerText == "Building..."){
+            document.querySelector("#span_status").innerText = "Building";
+          }
+          else{
+            document.querySelector("#span_status").innerText = document.querySelector("#span_status").innerText + ".";
+          }
+        },500);
+      }
+
+      function buildResults(response){
+        let resData = JSON.parse(response);
+        resData = stripNP(resData);
+        if(
+          resData.dname != null &&
+          resData.mb == "Enabled" &&
+          resData.ly == "Enabled"
+        ){
+          document.querySelector("#span_status").innerText = "Complete";
+          document.querySelector("#span_status").style.color = "#00e000";
+        }
+        else{
+          document.querySelector("#span_status").innerText = "Error Occurred...";
+          document.querySelector("#span_status").style.color = "magenta";
+        }
+        document.querySelector("#results_fname").innerText = resData.fname;
+        document.querySelector("#results_mi").innerText = resData.mi;
+        document.querySelector("#results_lname").innerText = resData.lname;
+        document.querySelector("#results_dname").innerText = resData.dname;
+        document.querySelector("#results_logon").innerText = resData.logon;
+        document.querySelector("#results_expDate").innerText = resData.expDate;
+        if(resData.enabled) document.querySelector("#results_enabled").innerText = "Yes";
+        else if(!resData.enabled) document.querySelector("#results_enabled").innerText = "No";
+        else document.querySelector("#results_enabled").innerText = resData.enabled;
+        if(resData.smartcard) document.querySelector("#results_smartcard").innerText = "Yes";
+        else if(!resData.smartcard) document.querySelector("#results_smartcard").innerText = "No";
+        else document.querySelector("#results_smartcard").innerText = resData.smartcard;
+        document.querySelector("#results_group").innerText = resData.group;
+        document.querySelector("#results_pwd").innerText = resData.pwd;
+        document.querySelector("#results_mb").innerText = resData.mb;
+        document.querySelector("#results_ly").innerText = resData.ly;
+        document.querySelector("#div_confirm").style.display = "none";
+        document.querySelector("#div_results").style.display = "block";
+      }
+
+      function setPwd(){
+        xhttpPut = new XMLHttpRequest();
+        xhttpPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            document.querySelector("#div_samTran").style.display = "none";
+            document.querySelector("#div_results").style.display = "block";
+            buildResults(buildResponse);
+          }
+        };
+        xhttpPut.open("PUT", "ad/abPwdSet", true);
+        xhttpPut.send(packedData.logon+","+userPwd);
+        
+        document.querySelector("#btn_setPwd").style.display = "none";
+        document.querySelector("#span_status").style.display = "block";
+        document.querySelector("#span_status").style.color = "yellow";
+        document.querySelector("#span_status").innerText = "Setting Password";
+      }
+
+      /*
+      function checkBackend(){
+        statusGet = new XMLHttpRequest();
+        statusGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            clearTimeout(waitForStauts);
+            backendBusy = false;
+            document.querySelector("#cir_backendStatus").style.fill = "#00e000";
+          }
+        };
+
+        let waitForStauts = setTimeout(function(){
+          if(backendBusy == false){
+            document.querySelector("#cir_backendStatus").style.fill = "yellow";
+          }
+          else{
+            document.querySelector("#cir_backendStatus").style.fill = "red";
+          }
+          backendBusy = true;
+        },7000);
+
+        statusGet.open("GET", "n49fnb14b/statusCheck", true);
+        statusGet.send();
+      }
+      */
+      //checkBackend();
+      //setInterval(checkBackend,60000);
+
+      function getCustData(){
+        custGet = new XMLHttpRequest();
+        custGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(crmOpen == false){
+              newCustCount = 0;
+              document.querySelector("#span_newCustCount").innerText = newCustCount;
+              if(custGet.responseText == "No Cust"){
+                document.querySelector("#table_crm").innerHTML = "All Customers Complete";
+              }
+              else{
+                custData = JSON.parse(custGet.responseText);
+                custData = stripNP(custData);
+                if(!(Array.isArray(custData))){
+                  custData = [custData];
+                }
+                buildCrmTable();
+                fillCrmTable();
+              }
+              crmOpen = true;
+              document.querySelector("#btn_showCrm").innerText = "CRM";
+              document.querySelector("#div_crmCon").style.display = "block";
+              document.querySelector("#lab_newCustCount").style.display = "inline";
+              document.querySelector("#span_newCustCount").style.display = "inline";
+              document.querySelector("#btn_crmRefresh").onclick = refreshCrmTable;
+              document.querySelector("#btn_crmRefresh").innerText = "Refresh";
+              if(document.querySelector("#table_crm").clientHeight <= 600){
+                document.querySelector("#div_crm").style.height = document.querySelector("#table_crm").clientHeight + "px";
+              }
+              else{
+                document.querySelector("#div_crm").style.height = "600px";
+              }
+            }
+            else{
+              if(custGet.responseText == "No Cust"){
+                document.querySelector("#table_crm").innerHTML = "All Customers Complete";
+              }
+              else{
+                custData = JSON.parse(custGet.responseText);
+                custData = stripNP(custData);
+                if(!(Array.isArray(custData))){
+                  custData = [custData];
+                }
+                newCustCount = 0;
+                let currentCustCount = 0;
+                for(let i = 0; i < custTableData.length; i++){
+                 let row = document.querySelector(`#table_crm > tbody > tr:nth-child(${i+2})`);
+                 for(let ii = 0; ii < custData.length; ii++){
+                   if(row.childNodes[6].innerText == custData[ii].ID){
+                      currentCustCount += 1;
+                      if(row.childNodes[5].childNodes[0].value != custData[ii].serviceStatus){
+                        row.childNodes[5].childNodes[0].value = custData[ii].serviceStatus;
+                      }
+                    break;
+                    }
+                    else if(ii == custData.length - 1){
+                      row.childNodes[0].childNodes[0].checked = false;
+                      row.childNodes[0].childNodes[0].style.display = "none";
+                      row.childNodes[5].childNodes[0].value = "Complete";
+                      try{
+                        row.childNodes[5].childNodes[0].style.display = "none";
+                      }catch{}
+                      row.childNodes[5].innerText = "Complete";
+                      row.childNodes[5].style.textAlign = "center";
+                      row.style.backgroundColor = "#004000";
+                    }
+                  }
+                }
+                newCustCount = custData.length - currentCustCount;
+                document.querySelector("#span_newCustCount").innerText = newCustCount;
+              }
+            }
+          }
+        };
+
+        //custGet.open("GET", "n49fnb14b/32/crmCustGet", true);
+        custGet.open("GET", "hb23i4h5gb/custGet", true);
+        custGet.send();
+      }
+
+      function buildCrmTable(){
+        custTableData = custData;
+        let tableRows = custTableData.length + 1;
+        let tableColumns = 6 + 1;
+        let tableHeaders = [
+          "",
+          "Rank",
+          "Last",
+          "First",
+          "Reason",
+          "Status",
+          "ID"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 0){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               if(ii == 0){
+                 rowCont += '<td><input type="checkbox'+'"></td>';
+               }
+               else{
+                 rowCont += "<td></td>";
+               }
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_crm").innerHTML = tableCont;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_crm > tbody > tr:nth-child(1)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 1; i < tableRows; i++){
+          document.querySelector(`#table_crm > tbody > tr:nth-child(${i+1})`).childNodes[5].innerHTML = `<select id="sel_cust${i}" class="custStatus">
+            <option>New Customer</option>
+            <option>Complete</option>
+            <option>In AWARE</option>
+          </select>`;
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_crm > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+            document.querySelector(`#table_crm > tbody > tr:nth-child(${i}) > td:nth-child(6)`).childNodes[0].style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillCrmTable(){
+        for(let i = 0; i < custData.length; i++){
+          let row = document.querySelector(`#table_crm > tbody > tr:nth-child(${i+2})`);
+          row.childNodes[1].innerText = custData[i].rank;
+          row.childNodes[2].innerText = custData[i].lname;
+          row.childNodes[3].innerText = custData[i].fname;
+          row.childNodes[4].innerText = custData[i].reason;
+          row.childNodes[5].childNodes[0].value = custData[i].serviceStatus;
+          row.childNodes[6].innerText = custData[i].ID;
+        }
+      }
+
+      function refreshCrmTable(){
+        crmOpen = false;
+        document.querySelector("#btn_crmRefresh").onclick = "";
+        document.querySelector("#btn_crmRefresh").innerText = "Refreshing...";
+        getCustData();
+      }
+
+      function stripNP(rdat){
+        if(Array.isArray(rdat)){
+          for(let cust of rdat){
+            Object.keys(cust).forEach(function(prop){
+              if(cust[prop] == "_NP"){
+                cust[prop] = "";
+              }
+            });
+          }
+        }
+        else{
+          Object.keys(rdat).forEach(function(prop){
+            if(rdat[prop] == "_NP"){
+              rdat[prop] = "";
+            }
+          });
+        }
+        return rdat;
+      }
+
+      function updateCustStatus(){
+        //updateCrmTable();
+        //if row is already complete, color yellow on completion, else color green
+        let custStatusSend = [];
+        for(let i = 0; i < custTableData.length; i++){
+          let row = document.querySelector(`#table_crm > tbody > tr:nth-child(${i+2})`);
+          if(
+            row.childNodes[0].childNodes[0].checked == true && 
+            row.childNodes[5].childNodes[0].value != custTableData[i].serviceStatus
+          ){
+            let pushData = new custStatusData(custTableData[i]);
+            pushData.status = row.childNodes[5].childNodes[0].value;
+            custStatusSend.push(pushData);
+          }
+        }
+        if(custStatusSend.length >= 1){
+          document.querySelector("#btn_crmUpdate").onclick = "";
+          document.querySelector("#btn_crmUpdate").innerText = "Updating...";
+          statusPut = new XMLHttpRequest();
+          statusPut.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              let updateData = JSON.parse(statusPut.responseText);
+              updateData = stripNP(updateData);
+              let arrayCheck = Array.isArray(updateData);
+              for(let i = 0; i < custTableData.length; i++){
+                let row = document.querySelector(`#table_crm > tbody > tr:nth-child(${i+2})`);
+                if(arrayCheck){
+                  for(let ii = 0; ii < updateData.length; ii++){
+                    if(row.childNodes[6].innerText == updateData[ii].ID){
+                      row.childNodes[5].childNodes[0].value = updateData[ii].serviceStatus;
+                    }
+                  }
+                }
+                else{
+                  if(row.childNodes[6].innerText == updateData.ID){
+                    row.childNodes[5].childNodes[0].value = updateData.serviceStatus;
+                  } 
+                }
+              }
+              document.querySelector("#btn_crmUpdate").onclick = updateCustStatus;
+              document.querySelector("#btn_crmUpdate").innerText = "Update";
+              getCustData();
+            }
+          };
+          //statusPut.open("PUT", "n49fnb14b/32/crmCustStatusUpdate", true);
+          statusPut.open("PUT", "hb23i4h5gb/custStatusUpdate", true);
+          statusPut.send(JSON.stringify(custStatusSend));
+        }
+      }
+
+      function fillCustData(URLCust){
+        let cust;
+        if(URLCust == null){
+          for(let i = 0; i < custTableData.length; i++){
+            let cbox = document.querySelector(`#table_crm > tbody > tr:nth-child(${i+2}) > td:nth-child(1) > input`).checked;
+            if(cbox){
+              cust = custData[i];
+              break;
+            }
+          }
+        }
+        else{
+          cust = URLCust;
+        }
+        document.querySelector("#in_fname").value = cust.fname;
+        document.querySelector("#in_mi").value = cust.mi;
+        document.querySelector("#in_lname").value = cust.lname;
+        buildNames();
+        for(rad of groupRadios){
+          if(rad.id.split("_")[2] != cust.taskforce){
+            rad.checked = false;
+          }
+          else{
+            rad.checked = true;
+          }
+        }
+        groupSelect = cust.taskforce;
+        document.querySelector("#in_expDate").focus();
+      }
+
+      function showCrm(){
+        if(crmOpen == true){
+          clearInterval(updatingCrm);
+          crmOpen = false;
+          document.querySelector("#div_crmCon").style.display = "none";
+          document.querySelector("#lab_newCustCount").style.display = "none";
+          document.querySelector("#span_newCustCount").style.display = "none";
+        }
+        else{
+          document.querySelector("#btn_showCrm").innerText = "Loading...";
+          updatingCrm = setInterval(getCustData, 30000);
+          getCustData();
+        }
+      }
+
+      function checkURL(){
+        let search = window.location.search;
+        if(search != ""){
+          search = search.slice(1,search.length);
+          URLCustGET = new XMLHttpRequest();
+          URLCustGET.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              if(URLCustGET.responseText != "No Cust"){
+                let URLCust = JSON.parse(URLCustGET.responseText);
+                fillCustData(stripNP(URLCust));
+              }
+              document.querySelector("#span_status").style.display = "none";
+              document.querySelector("#div_mainContent").style.display = "block";
+            }
+          };
+          document.querySelector("#div_mainContent").style.display = "none";
+          document.querySelector("#span_status").innerText = "Loading...";
+          document.querySelector("#span_status").style.display = "block";
+          URLCustGET.open("GET", "hb23i4h5gb/custGetSing/" + search, true);
+          URLCustGET.send();
+        }
+      }
+      // checkURL();
+
+      function reloadPage(){
+        document.querySelector("#span_status").style.color = "#ffffff";
+        document.querySelector("#span_status").innerText = "Loading...";
+        window.parent.postMessage("accountBuilderLoad");
+      }
+
+    </script>
+  </body>
+</html>

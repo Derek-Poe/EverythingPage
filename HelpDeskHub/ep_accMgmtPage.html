@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      #in_username{
+        margin-left: 5px;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #table_accInfo > tbody > tr > td:nth-child(1){
+        text-align: left;
+      }
+      #table_accInfo {
+        margin-bottom: 3px;
+      }
+      #lab_pwd,#in_pwd,#in_pwdConfirm{
+        margin-right: 5px;
+      }
+      #lab_pwdConfirm{
+        margin-right: 12px;
+      }
+      #span_status,#div_pwdIn,#div_submit,#div_accManage{
+        display: none;
+      }
+      #btn_submitChanges{
+        display: inline;
+        margin-right: 15px;
+      }
+      .ep_hide{
+        display: none;
+      }
+
+      /*********************************/
+        #table_accInfo > tbody > tr:nth-child(24) > td:nth-child(3) > input,
+        #table_accInfo > tbody > tr:nth-child(25) > td:nth-child(3) > input{
+/*           display: none; */
+        }
+      /*********************************/
+    </style>
+  </head>
+  <body>    
+    <title>Account Management</title>
+    <h1 class="ep_hide" id="header_title">Account Management</h1>
+    <div id="div_content">
+      <div id="div_getUser">
+        <label id="lab_username">Username:</label><input id="in_username"><br><br>
+        <button id="btn_getData" onclick="getAccData()">Submit</button>
+      </div>
+      <div id="div_accManage">
+        <table id="table_accInfo"></table>
+        <div id="div_submit">
+          <button id="btn_submitChanges" onclick="submitChanges()">Submit Changes</button><input style="display: none;" id="in_custAutoEntry" type="checkbox"/><label style="display: none;" id="lab_custAutoEntry">Auto Create Customer</label>
+        </div>
+        <button id="btn_newUser" onclick="returnToUserInput()">Back</button>
+        <button id="btn_refreshData" onclick="getAccData()">Refresh</button>
+      </div>
+    </div><br>
+    <div id="div_pwdIn">
+      <label id="lab_pwd">Password:</label><input type="password" id="in_pwd" oninput="checkPwdAll()"><span id="span_pwd"></span><br><br>
+      <label id="lab_pwdConfirm">Confirm:</label><input type="password" id="in_pwdConfirm" oninput="checkPwdAll()"><span id="span_pwdConfirm"></span>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <script>
+
+      let userAccName = "";
+      let accData = {};
+      let packedData = {};
+      let logonChange = false;
+      let newLogon = "";
+      let pwdReady = false;
+      document.querySelector("#in_username").onkeyup = function(e){if(e.keyCode == 13){getAccData();}};
+
+      function returnToUserInput(){
+        document.querySelector("#in_username").value = "";
+        document.querySelector("#div_accManage").style.display = "none";
+        document.querySelector("#div_getUser").style.display = "block";
+      }
+      
+      function getAccData(){
+        accDataPut = new XMLHttpRequest();
+        accDataPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(accDataPut.responseText == "BU"){
+              document.querySelector("#span_status").innerText = "Searching for User...";
+              ///document.querySelector("#div_getUser").style.display = "block";
+              window.parent.postMessage(`Account Search,${encodeURIComponent(document.querySelector("#in_username").value)}`);
+            }
+            else{
+              accData = JSON.parse(accDataPut.responseText);
+              buildAccTable();
+              fillAccountTable();
+//              document.querySelector("#in_custAutoEntry").checked = false;
+              document.querySelector("#div_accManage").style.display = "block";
+              document.querySelector("#span_status").style.display = "none";
+            }
+          }
+        };
+        userAccName = document.querySelector("#in_username").value;
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";
+        document.querySelector("#div_accManage").style.display = "none";
+        document.querySelector("#div_getUser").style.display = "none";
+        accDataPut.open("PUT", "ad/amInfoGet", true);
+        accDataPut.send(userAccName);
+      }
+
+      function buildAccTable(){
+        let tableRows = Object.keys(accData).length + 3;
+        let tableColumns = 3;
+        let tableHeaders = [
+          "Setting",
+          "Current",
+          "Configure"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 0){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               if(ii == 2){
+                 rowCont += `<td><input type="checkbox" onclick="checkConfigure(this)"></td>`;
+               }
+               else{
+                 rowCont += "<td></td>";
+               }
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_accInfo").innerHTML = tableCont;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_accInfo > tbody > tr:nth-child(1)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+            //document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i}) > td:nth-child(9)`).childNodes[0].style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillAccountTable(){
+        for(let i = 0; i < Object.keys(accData).length; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          row.childNodes[0].innerText = Object.keys(accData)[i];
+          row.childNodes[1].innerText = Object.values(accData)[i];
+        }
+        for(let i = 0; i < Object.keys(accData).length; i++){
+          let colSet = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2}) > td:nth-child(1)`);
+          switch(colSet.innerText){
+            case "lastLogonTimestamp":
+              colSet.innerText = "Last Logon";
+              break;
+            case "lockedOut":
+              colSet.innerText = "Locked";
+              break;
+            case "lockoutTime":
+              colSet.innerText = "Lockout Time";
+              break;            
+            case "badPasswordTime":
+              colSet.innerText = "Last Bad Password";
+              break;
+            case "pwdLastSet":
+              colSet.innerText = "Password Last Set";
+              break;
+            case "passwordExpired":
+              colSet.innerText = "Password Expired";
+              break;
+            case "passwordNeverExpires":
+              colSet.innerText = "Password Never Expires";
+              break;
+            case "cannotChangePassword":
+              colSet.innerText = "Cannot Change Password";
+              break;
+            case "expDate":
+              colSet.innerText = "Account Expiration";
+              break;
+            case "smartcard":
+              colSet.innerText = "Smartcard Required";
+              break;
+            case "fname":
+              colSet.innerText = "First Name";
+              break;
+            case "mi":
+              colSet.innerText = "MI";
+              break;
+            case "lname":
+              colSet.innerText = "Last Name";
+              break;
+            case "dname":
+              colSet.innerText = "Display Name";
+              break;
+            case "createTimeStamp":
+              colSet.innerText = "Created";
+              break;
+
+            default:
+              colSet.innerText = (colSet.innerText).slice(0,1).toUpperCase() + (colSet.innerText).slice(1,(colSet.innerText).length);
+          }
+        }
+        for(let i = 0; i < Object.keys(accData).length; i++){
+          let colSet = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2}) > td:nth-child(1)`);
+          let colCur = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2}) > td:nth-child(2)`);
+          let timeInt;
+          switch(colSet.innerText){
+            case "Password Expired":
+              if(JSON.parse(colCur.innerText)){
+                colCur.innerText = "Yes";
+              }
+              else{
+                colCur.innerText = "No";
+              }
+              break;
+
+            case "Enabled":
+            case "Locked":
+            case "Password Never Expires":
+            case "Cannot Change Password":
+            case "Smartcard Required":
+            case "Exchange":
+            case "Lync":
+              colCur.innerHTML = `<input type="checkbox" disabled="true"/>`;
+              colCur.childNodes[0].checked = Object.values(accData)[i];
+              break;
+
+            case "Last Logon":
+            case "Lockout Time":
+            case "Last Bad Password":
+            case "Password Last Set":
+            case "Created":
+            case "Modified":
+              timeInt = parseInt((colCur.innerText).slice(((colCur.innerText).indexOf("(") + 1),(colCur.innerText).indexOf(")")));
+              if(timeInt > 0){
+                let time = new Date(timeInt);
+                accData[Object.keys(accData)[i]] = `${time.toLocaleDateString("en-US",{timeZone: "America/Chicago"})} ${time.toLocaleTimeString("en-US",{timeZone: "America/Chicago"})}`;
+                colCur.innerText = accData[Object.keys(accData)[i]];
+              }
+              else{
+                accData[Object.keys(accData)[i]] = "";
+                colCur.innerText = accData[Object.keys(accData)[i]];
+              }            
+              break;
+
+            case "Account Expiration":
+              timeInt = parseInt((colCur.innerText).slice(((colCur.innerText).indexOf("(") + 1),(colCur.innerText).indexOf(")")));
+              if(timeInt > 0){
+                let time = new Date(timeInt);
+                let dateStr = time.toLocaleDateString("en-US",{timeZone: "America/Chicago"});
+                accData[Object.keys(accData)[i]] = (new Date(dateStr)).toISOString().split("T")[0];
+                colCur.innerText = dateStr;
+              }
+              else{
+                accData[Object.keys(accData)[i]] = "";
+                colCur.innerText = accData[Object.keys(accData)[i]];
+              }            
+              break;
+          }
+        }
+        for(let i = 0; i < Object.keys(accData).length; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          switch(row.childNodes[0].innerText){
+             case "Last Logon":
+             case "Lockout Time":
+             case "Last Bad Password":
+             case "Password Last Set":
+             case "Password Expired":
+             case "Created":
+             case "Modified":
+//               default:
+// case "Taskforce":
+// case "Exchange":
+// case "Lync":
+              row.childNodes[2].childNodes[0].disabled = true;
+              row.childNodes[2].childNodes[0].style.display = "none";
+              break;
+          }
+        }
+        document.querySelector(`#table_accInfo > tbody > tr:nth-child(${Object.keys(accData).length + 2}) > td:nth-child(1)`).innerText = "Password Reset";
+        document.querySelector(`#table_accInfo > tbody > tr:nth-child(${Object.keys(accData).length + 3}) > td:nth-child(1)`).innerText = "Delete Account";
+        document.querySelector(`#table_accInfo > tbody > tr:nth-child(${Object.keys(accData).length + 3}) > td:nth-child(3) > input`).onclick = e => {toggleDelete(e)};
+        document.querySelector(`#table_accInfo > tbody > tr:nth-child(${Object.keys(accData).length + 3}) > td:nth-child(2)`).innerHTML = `
+          <button id="btn_deleteAccount" style="display: none; margin: 0 auto;" onclick="deleteAccount()">Delete Account</button>
+          `;
+        document.querySelector("#btn_deleteAccount").confirm = false;
+      }
+
+      function checkConfigure(cbox){
+        let noBoxesChecked = true;
+        for(let i = 0; i < Object.keys(accData).length + 1; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          if(row.childNodes[2].childNodes[0].checked){
+            if(row.childNodes[0].innerText !== "Password Reset"){
+              document.querySelector("#div_submit").style.display = "block";
+            }
+            noBoxesChecked = false;
+            if(cbox == row.childNodes[2].childNodes[0]){
+              if(row.childNodes[0].innerText == "Taskforce"){
+                let val = row.childNodes[1].innerText;
+                row.childNodes[1].innerHTML = `<select>
+                    <option>Task Force 1</option>
+                    <option>Task Force 2</option>
+                    <option>Task Force 3</option>
+                    <option>Task Force 4</option>
+                    <option>Task Force 5</option>
+                    <option>Task Force Sustainment</option>
+                    <option>Task Force Aviation</option>
+                    <option>Task Force BMC</option>               
+                    <option>Task Force FireSupport</option>                 
+                    <option>Task Force SOTD</option>                 
+                    <option>OpFor</option>
+                    <option>Valiant</option>                   
+                    <option>LiveFire</option>                    
+                  </select>`;
+                  row.childNodes[1].childNodes[0].value = val;
+              }
+              else if(row.childNodes[0].innerText == "Account Expiration"){
+                let val = row.childNodes[1].innerText;
+                row.childNodes[1].innerHTML = `<input type="date"/>`;
+                row.childNodes[1].childNodes[0].value = Object.values(accData)[i];
+              }
+              else if(row.childNodes[0].innerText == "Password Reset"){
+                document.querySelector("#div_pwdIn").style.display = "block";
+              }
+              else if(Object.values(accData)[i] === null || Object.values(accData)[i] === " "){
+                row.childNodes[1].innerHTML = `<input/>`;
+                row.childNodes[1].childNodes[0].value = " ";
+              }
+              else if(row.childNodes[1].childNodes[0].type != "checkbox"){
+                let val = row.childNodes[1].innerText;
+                row.childNodes[1].innerHTML = `<input/>`;
+                row.childNodes[1].childNodes[0].value = val;
+              }
+              else{
+                row.childNodes[1].childNodes[0].disabled = false;
+              }
+              row.style.backgroundColor = "#4e4917";
+            }
+          }
+          else{
+            if(noBoxesChecked){
+              document.querySelector("#div_submit").style.display = "none";
+            }
+            if(row.childNodes[0].innerText == "Taskforce"){
+              row.childNodes[1].innerHTML = Object.values(accData)[i];
+            }
+            else if(row.childNodes[0].innerText == "Account Expiration"){
+              row.childNodes[1].innerHTML = (new Date(Object.values(accData)[i])).toLocaleDateString();
+            }
+            else if(row.childNodes[0].innerText == "Password Reset"){
+              document.querySelector("#div_pwdIn").style.display = "none";
+            }
+            else if(Object.values(accData)[i] === null || Object.values(accData)[i] === ""){
+              row.childNodes[1].innerHTML = Object.values(accData)[i];
+            }
+            else if(row.childNodes[1].childNodes[0].tagName != "INPUT"){
+              if(row.childNodes[0].innerText != "Password Expired"){
+                row.childNodes[1].innerHTML = Object.values(accData)[i];
+              }
+              else{
+                if(Object.values(accData)[i]){
+                  row.childNodes[1].innerHTML = "Yes";
+                }
+                else{
+                  row.childNodes[1].innerHTML = "No";
+                }
+              }
+            }
+            else if(row.childNodes[1].childNodes[0].type == "checkbox"){
+              row.childNodes[1].childNodes[0].checked = Object.values(accData)[i];
+              row.childNodes[1].childNodes[0].disabled = true;
+            }
+            else{
+              row.childNodes[1].innerHTML = Object.values(accData)[i];
+            }
+            
+            if(i % 2 == 0){
+              row.style.backgroundColor = "#333333";
+            }
+            else{
+              row.style.backgroundColor = "#000000";
+            }
+          }
+        }
+      }
+
+      function checkPwd(){
+        let pwd = document.querySelector("#in_pwd").value;
+        let low;
+        let up;
+        let num;
+        let spec;
+        let len;
+        let spaces;
+        
+        try{
+          low = (pwd.match(/[a-z]/g).length > 1);
+        }
+        catch{
+          low = false;
+        }
+        try{
+          up = (pwd.match(/[A-Z]/g).length > 1);
+        }
+        catch{
+          up = false;
+        }
+        try{
+          num = (pwd.match(/[0-9]/g).length > 1);
+        }
+        catch{
+          num = false;
+        }
+        try{
+          spec = (pwd.match(/[^a-zA-Z\d]/g).length > 1);
+        }
+        catch{
+          spec = false;
+        }
+        try{
+          len = (pwd.length > 13 && pwd.length < 21);
+        }
+        catch{
+          len = false;
+        }
+        try{
+          spaces = (pwd.match(/\s/g).length > 1);
+        }
+        catch{
+          spaces = false;
+        }
+
+        if(
+          low == true &&
+          up == true &&
+          num == true &&
+          spec == true &&
+          len == true &&
+          spaces == false
+        ){
+          //console.log("Req. Met");
+          document.querySelector("#span_pwd").style.color = "#00e000";
+          document.querySelector("#span_pwd").innerText = "Password Requirements Met";
+          document.querySelector("#span_pwd").style.display = "inline";
+          passChecked = true;
+        }
+        else{
+          //console.log(
+          //  "Low: " + low + "\r\n" +
+          //  "Up: " + up + "\r\n" +
+          //  "Num: " + num + "\r\n" +
+          //  "Spec: " + spec + "\r\n" +
+          //  "Len: " + len + "\r\n" +
+          //  "Spaces: " + spaces 
+          //);
+          document.querySelector("#span_pwd").innerText = "";
+          document.querySelector("#span_pwd").style.display = "none";
+          passChecked = false;
+        }
+      }
+      function checkConfirm(){  
+        let pwd = document.querySelector("#in_pwd").value;
+        let confirm = document.querySelector("#in_pwdConfirm").value;
+        let confirmCheck = false;
+        if(pwd === confirm){
+          confirmCheck = true;
+        }
+        else{
+          confirmCheck = false;
+        }
+        //console.log(pwd + " " + confirm + " " + confirmCheck);
+        if(confirmCheck == true && passChecked == true && pwd != ""){
+          document.querySelector("#span_pwdConfirm").style.color = "#00e000";
+          document.querySelector("#span_pwdConfirm").innerText = "Passwords Match";
+          document.querySelector("#span_pwdConfirm").style.display = "inline";
+          document.querySelector("#div_submit").style.display = "block";
+          pwdReady = true;
+        }
+        else{
+          document.querySelector("#span_pwdConfirm").innerText = "";
+          document.querySelector("#span_pwdConfirm").style.display = "none";
+          document.querySelector("#div_submit").style.display = "none";
+          pwdReady = false;
+        }
+      }
+      function checkPwdAll(){
+        checkPwd();
+        checkConfirm();
+      }
+
+      function getChangeData(){
+        //let packedData = {};
+        packedData = {};
+        for(let i = 0; i < Object.keys(accData).length; i++){
+          let row = document.querySelector(`#table_accInfo > tbody > tr:nth-child(${i+2})`);
+          if(
+              row.childNodes[2].childNodes[0].checked &&               
+              (row.childNodes[1].childNodes[0].value !== Object.values(accData)[i] && row.childNodes[1].childNodes[0].checked !== Object.values(accData)[i])          
+            ){
+            if(row.childNodes[1].childNodes[0].type == "text" || row.childNodes[1].childNodes[0].type == "date" || row.childNodes[1].childNodes[0].type == "select-one"){
+              packedData[row.childNodes[0].innerText] = row.childNodes[1].childNodes[0].value;
+            }
+            else if(row.childNodes[1].childNodes[0].type == "checkbox"){
+              packedData[row.childNodes[0].innerText] = row.childNodes[1].childNodes[0].checked;
+            }
+            if(row.childNodes[0].innerText == "Logon"){
+              logonChange = true;
+            }
+          }
+        }
+        if(pwdReady){
+          packedData.pwd = document.querySelector("#in_pwdConfirm").value;
+        }
+        Object.keys(packedData).forEach(function(prop){
+          if(typeof packedData[prop] != "boolean"){
+            if(packedData[prop] === "" || (packedData[prop]).replace(/\s+/g, " ") === " "){
+              packedData[prop] = null;
+            }
+          }
+          else{
+            if(packedData[prop] === ""){
+              packedData[prop] = null;
+            }
+          }       
+        });
+        if(Object.keys(packedData).length > 0){
+          if(logonChange){
+            newLogon = packedData.Logon;
+            packedData.Logon = accData.logon;
+            if(newLogon !== "" && newLogon !== null){
+              packedData.NewLogon = newLogon;
+            }
+            else{
+              packedData.NewLogon = "_NP";
+            }
+          }
+          else{
+            packedData.Logon = accData.logon;
+          }
+          let tempLogon = packedData.Logon;
+          delete packedData.Logon;
+          packedData.Logon = tempLogon;
+        }
+        packedData = JSON.stringify(packedData);
+        //return packedData;
+       
+      }
+
+      function getTime(){
+        let cDate = new Date;
+        return `${cDate.toLocaleDateString("en-US")} ${cDate.toLocaleTimeString("en-US")}`;
+      }
+
+      function getNewCustData(){
+        let obj = {};
+        obj.fname = accData.fname;
+        obj.mi = accData.mi;
+        obj.lname = accData.lname;
+        obj.rank = "_NP";
+        obj.logon = accData.logon;
+        obj.group = accData.taskforce;
+        obj.reason = "Account Modification";
+        obj.status = "Complete";
+        obj.time = getTime();
+        return obj;
+      }
+
+      function submitAutoCust(){
+        autoCustPut = new XMLHttpRequest();
+        autoCustPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            document.querySelector("#span_status").innerText = "Customer Entry Creation Complete";
+            document.querySelector("#span_status").style.display = "block";
+          }
+        };
+        document.querySelector("#span_status").innerText = "Creating Customer Entry";
+        document.querySelector("#span_status").style.display = "block";
+        autoCustPut.open("PUT", "hb23i4h5gb/custSubmit", true);
+        autoCustPut.send(JSON.stringify(getNewCustData()));
+      }
+
+      function toggleDelete(e){
+        if(e.target.checked){
+          document.querySelector("#btn_deleteAccount").style.display = "block";
+        }
+        else{
+          document.querySelector("#btn_deleteAccount").style.display = "none";
+          document.querySelector("#btn_deleteAccount").confirm = false;
+          document.querySelector("#btn_deleteAccount").style.backgroundColor = "white";
+        }
+      }
+
+      function deleteAccount(){
+        let btn = document.querySelector("#btn_deleteAccount");
+        if(btn.confirm){
+          deletePut = new XMLHttpRequest();
+          deletePut.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              document.querySelector("#div_accManage").innerHTML = "Account Deleted";
+              document.querySelector("#span_status").style.display = "none";
+            }
+          };
+          document.querySelector("#span_status").innerText = "Loading...";
+          document.querySelector("#span_status").style.display = "block";
+          deletePut.open("PUT", "ad/amDelete", true);
+          if((accData.logon.replace(/\s+/g,"")).length > 2){
+            deletePut.send(accData.logon);
+          }
+        }
+        else{
+          btn.confirm = true;
+          btn.style.backgroundColor = "yellow";
+        }
+      }
+
+      function submitChanges(){
+        submitPut = new XMLHttpRequest();
+        submitPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(logonChange){
+              let a = document.createElement("a");
+              a.href = `https://${window.location.hostname}:1497/AccountManagement?${newLogon}`;
+              a.id = "a_logout";
+              a.style.display = "none";
+              document.body.appendChild(a);
+              a.click();
+            }
+            else{
+              getAccData();
+//              if(document.querySelector("#in_custAutoEntry").checked === true){
+//                submitAutoCust()
+//              }
+              document.querySelector("#div_submit").style.display = "none";
+            }
+          }
+        };
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";
+        document.querySelector("#div_accManage").style.display = "none";
+        document.querySelector("#div_pwdIn").style.display = "none";
+        getChangeData();
+        if(packedData != "_NP"){
+          submitPut.open("PUT", "ad/amManage", true);
+          submitPut.send(packedData);
+        }
+      }
+
+      function logout(){
+        logoutGet = new XMLHttpRequest();
+        logoutGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            let a = document.createElement("a");
+            a.href = `https://${window.location.hostname}:1497/loginSite`;
+            a.id = "a_logout";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+          }
+        };
+        logoutGet.open("GET", "logout", true);
+        logoutGet.send();
+      }
+
+      function addLogoutButton(){
+        let btn = document.createElement("button");
+        btn.id = "btn_logout";
+        btn.onclick = logout;
+        btn.innerText = "Logout";
+        btn.style.position = "absolute";
+        document.body.appendChild(btn);
+        resizeMovements();
+      }
+
+      function resizeMovements(){
+        document.querySelector("#btn_logout").style.left = (window.innerWidth - document.querySelector("#btn_logout").clientWidth - 4) + "px";
+        document.querySelector("#btn_logout").style.top = (window.innerHeight - document.querySelector("#btn_logout").clientHeight - 4) + "px";
+      }
+
+      addLogoutButton();
+      window.onresize = resizeMovements;
+
+      function checkURL(){
+        let search = window.location.search;
+        if(search != ""){
+          search = search.slice(1,search.length);
+          document.querySelector("#in_username").value = search.replace(/%20/g," ");
+          getAccData();
+        }
+      }
+      checkURL();
+
+    </script>
+  </body>
+</html>

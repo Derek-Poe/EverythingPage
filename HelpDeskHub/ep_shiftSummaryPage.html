@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select{
+        text-align: center;
+      }
+
+      #table_summary {
+        border: 1px white solid;
+        border-collapse: collapse;
+      }
+
+      #table_summary td {
+        border: 1px white solid;
+        border-collapse: collapse;
+        padding: 3px;
+        width: 175px;
+        word-break: break-word;
+      }
+
+      #table_summary td:first-child {
+        text-align: left;
+      }
+
+    </style>
+  </head>
+  <body>  
+    <title>Shift Summary</title>  
+    <h1 class="ep_hide" id="header_title">Shift Summary</h1>
+    <div id="div_content">
+      <div id="div_summary">
+        <table id="table_summary"></table>
+        <span id="span_summaryUpdateTime"></span><br>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <script>
+
+      let summaryData = {};
+
+      function getSummaryData(){
+        let summaryDataGet = fetch("shiftSummaryData").then(
+          res => {
+            if(res.ok && res.status === 200){
+              res.json().then(resJson => {
+                summaryData = resJson;
+                buildSummaryDataTable(summaryData);
+              });
+            }
+            else console.log("Bad Request");
+          }
+        );
+      }
+
+      function buildSummaryDataTable(summaryData){
+        let tableHTML = "";
+        let keys = Object.keys(summaryData);
+      	let values = Object.values(summaryData);
+        for(let i = 0; i < keys.length; i++){
+          tableHTML += "<tr>";
+          for(ii = 0; ii < 2; ii++){
+            (ii === 0) ? tableHTML += `<td>${keys[i]}</td>` : tableHTML += `<td>${values[i]}</td>`;
+          }
+          tableHTML += "</tr>";
+        }
+      	document.querySelector("#table_summary").innerHTML = tableHTML;
+        document.querySelector("#span_status").style.display = "none";
+      }
+
+      getSummaryData();
+      let updatingSummaryData = setInterval(getSummaryData, 30000);
+
+    </script>
+  </body>
+</html>

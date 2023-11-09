@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <style>
+      @keyframes glow {
+        0% {
+          opacity: 0%;
+        }
+        50% {
+          opacity: 100%;
+        }
+        100% {
+          opacity: 0%;
+        }
+      }
+      #header_title {
+        user-select: none;
+        color: #ffffff;
+        background-color: #000000;
+        position: absolute;
+        font-size: 5em;
+        left: 31%;
+        top: 29%;
+      }
+      #header_greeting {
+        user-select: none;
+        color: #ffffff;
+        background-color: #000000;
+        position: absolute;
+        font-size: 3em;
+        left: 38%;
+        top: 41%;
+        opacity: 0%;
+        transition: opacity 5s;
+      }
+      #header_status {
+        user-select: none;
+        color: #ffffff;
+        background-color: #000000;
+        position: absolute;
+        font-size: 2em;
+        left: 46%;
+        top: 53%;
+        opacity: 0%;
+        transition: color 3s;
+        animation: glow 5s infinite;
+        animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="header_title">The Everything Page</h1>
+    <h2 id="header_greeting"></h2>
+    <h3 id="header_status">Loading</h3>
+  <script>
+    function getName(){
+      let maintenanceDataGet = fetch("getFirstName").then(
+        res => {
+          if(res.ok && res.status === 200){
+            res.text().then(resText => {
+              document.querySelector("#header_greeting").innerText = `Welcome Back, ${resText}!`;
+              document.querySelector("#header_greeting").style.opacity = "100%";
+              // document.querySelector("#header_status").innerText = "    Loading \r\n(...almost done)";
+              // document.querySelector("#header_status").style.animationPlayState = "paused"
+              // document.querySelector("#header_status").style.color = "#000000";           
+              window.parent.postMessage(`setCurrentUser,${resText}`);
+              window.parent.postMessage("autoWakeLock");
+              if(resText === "Derek" /*|| resText === "James"*/){
+                window.parent.postMessage("startDebugMode");
+              }
+              let landingPageAutoChange = setTimeout(()=>{
+                window.parent.postMessage("landingPageAutoChange");
+              }, 7000);
+            });
+          }
+          else console.log("Bad FName Request");
+        }
+      );
+    }
+    getName();
+  </script>
+  </body>
+</html>

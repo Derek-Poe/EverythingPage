@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #span_status,#div_stopRefresh{
+        display: none;
+      }
+      #div_stats{
+        display: inline-block;
+        float: left;
+      }
+      #div_processControl{
+      	display: none;
+      	float: left;
+      	margin-left: 15px;
+      }
+
+      #div_autoRefreshButtons{
+	    float: right;
+		text-align: center;
+	  }	  
+	  #in_refreshInterval{
+	    width: 100px;
+	    text-align: center;
+	  }
+
+	  table{
+        border-collapse: separate;
+        border-spacing: 0px;
+		display: inline-table;
+      }
+      table, th, td{
+        border: 0.5px solid white;
+        white-space: nowrap;
+        /* user-select: none; */
+      }
+      .selectableRow:hover{
+        color: yellow;
+      }
+      th, td{
+        padding: 2.5px;
+      }
+
+    </style>
+  </head>
+  <body>  
+    <title>Automation Server Monitor</title>  
+    <h1 id="header_title">Automation Server Monitor</h1>
+    <div id="div_content">      
+      <div id="div_stats">
+        <table id="table_stats"></table><br>
+        <span id="span_statsUpdateTime"></span><br>
+        <button id="button_refreshData" onclick="refreshData()">Refresh</button>
+      </div>
+      <div id="div_processControl">
+        <table id="table_processControl">
+          <tr><th colspan="2">Process Controller</th></tr>
+          <tr><td colspan="2">Process</td></tr>
+          <tr><td><button id="btn_stopProcess" onclick="putProcessUpdate('stop')">Stop</button></td><td><button id="btn_startProcess" onclick="putProcessUpdate('start')">Start / Restart</button></td></tr>
+        </table>
+      </div>
+      <div id="div_autoRefreshButtons">
+	    <span id="span_autoRefresh">Auto-Refresh</span><br><br>
+  	    <div id="div_startRefresh">
+          <label id="lab_refreshInterval">Refresh Interval (seconds):</label><br>
+          <input id="in_refreshInterval"></input><button id="btn_startAutoRefresh" onclick="startRefresh()">Start</button>
+        </div>
+        <div id="div_stopRefresh">
+	      <span id="span_refreshStatus"></span><br>
+	      <button id="btn_stopAutoRefresh" onclick="stopRefresh()">Stop</button>
+        </div>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <script>
+      
+      let statsData;
+      let loadingData = false;
+      let refreshingData;
+      let processSel = "";
+      
+      document.querySelector("#in_refreshInterval").onkeyup = function(e){if(e.keyCode == 13){startRefresh();}};
+      
+      document.querySelector("#table_stats").addEventListener("click", e => {
+        if(!(loadingData) && e.target.parentNode.className === "selectableRow"){
+          processSel = e.target.parentNode.firstChild.innerText;
+          updateProcessController();
+        }
+      });      
+
+      function getStatsData(){
+        statsDataGet = new XMLHttpRequest();
+        statsDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            statsData = JSON.parse(statsDataGet.responseText);
+            buildStatsTable();
+            fillStatsTable();
+            assignSelectableRows();
+            document.querySelector("#span_statsUpdateTime").innerText = `Last Updated: ${statsData["Time"]}`;
+            document.querySelector("#div_stats").style.display = "inline-block";
+            document.querySelector("#button_refreshData").innerText = "Refresh";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#button_refreshData").innerText = "Loading...";
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        statsDataGet.open("GET", "kj235b4lk/stats", true);
+        statsDataGet.send();
+      }
+
+      function putProcessUpdate(upType){
+        proPut = new XMLHttpRequest();
+        proPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+          	loadingData = false;
+            document.querySelector("#btn_stopProcess").innerText = "Stop";
+            document.querySelector("#btn_startProcess").innerText = "Start / Restart";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#btn_stopProcess").innerText = "Loading...";
+        document.querySelector("#btn_startProcess").innerText = "Loading...";
+        proPut.open("put", "kj235b4lk/proUp", true);
+        proPut.send(`${upType},${processSel}`);
+      }
+
+      function buildStatsTable(){
+        let tableRows = Object.keys(statsData).length + 0;
+        let tableColumns = 2;
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "";
+          rowCont += "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+            rowCont += "<td></td>";
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_stats").innerHTML = tableCont;
+        document.querySelector("#table_stats > tbody > tr:first-child").innerHTML = `<th colspan="2">Diagnostics</th>`;
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_stats > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+          else{
+            try{
+              document.querySelector(`#table_stats > tbody > tr:nth-child(${i})`).style.backgroundColor = "#000000";
+            }
+            catch{}
+          }
+        }
+      }
+
+      function fillStatsTable(){
+        for(let i = 0; i < Object.keys(statsData).length - 1; i++){
+          let row = document.querySelector(`#table_stats > tbody > tr:nth-child(${i+2})`);
+          switch(Object.keys(statsData)[i]){
+            case "adAPI":
+              row.childNodes[0].innerText = "AD API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "autoServMonAPI":
+              row.childNodes[0].innerText = "Automation Server Monitor API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "autoServResourceDataBuilder":
+              row.childNodes[0].innerText = "Resource Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "crmAPI":
+              row.childNodes[0].innerText = "CRM API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "ipuAPI":
+              row.childNodes[0].innerText = "IPU API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "ipuDataBuilder":
+              row.childNodes[0].innerText = "IPU Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "nrDataBuilder":
+              row.childNodes[0].innerText = "NR Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbAPI":
+              row.childNodes[0].innerText = "Siteboss API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+               if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbhBuilder":
+              row.childNodes[0].innerText = "Siteboss History Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+               if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbPoller":
+              row.childNodes[0].innerText = "Siteboss Poller";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbrAPI":
+              row.childNodes[0].innerText = "Siteboss Report API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "IPUOTADataBuilder_multiInstance":
+              row.childNodes[0].innerText = "IPU OTA Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "WebSessionAPI":
+              row.childNodes[0].innerText = "Web Sessions API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "IPUAPIChaperone":
+              row.childNodes[0].innerText = "IPU API Chaperone";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "Processor":
+              row.childNodes[0].innerText = "CPU";
+              row.childNodes[1].innerText = `${Object.values(statsData)[i]}%`;
+              break;
+            case "Memory":
+              row.childNodes[0].innerText = "RAM";
+              row.childNodes[1].innerText = `${Object.values(statsData)[i]}%`;
+              break;
+            default:
+              row.childNodes[0].innerText = Object.keys(statsData)[i];
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+          }
+        }
+      }
+
+      function refreshData(){
+        getStatsData();
+      }
+
+      function startRefresh(){
+        refreshingData = setInterval(getStatsData, (parseInt(document.querySelector("#in_refreshInterval").value) * 1000));
+        document.querySelector("#span_refreshStatus").innerText = `Refreshing Every ${document.querySelector("#in_refreshInterval").value} Seconds`;
+		document.querySelector("#div_startRefresh").style.display = "none";
+		document.querySelector("#div_stopRefresh").style.display = "block";
+      }
+
+      function stopRefresh(){
+        clearInterval(refreshingData);
+        document.querySelector("#div_startRefresh").style.display = "block";
+		document.querySelector("#div_stopRefresh").style.display = "none";
+      }
+
+      function assignSelectableRows(){
+        for(let cell of document.querySelectorAll("#table_stats > tbody > tr > td:first-child")){
+          switch(cell.innerText){
+            case "AD API":
+            case "Automation Server Monitor API":
+            case "Resource Data Collector":
+            case "CRM API":
+            case "IPU API":
+            case "IPU Data Collector":
+            case "IPU OTA Data Collector":
+            case "IPU API Chaperone":
+            case "Web Sessions API":
+            case "NR Data Collector":
+            case "Siteboss API":
+            case "Siteboss History Collector":
+            case "Siteboss Poller":
+            case "Siteboss Report API":
+              cell.parentNode.classList.add("selectableRow");
+              break;
+          }
+        }
+      }
+
+      function updateProcessController(){
+      	switch(processSel){
+      	  case "AD API":
+      	  case "CRM API":
+      	    processSel = "CRM";
+      	    break;
+          case "Automation Server Monitor API":
+          case "Resource Data Collector":
+            processSel = "Automation Server Monitor";
+            break;     
+          case "IPU API":
+          case "IPU Data Collector":
+          case "IPU OTA Data Collector":
+          case "IPU API Chaperone":
+          case "Web Sessions API":
+            processSel = "IPU";
+            break;
+          case "NR Data Collector":
+            processSel = "AutoNR";
+            break;
+          case "Siteboss API":
+          case "Siteboss History Collector":
+          case "Siteboss Poller":
+          case "Siteboss Report API":
+            processSel = "Siteboss Hub";
+            break;
+      	}
+        document.querySelector("#table_processControl > tbody > tr:nth-child(2) > td").innerText = processSel;
+        document.querySelector("#div_processControl").style.display = "inline-block";
+      }
+
+      getStatsData();
+
+    </script>
+  </body>
+</html>

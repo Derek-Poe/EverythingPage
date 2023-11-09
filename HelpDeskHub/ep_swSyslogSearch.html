@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select,option {
+        text-align: center;
+      }
+      table {
+        border-collapse: separate;
+        border-spacing: 0px;
+		display: inline-table;
+      }
+      table, th, td {
+        border: 0.5px solid #bbbbbb;
+        white-space: nowrap;
+        user-select: none;
+      }
+      th, td {
+        padding: 2.5px;
+      }
+
+      #span_status {
+      	display: none;
+      }
+
+      #div_searchController {
+        float: right;
+        margin-top: 1.5%;
+      }
+
+      #table_searchController {
+        border: solid 1px #ffffff77;
+        border-radius: 15px;
+      }
+
+      #table_searchController > tbody > tr > td:first-child {
+        text-align: right;
+      }
+
+      #table_searchController > tbody > tr:last-child > td {
+        text-align: center;
+      }
+
+      #table_searchController > tbody > tr > td {
+        border-style: none;
+      }
+
+      #div_resultsCon {
+        overflow: scroll;
+        max-width: 80%;
+        max-height: 98vh;
+        display: none;
+      }
+
+      #table_results {
+        
+      }
+
+    </style>
+  </head>
+  <body>  
+    <title>Syslog Search</title>  
+    <div id="div_main">
+
+      <div id="div_searchController">
+        <table id="table_searchController">
+          <tr>
+            <td>IP:</td><td><input id="in_searchIP" type="text"/></td>
+          </tr>
+          <tr>
+            <td>Start:</td><td><input id="in_searchStartDT" type="datetime-local"/></td>
+          </tr>
+          <tr>
+            <td>End:</td><td><input id="in_searchEndDT" type="datetime-local"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><button id="btn_submitSearch" onclick="submitSearch()">Search</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="div_resultsCon">
+        <table id="table_results"></table>
+      </div>
+
+      <span id="span_status">Loading...</span>
+      
+    </div>
+    <script>
+
+      let resultsData;
+
+      document.body.addEventListener("keyup", e => {bodyKeyHandler(e);});
+      
+      document.querySelector("#in_searchStartDT").value = (new Date(((new Date).getTime() + (-1 * 60 * 60 * 1000)))).toISOString().slice(0,16);
+      document.querySelector("#in_searchEndDT").value = (new Date).toISOString().slice(0,16);
+      
+      function bodyKeyHandler(e){
+        switch(e.keyCode){
+          case 13:
+            submitSearch();
+            break;
+        }
+      }
+
+      function submitSearch(){
+        if(document.querySelector("#in_searchIP").value.trim() !== ""){
+          let submitSearchPut = new XMLHttpRequest();
+          submitSearchPut.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){          
+              if(submitSearchPut.responseText !== "ND"){
+                resultsData = JSON.parse(submitSearchPut.responseText);
+                buildResultsTable();
+                document.body.querySelector("#span_status").style.display = "none";
+                document.body.querySelector("#div_resultsCon").style.display = "inline-block";
+              }
+            }
+          };
+          document.body.querySelector("#div_resultsCon").style.display = "none";
+          document.body.querySelector("#span_status").style.display = "inline-block";
+          submitSearchPut.open("PUT", "syslogSearchSubmit", true);
+          submitSearchPut.send(`IP<~~~>${document.querySelector("#in_searchIP").value},${document.querySelector("#in_searchStartDT").value},${document.querySelector("#in_searchEndDT").value}`);
+        }
+      }
+
+      function buildResultsTable(){
+        let tableCont = "";
+        for(let i = 0; i < resultsData.length; i++){
+          tableCont += "<tr>";
+            for(let ii = 0; ii < Object.keys(resultsData[0]).length + 1; ii++){
+              if(i === 0){
+                tableCont += "<th>";
+                tableCont += Object.keys(resultsData[0])[ii];
+                tableCont += "</th>";
+              }
+              else{
+                tableCont += "<td>";
+                tableCont += Object.values(resultsData[i - 1])[ii];
+                tableCont += "</td>";
+              }
+            }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_results").innerHTML = tableCont;
+      }
+      
+    </script>
+  </body>
+</html>

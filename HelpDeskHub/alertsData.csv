@@ -1,0 +1,17 @@
+AlertID,AlertURI,ObjectURI,NodeURI,NotesData,LastTriggeredDate,Alert,Object,TimesTriggered,LastTriggered,Node,AcknowledgedBy,Notes,Silenced
+157426<~>28428,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:28428,/Orion/View.aspx?NetObject=I:1372,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:268,,5/17/2023 15:13,Interface is down,GigabitEthernet1/0/22 - Gi1/0/22,1,22h 35m,8213_OC_ACADEMY.is-u.jrtc.army.mil,,,TRUE
+157424<~>11062,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:11062,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129,notified outside plant 01/17/2023,5/17/2023 14:50,Tower Alert --INVERTER MINOR ALARM,Inverter Minor Alarm,10,22h 58m,CSE01-SBOSS1-INT,,...,TRUE
+157401<~>10026,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:10026,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161,"Outside Plant is tracking. 10 Jan. 2023
+Edwin notified and advised to disable alarm until he can access the network module to reset  27 FEB 2023",5/17/2023 5:51,Tower Alert --INVERTER MINOR ALARM,INVERTER MINOR ALARM,10,1d 7h 58m,CS046-SBOSS1-INT,,...,TRUE
+157400<~>10031,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:10031,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:161,"Outside Plant is tracking. 10 Jan. 2023
+Edwin notified and advised to disable alarm until he can access the network module to reset  27 FEB 2023",5/17/2023 5:51,Tower Alert --INVERTER AC INPUT PWR FAIL,INVERTER AC INPUT PWR FAIL,8,1d 7h 58m,CS046-SBOSS1-INT,,...,TRUE
+157398<~>10025,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:10025,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159,"Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  Waiting on network module.  12 Jan. 2023",5/17/2023 4:30,Tower Alert --INVERTER MINOR ALARM,INVERTER MINOR ALARM,7,1d 9h 18m,CS045-SBOSS1-INT,,...,TRUE
+157397<~>10030,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:10030,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:159,"Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  10 Jan. 2023
+Outside Plant is tracking.  Waiting on network module.  12 Jan. 2023",5/17/2023 4:30,Tower Alert --INVERTER AC INPUT PWR FAIL,INVERTER AC INPUT PWR FAIL,7,1d 9h 18m,CS045-SBOSS1-INT,,...,TRUE
+157167<~>14425,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:14425,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:114,,5/16/2023 13:05,Tower Alert --INVERTER MAJOR ALARM,INVERTER MAJOR ALARM,3,2d 0h 43m,CS015-SBOSS1-INT,,,TRUE
+156941<~>10325,/Orion/NetPerfMon/ActiveAlertDetails.aspx?NetObject=AAT:10325,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129,/Orion/NetPerfMon/NodeDetails.aspx?NetObject=N:129,"Outside plant is tracking.  False positive alert.  Will continue to monitor.  12 Jan. 2023
+
+False positive alert. Will continue to monitor.",5/15/2023 15:50,Tower Alert -- DC Controller General Alarm,DC Controller,9,2d 21h 58m,CSE01-SBOSS1-INT,,...,TRUE

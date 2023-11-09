@@ -1,0 +1,400 @@
+"name","class","id","disEntityType","entityType","uniqueName","parentOrganization","isFlagBearer","spatialRelationship","damageStateController","exercises","tspiSource","tacticalSymbols","isOutOfComms","tacticalSymbolColor","tacticalSymbolStandardCurrent","gatewayNetworkType","displayOrder","isExcludedFromFireEffects","isExcludedFromDetonationEffects","isRFOutOfComms","isVisible","isHiddenFromExercise","systemsUnderTestData","isReal","percentObscured","isFratricided","xroeViolation","isBDAComplete","instrumentationOverrideMode","urn","isTarget","fuelLevel","damageCode","mobilityKill","catastrophicKill","communicationsKill","sensorKill","firepowerKill","isPowerPlantOn","isMissionCapableSupply","isMissionCapableMaintenance","isCaptured","isLaserDesignatorOn","isTriggerDepressed","battlesightRange","currentRange"
+"15RVQ 8073 3541",,,"1.1.225.7.19.2.3","LandPlatform","CVC281407d9",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"DEF0000005",,,"3.1.225.11.0.0.0","Person","DEF0000005",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000006",,,"3.1.225.11.0.0.0","Person","DEF0000006",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000009",,,"3.1.225.11.0.0.0","Person","DEF0000009",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000013",,,"3.1.225.11.0.0.0","Person","DEF0000013",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000015",,,"3.1.225.11.0.0.0","Person","DEF0000015",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000016",,,"3.1.225.11.0.0.0","Person","DEF0000016",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000017",,,"3.1.225.11.0.0.0","Person","DEF0000017",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000018",,,"3.1.225.11.0.0.0","Person","DEF0000018",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF000002",,,"3.1.225.11.0.0.0","Person","81mmMortar",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000020",,,"3.1.225.11.0.0.0","Person","DEF0000020",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000021",,,"3.1.225.11.0.0.0","Person","DEF0000021",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000023",,,"3.1.225.11.0.0.0","Person","DEF0000023",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF0000024",,,"3.1.225.11.0.0.0","Person","DEF0000024",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF000003",,,"3.1.225.11.0.0.0","Person","60mmMortar",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"DEF000004",,,"3.1.225.11.0.0.0","Person","SPAREMortar",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"mk19 test 2",,,"1.1.225.3.26.1.6","LandPlatform","CVCa06da03a",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"mtrtrp00001",,,"3.1.225.11.5.42.0","Person","mtrtrp00001",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00002",,,"3.1.225.11.5.42.0","Person","mtrtrp00002",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00003",,,"3.1.225.11.5.42.0","Person","mtrtrp00003",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00004",,,"3.1.225.11.5.42.0","Person","mtrtrp00004",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00005",,,"3.1.225.11.5.42.0","Person","mtrtrp00005",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00006",,,"3.1.225.11.5.42.0","Person","mtrtrp00006",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00007",,,"3.1.225.11.5.42.0","Person","mtrtrp00007",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00008",,,"3.1.225.11.5.42.0","Person","mtrtrp00008",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00009",,,"3.1.225.11.5.42.0","Person","mtrtrp00009",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00010",,,"3.1.225.11.5.42.0","Person","mtrtrp00010",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00011",,,"3.1.225.11.5.42.0","Person","mtrtrp00011",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00012",,,"3.1.225.11.5.42.0","Person","mtrtrp00012",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00013",,,"3.1.225.11.5.42.0","Person","mtrtrp00013",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00014",,,"3.1.225.11.5.42.0","Person","mtrtrp00014",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00015",,,"3.1.225.11.5.42.0","Person","mtrtrp00015",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00016",,,"3.1.225.11.5.42.0","Person","mtrtrp00016",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00017",,,"3.1.225.11.5.42.0","Person","mtrtrp00017",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00018",,,"3.1.225.11.5.42.0","Person","mtrtrp00018",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00019",,,"3.1.225.11.5.42.0","Person","mtrtrp00019",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00020",,,"3.1.225.11.5.42.0","Person","mtrtrp00020",,,,"lt2.entity_damage_state_controller_puxml",,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00021",,,"3.1.225.11.5.42.0","Person","mtrtrp00021",,,,"lt2.entity_damage_state_controller_puxml",,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00022",,,"3.1.225.11.5.42.0","Person","mtrtrp00022",,,,"lt2.entity_damage_state_controller_puxml",,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00023",,,"3.1.225.11.5.42.0","Person","mtrtrp00023",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00024",,,"3.1.225.11.5.42.0","Person","mtrtrp00024",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"mtrtrp00025",,,"3.1.225.11.5.42.0","Person","mtrtrp00025",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"MTRveh00001",,,"1.1.225.6.1.0.0","LandPlatform","MTRveh00001",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"MTRveh00002",,,"1.1.225.6.1.0.0","LandPlatform","MTRveh00002",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk 19 13",,,"1.1.225.7.12.16.3","LandPlatform","CVC148fcaaa",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19",,,"1.1.225.3.26.1.3","LandPlatform","CVC081302aa",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"Test mk19",,,"1.1.225.3.26.1.3","LandPlatform","test 1",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 10",,,"1.1.225.6.1.9.3","LandPlatform","CVCa3471dc4",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 11",,,"1.1.225.6.2.3.0","LandPlatform","CVCf648d2a8",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 12",,,"1.1.225.6.31.2.0","LandPlatform","CVC2c55b3c4",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 13",,,"1.1.225.7.12.15.3","LandPlatform","CVC9a4e9ca1",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 14",,,"1.1.225.7.12.17.3","LandPlatform","CVC795bed60",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 15",,,"1.1.225.7.12.18.3","LandPlatform","CVC40f81c9c",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 16",,,"1.1.225.7.12.20.3","LandPlatform","CVC689463a9",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 17",,,"1.1.225.7.12.5.1","LandPlatform","CVC134b8146",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 19",,,"1.1.225.7.19.14.3","LandPlatform","CVCfaf387c4",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 3",,,"1.1.225.3.26.2.3","LandPlatform","CVCf6b898f6",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 4",,,"1.1.225.3.27.1.3","LandPlatform","CVC84647859",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 5",,,"1.1.225.3.27.2.3","LandPlatform","CVC0575f13e",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 6",,,"1.1.225.3.29.4.3","LandPlatform","CVC7e9bbe67",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 7",,,"1.1.225.6.1.16.3","LandPlatform","CVC9d31423b",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 8",,,"1.1.225.6.1.32.4","LandPlatform","CVCab7a40be",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"test mk19 9",,,"1.1.225.6.1.38.2","LandPlatform","CVC847178c7",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"TEST105 G1",,,"1.1.225.5.4.255.0","FiringWeapon","TEST105 G1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST105 G2",,,"1.1.225.5.4.255.0","FiringWeapon","TEST105 G2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST105 G3",,,"1.1.225.5.4.255.0","FiringWeapon","TEST105 G3",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST105 G4",,,"1.1.225.5.4.255.0","FiringWeapon","TEST105 G4",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST155 G1",,,"1.1.225.5.6.1.0","FiringWeapon","TEST155 G1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST155 G2",,,"1.1.225.5.6.1.0","FiringWeapon","TEST155 G2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST155 G3",,,"1.1.225.5.6.1.0","FiringWeapon","TEST155 G3",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST155 G4",,,"1.1.225.5.6.1.0","FiringWeapon","TEST155 G4",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"test2S12",,,"1.1.222.10.13.0.0","FiringWeapon","test2S12",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST60M T1",,,"1.1.225.10.2.0.0","FiringWeapon","TEST60M T1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST60M T2",,,"1.1.225.10.2.0.0","FiringWeapon","TEST60M T2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST81M T1",,,"1.1.225.10.8.0.0","FiringWeapon","TEST81M T1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST81M T2",,,"1.1.225.10.8.0.0","FiringWeapon","TEST81M T2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST81M T3",,,"1.1.225.10.8.0.0","FiringWeapon","TEST81M T3",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TEST81M T4",,,"1.1.225.10.8.0.0","FiringWeapon","TEST81M T4",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWO--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testAH641",,,"1.2.225.20.1.4.0","Aircraft","testAH641",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH642",,,"1.2.225.20.1.4.0","Aircraft","testAH642",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH643",,,"1.2.225.20.1.4.0","Aircraft","testAH643",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH644",,,"1.2.225.20.1.4.0","Aircraft","testAH644",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH645",,,"1.2.225.20.1.4.0","Aircraft","testAH645",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH646",,,"1.2.225.20.1.4.0","Aircraft","testAH646",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH647",,,"1.2.225.20.1.4.0","Aircraft","testAH647",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH648",,,"1.2.225.20.1.4.0","Aircraft","testAH648",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testAH64a",,,"1.2.225.20.1.4.0","Aircraft","testAH64a",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFA-MHA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,,
+"testbm21v",,,"1.1.222.4.13.1.0","LandPlatform","testbm21v",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWXM-------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"TESTD20 G1",,,"1.1.222.5.3.0.0","FiringWeapon","TESTD20 G1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD20 G2",,,"1.1.222.5.3.0.0","FiringWeapon","TESTD20 G2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD20 G3",,,"1.1.222.5.3.0.0","FiringWeapon","TESTD20 G3",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD20 G4",,,"1.1.222.5.3.0.0","FiringWeapon","TESTD20 G4",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWH--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD30 G1",,,"1.1.222.5.4.0.0","FiringWeapon","TESTD30 G1",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWHH-------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD30 G2",,,"1.1.222.5.4.0.0","FiringWeapon","TESTD30 G2",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWHH-------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD30 G3",,,"1.1.222.5.4.0.0","FiringWeapon","TESTD30 G3",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWHH-------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"TESTD30 G4",,,"1.1.222.5.4.0.0","FiringWeapon","TESTD30 G4",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWHH-------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testM109a6",,,"1.1.225.4.3.7.0","FiringWeapon","testM109a6",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWHMS------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint01",,,"3.1.225.11.5.42.0","Person","testmaint01",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testmaint02",,,"3.1.225.11.5.42.0","Person","testmaint02",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint03",,,"3.1.225.11.5.42.0","Person","testmaint03",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint04",,,"3.1.225.11.5.42.0","Person","testmaint04",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint05",,,"3.1.225.11.5.42.0","Person","testmaint05",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint06",,,"3.1.225.11.5.42.0","Person","testmaint06",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint07",,,"3.1.225.11.5.42.0","Person","testmaint07",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint08",,,"3.1.225.11.5.42.0","Person","testmaint08",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint09",,,"3.1.225.11.5.42.0","Person","testmaint09",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testmaint10",,,"3.1.225.11.5.42.0","Person","testmaint10",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testMK19",,,"1.1.225.6.1.16.3","LandPlatform","testMK19",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"testmk2",,,"1.1.225.3.26.1.3","LandPlatform","testmk2",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVA--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"16448250","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"testQ36",,,"9.1.225.2.8.1.0","CounterBatteryRadar","CVCe13ace0e",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFGPESR--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,,,,,,,,,,,,,,,
+"testT80",,,"1.1.222.1.1.1.0","LandPlatform","testT80",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","lt2.entity_damage_state_controller_puxml",,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVATM------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"testtrp0001",,,"3.1.225.11.5.42.0","Person","testtrp0001",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0002",,,"3.1.225.11.5.42.0","Person","testtrp0002",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0003",,,"3.1.225.11.5.42.0","Person","testtrp0003",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0004",,,"3.1.225.11.5.42.0","Person","testtrp0004",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0005",,,"3.1.225.11.5.42.0","Person","testtrp0005",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0006",,,"3.1.225.11.5.42.0","Person","testtrp0006",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0007",,,"3.1.225.11.5.42.0","Person","testtrp0007",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0008",,,"3.1.225.11.5.42.0","Person","testtrp0008",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0009",,,"3.1.225.11.5.42.0","Person","testtrp0009",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}","",,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0010",,,"3.1.225.11.5.42.0","Person","testtrp0010",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SHG-EWRR----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testtrp0011",,,"3.1.225.11.0.0.0","Person","testtrp0011",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E----------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,,,,,,,,,,,,,,,
+"testveh0001",,,"1.1.225.1.1.2.0","LandPlatform","testveh0001",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVATM---US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0002",,,"1.1.225.6.1.251.0","LandPlatform","testveh0002",,,,"",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU-----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0003",,,"1.1.222.1.1.1.0","LandPlatform","testveh0003",,,,"lt2.entity_damage_state_controller_puxml",,"lt2.tspi_source_puxml","@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVATM---US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0004",,,"1.1.222.1.1.1.0","LandPlatform","testveh0004",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVATM---US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0005",,,"1.1.222.2.2.0.0","LandPlatform","testveh0005",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVAI----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0006",,,"1.1.222.14.3.0.0","LandPlatform","testveh0006",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-E-------US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0007",,,"1.1.225.6.1.254.0","LandPlatform","testveh0007",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU-----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0008",,,"1.1.225.7.12.8.0","LandPlatform","testveh0008",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU-----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0009",,,"1.1.205.9.4.0.0","LandPlatform","testveh0009",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG---------US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0010",,,"1.1.225.7.13.1.0","LandPlatform","testveh0010",,,,,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU-----US-; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0",,"32767",,,,,,,,"0",,"False",,,"0",,"100","0",,,,,,,,,,,,"0","0"
+"testveh0011",,,"1.1.225.7.12.8.0","LandPlatform","testveh0011",,,"@{baseEntity=; relationshipType=Attached; offsetDistance=0.0; offsetBearing=0.0}",,,,"@{class=ctia.data_model.TacticalSymbol; symbolCode=SFG-EVU--------; symbolStandard=MS2525B; displayRotation=0}
+
+",,"0","0","Unknown","32767",,,,,,,,"0",,"False",,"None","0",,"100","0",,,,,,,,,,,,"0","0"

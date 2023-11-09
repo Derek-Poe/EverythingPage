@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+
+      @keyframes ring {
+        0% {
+          transform-origin: top;
+          transform: rotate(0deg);
+        }
+        5% {
+          transform-origin: top;
+          transform: rotate(-30deg);
+        }
+        20% {
+          transform-origin: top;
+          transform: rotate(20deg);
+        }
+        30% {
+          transform-origin: top;
+          transform: rotate(-12deg);
+        }
+        40% {
+          transform-origin: top;
+          transform: rotate(7deg);
+        }
+        50% {
+          transform-origin: top;
+          transform: rotate(0deg);
+        }    
+      }
+
+      @keyframes wakeLockAnim_KF1 {
+        0% {
+          transform: rotate3d(1, 0, 0, 0deg);
+        }
+        100% {
+          transform: rotate3d(1, 0, 0, 359deg);
+        }
+      }
+      @keyframes wakeLockAnim_KF2 {
+        0% {
+          transform: rotate3d(0, 1, 0, 0deg);
+        }
+        100% {
+          transform: rotate3d(0, 1, 0, 359deg);
+        }
+      }
+      @keyframes wakeLockAnim_KF3 {
+        0% {
+          transform: rotate3d(-1, 0.5, 0, 0deg);
+        }
+        100% {
+          transform: rotate3d(-1, 0.5, 0, 359deg);
+        }
+      }
+      @keyframes wakeLockAnim_KF4 {
+        0% {
+          transform: rotate3d(1, 0.5, 0, 0deg);
+        }
+        100% {
+          transform: rotate3d(1, 0.5, 0, 359deg);
+        }
+      }
+
+      .ringSingle {
+        animation: ring 1.5s;
+      }
+
+      .ringInfinite {
+        animation: ring 1.5s infinite;
+      }
+
+       
+      html {
+        overflow: hidden;
+      }   
+      body {
+        background-color: #000000;
+        color: #ffffff;
+        overflow: hidden;
+      }
+      input,table,select,option {
+        text-align: center;
+      }
+      table {
+        border-collapse: separate;
+        border-spacing: 0px;
+		/*display: inline-table;*/
+      }
+      table, th, td {
+        border: 0.5px solid #bbbbbb;
+        white-space: nowrap;
+        /* user-select: none; */
+      }
+      th, td {
+        padding: 2.5px;
+      }
+
+      #span_status {
+      	display: none;
+      }
+
+      #if_workspace {
+        position: absolute;
+        top: 1%;
+        left: 0.5%;
+        width: 98.5%;
+        height: 97%;
+        border-style: hidden;
+/*         border-style: dashed; */
+      }
+
+      .selectingWorkspace_parentCon {
+        position: absolute;
+        right: 0.5%;
+        bottom: 1.5%;
+        background-color: #777777;
+        width: 24%;
+        height: 50%;
+        transition: width 0.25s, height 0.25s;
+      }
+
+      .selectingWorkspace_childCon {
+      	transform: translateX(-3%);
+      }
+
+      .workspaceOption {
+        display: inline-block;
+        background-color: #000000;
+        border: 1px solid #ffffff;
+        width: 40%;
+        margin: 19px;
+        text-align: center;
+        font-weight: bold;
+        transition: opacity 0.5s, transform 0.1s;
+        user-select: none;
+        padding: 1px;
+      }
+
+      .workspaceOption:hover {
+        transition: transform 0.1s;
+        transform: scale(1.3);
+      }
+
+      .workspaceSelected_parentCon {
+        position: absolute;
+        right: 0.25%;
+        bottom: 0.5%;
+        background-color: #777777;
+        width: 12%;
+        height: 6%;
+        transition: width 0.5s, height 0.5s;
+      }
+
+      .workspaceSelected_childCon {
+      	position: relative;
+        left: 17%;
+        top: 30%;
+        width: 10rem;
+        font-size: 1.08vw;
+        user-select: none;
+      }
+
+      .alertsClosed {
+      	position: absolute;
+        right: 0.25%;
+        top: 0.5%;
+        background-color: #777777;
+        width: 2%;
+        height: 4%;
+        transition: width 0.5s, height 0.5s;
+      }
+
+      .alertsOpen {
+      	position: absolute;
+        right: 0.25%;
+        top: 0.5%;
+        background-color: #222222ee;
+        width: 99.5%;
+        height: 99%;
+        transition: width 0.5s, height 0.5s, background-color 1s;
+      }
+
+      #div_workspaceSelectionMainContainer {
+        border-radius: 20px;
+      }
+
+      #div_alertsParentContainer {
+        border-radius: 3px;
+      }
+
+      .workspaceOption {
+        border-radius: 4px;
+      }
+
+      #span_activeAlertsCount, #span_bell {
+      	transition: opacity 0.5s;
+      	user-select: none;
+/*       	padding-right: 1rem; */
+/*       	pointer-events: none; */
+      }
+      #span_activeAlertsCount {
+        display: inline;
+      }
+      #span_bell{
+        display: inline-block;
+      }
+
+/*      #div_alertsChildContainer, #span_activeAlertsCount {
+      	pointer-events: none;
+      } */
+
+      #div_alertsParentContainer {
+      	overflow: hidden;
+      }
+
+      #div_alertsChildContainer {
+      	text-align: center;
+      	margin-top: 11%;
+      	position: relative;
+      	top: -22%;
+      	left: 9%;
+/*       	width: 5% */
+      }
+
+      #table_alerts {
+      	display: none;
+      	opacity: 0;
+      	transition: opacity 0.5s;
+/*       	z-index: 11; */
+      }
+
+      #table_alerts tr:nth-child(odd) {
+        background-color: #000000;
+      }
+
+      #table_alerts tr:nth-child(even) {
+        background-color: #505050;
+      }
+
+      .alertID {
+      	display: none;
+      }
+
+      .swLink {
+      	color: inherit;
+        text-decoration: none;
+      }
+
+      #div_extraDataOverlay{
+      	position: absolute;
+      	left: 0px;
+      	top: 0px;
+      	z-index: 10;
+      	width: 100vw;
+      	height: 100vh;
+      	background-color: #000000d4;
+      	display: none; /*Also on HTML Tag*/
+      }
+
+      #div_extraDataOverlayCon{
+        width: 75vw;
+        height: 75vh;
+        margin: auto;
+        transform: translateY(15%);
+        background-color: #404040;
+        overflow: hidden scroll;
+      }
+
+      #div_extraDataOverlayClose{
+      	font-size: xxx-large;
+        color: #ff0000;
+        user-select: none;
+        cursor: pointer;
+        position: relative;
+        left: 96%;
+        top: -1%;
+      }
+
+      #div_extraData {
+      	transform: translate(5%, 0%);
+      }
+
+      #div_alertsTableCon {
+      	max-width: 85vw;
+      	max-height: 98vh;
+      	overflow: hidden;
+      	scroll-behavior: smooth;
+      }
+
+      #table_alerts > tbody > tr > th {
+      	position: sticky;
+      	top: 0px;
+      	z-index: 2;
+        border-top-width: 1px;
+        background-color: #000000;
+      }
+
+      .swAlertNoteEdit {
+        width: 85%; 
+        padding: 0.25em 0.25em; 
+        text-align: left; 
+        background-color: #404040; 
+        color: #ffffff; 
+        border-style: ridge;
+      }
+
+      .class_btn_partialConfirmed {
+        color: #000000;
+        background-color: #ffff00;
+      }
+
+      .class_btn_confirmed {
+        color: #eeeeee;
+        background-color: #111111;
+      }
+
+      #btn_removeDownNeighbors {
+        margin-top: 10%;
+      }
+
+      #div_maintenanceMessageCon {
+        display: none;
+        position: absolute;
+        bottom: 1%;
+        background-color: #855600;
+        padding: 5px;
+      }
+
+/*       .silenceCB input {
+      	background-color: #ffff00;
+      } */
+
+/*       #table_siteSpecificData {
+        transform: translate(-15rem, -4%);
+      } */
+
+      /*
+      #table_watchlist > tbody > tr > td,
+      #table_compOTAs > tbody > tr > td {
+	  	border: 0px solid white;
+	  	border-top: 0.5px solid #333333;
+	  	border-bottom: 0.5px solid #333333;
+	  }
+	  #div_compOTAs {
+	    display: none;
+	    margin-left: 10px;
+	    width: 47rem;
+	  }
+	  #table_compOTAs {
+	    float: left;
+	  }
+	  #table_otaBotQueue {
+	    display: none;
+	    margin-left: 10px;
+        clear: left;
+	  }
+	  */
+
+      #div_wakeLock {
+        position: absolute;
+        right: 0%;
+        top: 5.2%;
+        width: 75px;
+        height: 75px;
+      }
+
+      #svg_wakeLock {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        right: 0%;
+      }
+
+      #span_wakeLock {
+        user-select: none;
+        font-size: 0.8em;
+        position: absolute;
+        left: 47%;
+        top: 13%;
+        z-index: 1;
+      }
+
+      .wakeLockCircle_MainInactive {
+        cx: 24;
+        cy: 24;
+        r: 22;
+        stroke: #ffffff;
+        /*stroke-style: solid;*/
+        stroke-width: 2px;
+        fill: #000000;
+        transition: stroke 2s, fill 2s;
+      }
+
+      .wakeLockCircle_MainActive {
+        cx: 24;
+        cy: 24;
+        r: 22;
+        stroke: #000000;
+        /*stroke-style: solid;*/
+        stroke-width: 2px;
+/*         fill: #0bc70b82; */
+        fill: #000000;
+        transition: stroke 2s, fill 2s;
+      }
+
+      .wakeLockSVGAnim {
+        position: absolute;
+        right: -53%;
+        top: 0%;
+        width: 90px;
+        height: 90px;
+        user-select: none;
+      }
+
+      #svg_wakeLockAnim1 {
+        position: absolute;
+        right: -53%;
+        top: -29%;
+        width: 90px;
+        height: 90px;
+        animation-name: wakeLockAnim_KF1;
+        animation-duration: 1.5s;
+        animation-timing-function: linear;
+        animation-delay: 500ms;
+        animation-iteration-count: infinite;
+      }
+
+      #svg_wakeLockAnim2 {
+        position: absolute;
+        right: -26%;
+        top: 0%;
+        width: 90px;
+        height: 90px;
+        animation-name: wakeLockAnim_KF2;
+        animation-duration: 1.5s;
+        animation-timing-function: linear;
+        animation-delay: 750ms;
+        animation-iteration-count: infinite;
+      }
+
+      #svg_wakeLockAnim3 {
+        position: absolute;
+        right: -35%;
+        top: -35%;
+        width: 90px;
+        height: 90px;
+        animation-name: wakeLockAnim_KF3;
+        animation-duration: 1.5s;
+        animation-timing-function: linear;
+        animation-delay: 1.25s;
+        animation-iteration-count: infinite;
+      }
+
+      #svg_wakeLockAnim4 {
+        position: absolute;
+        right: -59;
+        top: -12%;
+        width: 90px;
+        height: 90px;
+        animation-name: wakeLockAnim_KF4;
+        animation-duration: 1.5s;
+        animation-timing-function: linear;
+        animation-delay: 1.6s;
+        animation-iteration-count: infinite;
+      }
+
+      .wakeLockCircle_AnimActive {
+        cx: 24;
+        cy: 24;
+        r: 3;
+        stroke: #0bc70b82;
+        /*stroke-style: solid;*/
+        stroke-width: 2px;
+        fill: #0bc70b82;
+        transition: stroke 2s, fill 2s;
+      }
+
+      .wakeLockCircle_AnimInactive {
+        cx: 24;
+        cy: 24;
+        r: 3;
+        stroke: #00000000;
+        /*stroke-style: solid;*/
+        stroke-width: 2px;
+        fill: #00000000;
+        transition: stroke 2s, fill 2s;
+      }
+
+      #div_teamNotesIcon {
+        position: absolute;
+        right: 0.8%;
+        top: 12%;
+        text-align: center;
+
+/*         display: none; */
+      }
+
+      #span_teamNotesNotepadIcon {
+        font-size: 250%;
+        user-select: none;
+      }
+
+      #span_teamNotesNotepadIconCount {
+        margin-left: -55%;
+        font-family: cursive;
+        color: #d54444;
+        user-select: none;
+      }
+
+      #div_teamNotepad {
+        display: block;
+        background-color: #dfdfdf;
+        width: 34%;
+        height: 93%;
+        position: absolute;
+        z-index: 20;
+        left: calc(50% - 17%);
+/*         bottom: 4%; */
+        bottom: 105%;
+        transition: bottom 1s;
+        transition-timing-function: cubic-bezier(0.53, -0.02, 0.17, 1.01);
+
+/*         box-shadow: -2px 4px 20px 20px #6c6c6ca3; */
+        background-image: radial-gradient(circle at 12% 59%, #000000 0%, #000000 6%, transparent 8.5%);
+        background-size: 101px 32px;
+        background-repeat: repeat-y;
+        overflow: hidden;
+/*         display: none; */
+        scroll-behavior: smooth;
+        border-radius: 10px 5px 2px 3px/3px 2px 5px 10px;
+      }
+
+      #div_teamNotepadHead {
+        width: 100%;
+        height: 15%;
+        transition: height 1s;
+      }
+
+      #span_teamNotesHeader {
+        font-family: cursive;
+        color: #383838;
+        font-size: 3em;
+        margin-left: 5%;
+      }
+
+      #div_teamNotepadNotesCon {
+        height: 85%;
+        overflow: hidden scroll;
+        scroll-behavior: smooth;
+      }
+
+      #ul_teamNotes {
+        padding: 0px;
+        scroll-behavior: smooth;
+      }
+
+      .teamNote {
+        color: #383838;
+        background-color: #cfcfcf;
+        font-family: cursive;
+        padding: 0px;
+        clear: both;
+        border: solid #ffffff40 2px;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        box-shadow: 3px 2px 7px 0.1px #000000f7;
+        scroll-behavior: smooth;
+      }
+
+      .teamNoteHeader {
+        float: left;
+        margin-left: 7%;
+        font-size: 0.9em;
+      }
+
+      .teamNoteBody {
+        clear: both;
+        margin-left: 12%;
+        width: 80%;
+        padding-left: 0.5%;
+      }
+
+      .teamNoteFooter {
+        float: right;
+        font-style: italic;
+        font-size: 0.75em;
+        margin-right: 3%;
+        margin-bottom: 5%;
+      }
+
+      
+      @keyframes turn {
+        from { transform: rotate3d(0, 0, 0, 0); }
+        to { transform: rotate3d(0, 1, 1, 360deg); }
+      }
+
+      #div_loadingCubeParentCon {
+        float: right;
+        margin-right: 1%;
+        margin-top: 1%;
+        opacity: 0%;
+        transition: opacity 0.5s;
+      }
+
+      #div_loadingCubeCon {
+/*         width: 200px;
+        height: 200px;
+        perspective: 500px;
+        margin: 100px; */
+        width: 25px;
+        height: 25px;
+        perspective: 62.5px;
+        margin: 12.5px;
+      }
+
+      #div_loadingCube {
+        position: relative;
+/*         width: 200px;
+        height: 200px; */
+        width: 25px;
+        height: 25px;
+        transform-style: preserve-3d;
+        animation: turn 5s linear infinite;
+      }
+
+      .loadingCubeFace {
+/*         width: 200px;
+        height: 200px; */
+        width: 25px;
+        height: 25px;
+        color: #383838b7;
+        background: #00000000;
+/*         border: 2px solid black; */
+        border: 0.5px solid #383838c7;
+        position: absolute;
+/*         opacity: 0.5; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: cursive;
+        font-size: 0.4rem;
+        transition: transform 500ms;
+      }
+
+      #div_loadingCubeFront {
+/*         transform: translateZ(100px); */
+        transform: translateZ(12.5px);
+      }
+
+      #div_loadingCubeBack {
+/*         transform: translateZ(-100px) rotateY(180deg); */
+        transform: translateZ(-12.5px) rotateY(180deg);
+      }
+
+      #div_loadingCubeLeft {
+/*         transform: translateX(-100px) rotateY(-90deg); */
+        transform: translateX(-12.5px) rotateY(-90deg);
+      }
+
+      #div_loadingCubeRight {
+/*         transform: translateX(100px) rotateY(90deg); */
+        transform: translateX(12.5px) rotateY(90deg);
+      }
+
+      #div_loadingCubeTop {
+/*         transform: translateY(-100px) rotateX(90deg); */
+        transform: translateY(-12.5px) rotateX(90deg);
+      }
+
+      #div_loadingCubeBottom {
+/*         transform: translateY(100px) rotateX(-90deg); */
+        transform: translateY(12.5px) rotateX(-90deg);
+      }
+
+/* @media (prefers-reduced-motion: reduce) {
+  .cube {
+    animation: none;
+    transform: rotate3d(1, 1, 0, 45deg);
+  }
+} */
+
+      #div_addTeamNote {
+        color: #383838;
+        background-color: #cfcfcf;
+        font-family: cursive;
+        padding: 0px;
+        clear: both;
+        border: solid #ffffff40 2px;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        box-shadow: 3px 2px 7px 0.1px #000000f7;
+        scroll-behavior: smooth;
+        transition: margin-top 1s, margin-left 1s, width 1s, height 1s;
+      }
+
+      .addTeamNoteBtn {
+        width: 20%;
+        height: 22%;
+        margin-left: 7%;
+        margin-top: 2%;
+        text-align: center;
+        font-size: 1.3em;
+        user-select: none;
+      }
+
+      .addTeamNoteBtn:active {
+        box-shadow: 1px 1px 4px 0.1px #000000f7;
+/*         box-shadow: box-shadow: none; */
+        transform: translate(2%, 2%);
+      }
+
+      .addTeamNoteInput {
+        width: 75%;
+        height: 57%;
+        margin-left: 14%;
+        margin-top: 10%;
+      }
+
+      #span_addTeamNoteBtn {
+        color: #383838;
+        font-family: cursive;
+        text-align: center;
+        font-size: 1.2em;
+        line-height: 0%;
+        user-select: none;
+        opacity: 100%;
+        transition: opacity 0.1s;
+      }
+
+      #div_addTeamNoteSubmit {
+        display: none;
+        opacity: 0%;
+        transition: opacity 0.1s;
+        width: 98%;
+        height: 98%;
+      }
+
+      #dbtn_cancelTeamNote {
+        margin-left: 23%;
+        float: left;
+        transform: rotate(-6deg);
+      }
+
+      #dbtn_submitTeamNote {
+        float: right;
+        margin-right: 23%;
+        transform: rotate(2deg);
+      }
+
+      .teamNoteDBTN {
+        width: 20%;
+        height: 22%;
+        margin-left: 7%;
+        margin-top: 2%;
+        text-align: center;
+        font-size: 1.3em;
+        user-select: none;
+
+        color: #383838;
+        background-color: #cfcfcf;
+        font-family: cursive;
+        padding: 0px;
+/*         clear: both; */
+        border: solid #ffffff40 2px;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        box-shadow: 3px 2px 7px 0.1px #000000f7;
+        scroll-behavior: smooth;
+      }
+
+      .teamNoteDBTN:active {
+        box-shadow: 1px 1px 4px 0.1px #000000f7;
+        transform: translate(2%, 2%);
+      }
+
+      #text_addTeamNote {
+        width: 91%;
+        height: 77%;
+        margin-left: 5%;
+        margin-top: 2%;
+        border: none;
+        outline: none;
+        resize: none;
+        background: #cfcfcf;
+        font-family: cursive;
+        font-size: 1.2em;
+        text-indent: 2%;
+      }
+
+      #div_newNoteTitle {
+        width: 100%;
+        height: 8%;
+        text-align: center;
+      }
+
+      #span_newNoteTitle {
+        font-family: cursive;
+        font-size: 2em;
+      }
+
+    </style>
+  </head>
+  <body>  
+    <title>The Everything Page</title>  
+    <div id="div_main">
+
+      <iframe id="if_workspace"></iframe>
+      <div id="div_workspaceSelectionMainContainer" class="workspaceSelected_parentCon">
+        <div id="div_workspaceSelectionContainer" class="workspaceSelected_childCon">
+          <span id="span_currentWorkspace">Loading...</span>
+        </div>
+      </div>
+      <!--
+      <div id="div_alertsParentContainer" class="alertsClosed">
+        <div id="div_alertsChildContainer">
+          <span id="span_bell"></span>
+          <span id="span_activeAlertsCount">Loading...</span>
+          <div id="div_alertsTableCon">
+            <table id="table_alerts"></table>
+            <button id="btn_removeDownNeighbors" onclick="removeDownNeighbors()">Remove Down Neighbors</button>
+          </div>
+        </div>
+      </div>
+      <div id="div_wakeLock" wlactive="inactive">
+        <span id="span_wakeLock">Wake Lock</span>
+        <svg id="svg_wakeLock"><circle class="wakeLockCircle_MainInactive" id="cir_wakeLockMain"/></svg>
+        <svg class="wakeLockSVGAnim" id="svg_wakeLockAnim1"><circle class="wakeLockCircle_AnimInactive"/></svg>
+        <svg class="wakeLockSVGAnim" id="svg_wakeLockAnim2"><circle class="wakeLockCircle_AnimInactive"/></svg>
+        <svg class="wakeLockSVGAnim" id="svg_wakeLockAnim3"><circle class="wakeLockCircle_AnimInactive"/></svg>
+        <svg class="wakeLockSVGAnim" id="svg_wakeLockAnim4"><circle class="wakeLockCircle_AnimInactive"/></svg>
+      </div>
+      <div id="div_teamNotesIcon">
+        <span id="span_teamNotesNotepadIcon">&#x1F5D2;&#xFE0F;</span>
+        <span id="span_teamNotesNotepadIconCount"></span>
+      </div>
+      <div id="div_teamNotepad" hideStatus="hiding">
+        <div id="div_teamNotepadHead">
+          <span id="span_teamNotesHeader">Team Notes</span>
+          <div id="div_loadingCubeParentCon">
+            <div id="div_loadingCubeCon">
+              <div id="div_loadingCube">
+                <div id="div_loadingCubeTop" class="loadingCubeFace">Loading</div>
+                <div id="div_loadingCubeBottom" class="loadingCubeFace">Loading</div>
+                <div id="div_loadingCubeLeft" class="loadingCubeFace">Loading</div>
+                <div id="div_loadingCubeRight" class="loadingCubeFace">Loading</div>
+                <div id="div_loadingCubeFront" class="loadingCubeFace">Loading</div>
+                <div id="div_loadingCubeBack" class="loadingCubeFace">Loading</div>
+              </div>
+            </div>
+          </div>
+          <div id="div_addTeamNote" class="addTeamNoteBtn" onclick="addTeamNoteToggle('btn')" inputState="btn">
+            <span id="span_addTeamNoteBtn">Add Note</span>  
+            <div id="div_addTeamNoteSubmit">
+              <div id="div_newNoteTitle">
+                <span id="span_newNoteTitle">New Note</span>
+              </div>
+              <textarea id="text_addTeamNote"></textarea>
+              <div id="div_addTeamNoteSubmitButtons">
+                <div id="dbtn_submitTeamNote" class="teamNoteDBTN" onclick="submitTeamNote()">Submit</div>
+                <div id="dbtn_cancelTeamNote" class="teamNoteDBTN" onclick="addTeamNoteToggle('input')">Cancel</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="div_teamNotepadNotesCon">
+          <div id="div_teamNotepadNotes"></div>
+        </div>
+      </div>
+      <div id="div_extraDataOverlay" style="display: none">
+        <div id="div_extraDataOverlayCon">
+          <div id="div_extraDataOverlayClose">
+            <span id="span_extraDataOverlayClose" onclick="document.querySelector('#div_extraDataOverlay').style.display = 'none';">x</span>
+          </div>
+          <div id="div_extraData"></div>
+        </div>
+      </div>
+      -->
+      <div id="div_maintenanceMessageCon">
+        <span id="span_maintenanceMessage"></span>
+      </div>
+      <!--
+      <audio id="aud_alarm">
+        <source src="alarm.wav" type="audio/wav">
+      </audio>
+      -->
+      <span id="span_status">Loading...</span>
+      
+    </div>
+    <script>
+
+      const workspaceOptions = ["Siteboss Hub", "Syslog Search**", "IPU OTA", "IPU Reporting Rates", "Account Search", "Account Management", "Account Builder", "Automation Server Management", "Shift Summary"/*"TCE/LT2 Compare", "2D Map"*/];
+      const audioNames = ["alarm","warning","newNote"];
+      let selectedWorkspace = "Select Workspace";
+      let presentingWorkspaceOptions = false;
+      let alertsData;
+      let alertsCount;
+      let alertsMoverTimeout;
+      let alertsMoutTimeout;
+      let silencedCol = "";
+      let alertCol = ["",""];
+      let objCol = ["",""];
+      let nodeCol = ["",""];
+      let notesCol = ["",""];
+      let initialLoad = true;
+      let selectedAccount = "";
+      let alertSounds = {};
+      let alarmAudio;
+      let warningAudio;
+      let warningAudioCounter = 0;
+//       let alarmAudioBlob;
+//       let silenceTimeoutUpdate;
+      let previousSWAlertNotes = "";
+      let selectedNotesID = "";
+      let ackAlertBtnHTML = "";
+      let alertsNeverOpened = true;
+      let submittingTeamNote = false;
+      let currentUser = "Unknown";
+      let updatingTeamNotes;
+      let lastNoteSeen = "";
+      let teamNotesInitialized = false;
+      
+      //document.querySelector("#if_workspace").srcdoc = `<html><body><h1 style="user-select: none;color: #ffffff;background-color: #000000;position: absolute;font-size: 4em;left: 31%;top: 38%;">Everything Page</h1></body></html>`;      
+//       document.querySelector("#div_workspaceSelectionMainContainer").addEventListener("click", e => workspaceOptionsClickHandler(e));
+      window.addEventListener("message", e => messageHandler(e));
+      document.body.addEventListener("click", e => bodyClickHandler(e));
+      document.body.addEventListener("wheel", e => wheelHandler(e));
+      document.body.addEventListener("keyup", e => keyUpHandler(e));
+//       document.querySelector("#div_alertsParentContainer").addEventListener("mouseover", e => alertsMouseOverHandler(e));
+//       document.querySelector("#div_alertsParentContainer").addEventListener("mouseout", e => alertsMouseOverHandler(e));
+      
+      // document.querySelector("#if_workspace").src = "landingPage";
+      document.querySelector("#if_workspace").src = "shiftSummary";
+
+      const isDescentdent = (p,c) => {
+      	let n = c.parentNode;
+      	while(n){
+      	  if(n === p){
+      	  	return true;
+      	  }
+      	  n = n.parentNode;
+      	}
+      	return false;
+      };
+
+      function startDebugMode(){
+        // console.log("Debug Mode Started");
+        // document.querySelector("#div_teamNotesIcon").style.display = "block";
+        // document.querySelector("#div_teamNotepad").style.display = "block";
+        // document.querySelector("#div_teamNotepad").style.bottom = "4%";
+            
+        // document.querySelector("#if_workspace").src = "debugPage";
+        document.querySelector("#if_workspace").src = "https://net-admin-tc215.is-u.jrtc.army.mil:9747/debugPage";
+      }
+          
+//       function retreiveAudio(audioName){
+// //         let alarmAudioBlob = new Blob([localStorage["alarmAudio"]], {type: "audio/wav"});
+// //         alarmAudio = new Audio(URL.createObjectURL(alarmAudioBlob));
+// //         alarmAudio.loop = true;
+//         let byteChar = atob(localStorage[`${audioName}Audio`]);
+//         let byteNum = [];
+//         for(let i = 0; i < byteChar.length; i++){
+//           byteNum.push(byteChar.charCodeAt(i));
+//         }
+//         let byteArr = new Uint8Array(byteNum);
+//         //May neeed to make format dynamic later
+//         let audioBlob = new Blob([byteArr], {type: "audio/wav"});
+//         alertSounds[audioName] = new Audio(URL.createObjectURL(audioBlob));
+//         alertSounds[audioName].id= `audio_${audioName}`;
+//         if(audioName === "alarm"){
+//           alertSounds[audioName].loop = true;
+//         }
+//       }
+//       function storeAudio(audioName){
+//         let audioGet = new XMLHttpRequest;
+//         audioGet.onreadystatechange = function(){
+//           if(this.readyState == 4 && this.status == 200){          
+//             console.log(`${audioName} Audio Downloaded`);
+//             let fr = new FileReader();
+//             fr.onload = () => {
+//               localStorage[`${audioName}Audio`] = (fr.result).split(",")[1];
+//               retreiveAudio(audioName);
+//             }
+//             fr.readAsDataURL(audioGet.response);
+// //             audioGet.response.text().then(blobText => {localStorage["alarmAudio"] = blobText;});
+//           }
+//         };
+//         audioGet.open("GET", `${audioName}.wav`, true);
+//         audioGet.responseType = "blob";
+//         audioGet.send();
+// //         let fr = new FileReader();
+// //         fr.addEventListener("load", e => console.log(e));
+//       }
+//       for(let audioName of audioNames){
+//         if(typeof localStorage[`${audioName}Audio`] === "undefined"){
+//           storeAudio(audioName);
+//         }
+//         else{
+//           retreiveAudio(audioName);
+//         }
+//       }
+
+      function messageHandler(e){
+      	let action = e.data.split(",")[0];
+      	let data = e.data.split(",")[1];
+      	switch(action){
+          case "Account Management":
+            selectedAccount = data;
+            selectedWorkspace = "Account Management";
+            document.querySelector("#if_workspace").src = `accountManagement?${selectedAccount}`;
+            document.querySelector("#div_workspaceSelectionContainer").innerHTML = `<span id="span_currentWorkspace">${selectedWorkspace}</span>`;
+            break;
+          case "landingPageAutoChange":
+            document.querySelector("#if_workspace").src = "shiftSummary";
+            break;
+          case "autoWakeLock":
+            wakeLockToggle();
+            break;
+          case "accountBuilderLoad":
+            document.querySelector("#if_workspace").src = `accountBuilder`;
+            break;
+          case "Account Search":
+            selectedWorkspace = "Account Search";
+            document.querySelector("#if_workspace").src = `accountSearch?${encodeURIComponent(data)}`;
+            document.querySelector("#div_workspaceSelectionContainer").innerHTML = `<span id="span_currentWorkspace">${selectedWorkspace}</span>`;
+            break;
+          case "pageRefresh":
+            window.parent.postMessage("pageRefresh");
+            break;
+          case "startDebugMode":
+            startDebugMode();
+            break; 
+          case "setCurrentUser":
+            currentUser = data;
+            initNewTeamNotesCheck();
+            break;
+      	}
+      }   
+      
+      function bodyClickHandler(e){
+      	// console.log(e);
+      	switch(e.target.id){
+      	  case "div_workspaceSelectionMainContainer":
+      	    workspaceOptionsClickHandler(e);
+      	    return;
+      	  case "div_alertsParentContainer":
+      	  case "span_activeAlertsCount":
+          case "span_bell":
+      	    alertsClickHandler(e);
+      	    return;
+          case "span_teamNotesNotepadIcon":
+            toggleTeamNotes();
+            return;
+        }
+        switch(e.target.className){
+          case "swLink":
+            gotoTableLink(e,false);
+            return;
+          case "silenceCB":
+          case "silenceCell":
+            silenceClickHandler(e);
+            return;
+        }
+        if(e.target.tagName === "circle"){
+          if(e.target.className.baseVal === "swLink"){
+            gotoTableLink(e,true);
+          }
+        }
+        if(isDescentdent(document.querySelector("#div_alertsParentContainer"),e.target) && !isDescentdent(document.querySelector("#div_alertsTableCon"),e.target)){
+          alertsClickHandler(e);
+          return;
+        }
+        else if(isDescentdent(document.querySelector("#div_workspaceSelectionMainContainer"),e.target)){
+          workspaceOptionsClickHandler(e);
+          return;
+        }
+        else if(isDescentdent(document.querySelector("#div_wakeLock"),e.target)){
+          if(e.target.className.baseVal !== "wakeLockSVGAnim"){
+            wakeLockToggle();
+          }
+          return;
+        }
+      }
+
+      function wheelHandler(e){
+      	//console.log(e);
+      }
+
+      function keyUpHandler(e){
+        if(e.keyCode === 13){
+          if(e.target.id !== "text_addTeamNote" && e.target === document.querySelector("#ul_SWAlertNotes").lastChild.lastChild){
+            let li = document.createElement("li");
+            li.innerHTML = `<input class="swAlertNoteEdit"/>`;
+            document.querySelector("#ul_SWAlertNotes").appendChild(li);
+          }
+        }
+      }
+
+//       function silenceClickHandler(e){
+//       	// console.log(e);
+//       	if(e.target.checked){
+//       	  let silencePUT = new XMLHttpRequest();
+//           silencePUT.onreadystatechange = function(){
+//             if(this.readyState == 4 && this.status == 200){          
+// //               clearTimeout(silenceTimeoutUpdate);
+// //               silenceTimeoutUpdate = setTimeout(getAlerts ,5000);
+//               //let newAlertCount = +document.querySelector("#span_activeAlertsCount").innerText.substr(2) - 1;
+//               let newAlertCount = +document.querySelector("#span_activeAlertsCount").innerText - 1;
+//               document.querySelector("#span_activeAlertsCount").innerText = newAlertCount;
+//               // console.log(`New Alert Count: ${newAlertCount}`);
+//               document.querySelector("#span_bell").innerText = "\uD83D\uDD14";
+//               // if(newAlertCount <= 0){
+//               // 	for(let audioName of audioNames){
+//               //     if(!alertSounds[audioName].paused){
+//               //       alertSounds[audioName].pause();
+//               //       alertSounds[audioName].currentTime = 0;
+//               //     }
+//               //   }
+//               //   warningAudioCounter = 0;
+//               //   document.querySelector("#span_bell").className = "";
+//               // }
+//             }
+//           };
+//           let newAlertCount = +document.querySelector("#span_activeAlertsCount").innerText - 1;
+//           if(newAlertCount <= 0){
+//            	for(let audioName of audioNames){
+//               if(!alertSounds[audioName].paused){
+//                 alertSounds[audioName].pause();
+//                 alertSounds[audioName].currentTime = 0;
+//               }
+//             }
+//             warningAudioCounter = 0;
+//             document.querySelector("#span_bell").className = "";
+//           }
+//           e.target.disabled = true;
+//           silencePUT.open("PUT", "silenceAlarm/silence", true);
+//           silencePUT.send(document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:first-child`).innerText.split("<~>")[0]);
+//       	}
+//         else if(!e.target.checked && e.target.className !== "silenceCell"){
+//           let silencePUT = new XMLHttpRequest();
+//           silencePUT.onreadystatechange = function(){
+//             if(this.readyState == 4 && this.status == 200){          
+//               //Nothing ...for now...
+//             }
+//           };          
+//           silencePUT.open("PUT", "silenceAlarm/unsilence", true);
+//           silencePUT.send(document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:first-child`).innerText.split("<~>")[0]);
+//         }
+//       	else if(e.target.className === "silenceCell"){
+//           // console.log(+e.target.firstChild.getAttribute("debugClick"));
+//       	  e.target.firstChild.setAttribute("debugClick",+e.target.firstChild.getAttribute("debugClick") + 1);
+//       	  if(e.target.firstChild.getAttribute("debugClick") > 4){
+//       	  	e.target.firstChild.disabled = false;
+//       	  }
+//       	}
+//       }
+
+//       function silenceAll(){
+//         for(let cb of document.querySelectorAll("#table_alerts input.silenceCB")){
+//           if(!cb.checked){
+//             cb.click();
+//           }
+//         }
+//       }
+      
+      function workspaceOptionsClickHandler(e){
+      	if(!presentingWorkspaceOptions){
+      	  presentWorkspaceOptions()
+      	}
+      	else{
+      	  if(e.target.nodeName === "LI"){
+      	  	selectedWorkspace = e.target.innerText;
+      	  	selectWorkspace();
+      	  }
+      	  else{
+      	  	document.querySelector("#div_workspaceSelectionMainContainer").classList = "workspaceSelected_parentCon"; document.querySelector("#div_workspaceSelectionContainer").classList = "workspaceSelected_childCon"; document.querySelector("#div_workspaceSelectionContainer").innerHTML = "";
+      	    setTimeout(() => {presentingWorkspaceOptions = false; document.querySelector("#div_workspaceSelectionContainer").innerHTML = `<span id="span_currentWorkspace">${selectedWorkspace}</span>`; document.body.style.overflow = "auto";}, 500);
+      	  }
+      	}
+      }
+
+//       function alertsMouseOverHandler(e){
+//       	if(e.type === "mouseover"){
+//       	  document.querySelector("#span_activeAlertsCount").style.opacity = 0;
+//           document.querySelector("#span_bell").style.opacity = 0;
+//       	  document.querySelector("#table_alerts").style.display = "table";
+//           clearTimeout(alertsMoverTimeout);
+//           alertsMoverTimeout = setTimeout(()=>{
+//           	//clearInterval(updatingAlerts);
+//           	document.querySelector("#table_alerts").style.opacity = 1;
+//       	    document.querySelector("#span_activeAlertsCount").style.display = "none";
+//             document.querySelector("#span_bell").style.display = "none";
+//       	  }, 1000);
+//       	}
+//       	else if(e.type === "mouseout"){
+//       	  document.querySelector("#table_alerts").style.opacity = 0;
+//       	  clearTimeout(alertsMoutTimeout);
+//       	  alertsMoutTimeout = setTimeout(()=>{
+//       	  	//getAlerts(); 
+//       	  	//updatingAlerts = setInterval(getAlerts, 30000);
+//       	  	document.querySelector("#table_alerts").style.display = "none";
+//       	  	document.querySelector("#span_activeAlertsCount").style.display = "block";
+//             document.querySelector("#span_bell").style.display = "block"; 
+//       	  	document.querySelector("#span_activeAlertsCount").style.opacity = 1;
+//             document.querySelector("#span_bell").style.opacity = 1;
+//       	  }, 1000);
+//       	}
+//       }
+
+//       function alertsClickHandler(e){
+//       	if(document.querySelector("#div_alertsParentContainer").className === "alertsClosed"){
+//           if(alertsNeverOpened){
+//             document.querySelector("#span_activeAlertsCount").innerText = alertsCount;
+//             alertsNeverOpened = false;
+//           }
+//       	  document.querySelector("#div_alertsParentContainer").className = "alertsOpen";
+//       	  document.querySelector("#span_activeAlertsCount").style.opacity = 0;
+//           document.querySelector("#span_bell").style.opacity = 0;
+//       	  document.querySelector("#table_alerts").style.display = "table";
+//           clearTimeout(alertsMoverTimeout);
+//           alertsMoverTimeout = setTimeout(()=>{
+//           	//clearInterval(updatingAlerts);
+//           	document.querySelector("#table_alerts").style.opacity = 1;
+// //           	document.querySelector("#div_alertsTableCon").style.overflow = "hidden scroll";
+//             document.querySelector("#div_alertsTableCon").style.overflow = "scroll";
+//       	    document.querySelector("#span_activeAlertsCount").style.display = "none";
+//             document.querySelector("#span_bell").style.display = "none";
+//       	  }, 1000);
+//       	}
+//       	else if(document.querySelector("#div_alertsParentContainer").className === "alertsOpen"){
+//       	  document.querySelector("#div_alertsParentContainer").className = "alertsClosed";
+//       	  document.querySelector("#div_alertsTableCon").style.overflow = "hidden";
+//       	  document.querySelector("#table_alerts").style.opacity = 0;
+//       	  clearTimeout(alertsMoutTimeout);
+//       	  alertsMoutTimeout = setTimeout(()=>{
+//       	  	//getAlerts(); 
+//       	  	//updatingAlerts = setInterval(getAlerts, 30000);
+//       	  	document.querySelector("#table_alerts").style.display = "none";
+//       	  	document.querySelector("#span_activeAlertsCount").style.display = "block"; 
+//             document.querySelector("#span_bell").style.display = "block"; 
+//       	  	document.querySelector("#span_activeAlertsCount").style.opacity = 1;
+//             document.querySelector("#span_bell").style.opacity = 1;
+//       	  }, 1000);
+//       	}
+//       }
+
+//       function wakeLockToggle(deactivate){
+//         if(document.querySelector("#div_wakeLock").getAttribute("wlactive") === "active" || deactivate){
+//           wakeLock.release().then(() => {
+//             wakeLock = null;
+//           });
+//           document.querySelector("#cir_wakeLockMain").setAttribute("class","wakeLockCircle_MainInactive");
+//           for(let circle of document.querySelectorAll(".wakeLockCircle_AnimActive")){
+//             circle.setAttribute("class","wakeLockCircle_AnimInactive");
+//           }
+//           document.querySelector("#div_wakeLock").setAttribute("wlactive","inactive");
+//         }
+//         else {
+//           requestWakeLock();
+//           document.querySelector("#cir_wakeLockMain").setAttribute("class","wakeLockCircle_MainActive");
+//           for(let circle of document.querySelectorAll(".wakeLockCircle_AnimInactive")){
+//             circle.setAttribute("class","wakeLockCircle_AnimActive");
+//           }
+//           document.querySelector("#div_wakeLock").setAttribute("wlactive","active");
+//         }
+//       }
+
+      function presentWorkspaceOptions(){
+      	presentingWorkspaceOptions = true;
+      	let wsopHTML = "<ul>";
+      	for(let op of workspaceOptions){
+      	  wsopHTML += `<li class="workspaceOption" style="opacity: 0;">${op}</li>`;
+      	}
+      	wsopHTML += "</ul>";
+      	document.body.style.overflow = "hidden";
+      	document.querySelector("#div_workspaceSelectionContainer").innerHTML = wsopHTML;
+      	document.querySelector("#div_workspaceSelectionMainContainer").classList = "selectingWorkspace_parentCon";
+      	document.querySelector("#div_workspaceSelectionContainer").classList = "selectingWorkspace_childCon";
+      	setTimeout(() => {document.querySelectorAll(".workspaceOption").forEach(op => {op.style.opacity = 1;}); document.body.style.overflow = "auto";}, 500);
+      }
+
+      function selectWorkspace(){
+      	document.body.style.overflow = "hidden";
+      	document.querySelectorAll(".workspaceOption").forEach(op => {op.style.opacity = 0;});
+      	switch(selectedWorkspace){
+          case "Siteboss Hub":
+            document.querySelector("#if_workspace").src = "https://net-admin-tc215.is-u.jrtc.army.mil:9747/EP_SitebossHub";
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nMostly done, but still needs layout work.");
+            break;
+          case "Syslog Search**":
+            document.querySelector("#if_workspace").src = "swSyslogSearch";
+            alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nCurrently Building...");
+            break;
+          case "Account Search":
+            document.querySelector("#if_workspace").src = "accountSearch";
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nPretty much done, unless anyone has ideas.");
+            break;
+          case "Account Management":
+            document.querySelector("#if_workspace").src = `accountManagement`;
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nPartially done. Need to review functions that change account info before they're enabled.");
+            break;
+          case "Account Builder":
+            document.querySelector("#if_workspace").src = `accountBuilder`;
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nIt'll be a while before this one gets fully built.");
+            break;
+          case "IPU OTA":
+            document.querySelector("#if_workspace").src = `https://net-admin-tc215.is-u.jrtc.army.mil:9748/16dsfSFfgsf3/ep_getOTAPage`;
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nNot throughly tested... There may be layout issues.");
+            break;
+          case "IPU Reporting Rates":
+            document.querySelector("#if_workspace").src = `https://net-admin-tc215.is-u.jrtc.army.mil:9748/ep_IPURR`;
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nPretty much done, unless anyone has ideas.");
+            break;
+          case "TCE/LT2 Compare":
+            document.querySelector("#if_workspace").src = `https://net-admin-tc215.is-u.jrtc.army.mil:9748/ep_TCELT2Comp`;
+            alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nPretty much done, unless anyone has ideas.");
+            break;
+          case "Automation Server Management":
+            document.querySelector("#if_workspace").src = `https://net-admin-tc215.is-u.jrtc.army.mil:1327/v190b2712uysgdi/autoServerMonitor`;
+            // document.querySelector("#if_workspace").src = `autoServerMonitor`;
+            // alert("\r\n\r\nUnder Construction \uD83D\uDE10");
+            break;  
+          case "2D Map":
+            document.querySelector("#if_workspace").src = "https://s-lctia4-104.is-u.jrtc.army.mil/lt2_is/#/Map";
+//             alert("\r\n\r\nWhy not?...");
+            break;
+          case "Shift Summary":
+            document.querySelector("#if_workspace").src = "shiftSummary";
+            break;
+          default:
+//             console.log(selectedWorkspace);
+            alert("\r\n\r\nUnder Construction \uD83D\uDE10\r\nWorkspace Not Built Yet\r\n\r\n\r\nbut it's coming soon...");
+      	}
+      	setTimeout(() => {document.querySelector("#div_workspaceSelectionMainContainer").classList = "workspaceSelected_parentCon"; document.querySelector("#div_workspaceSelectionContainer").classList = "workspaceSelected_childCon";}, 500);
+      	setTimeout(() => {presentingWorkspaceOptions = false; document.querySelector("#div_workspaceSelectionContainer").innerHTML = `<span id="span_currentWorkspace">${selectedWorkspace}</span>`; document.body.style.overflow = "auto";}, 1000);
+      }
+
+//       function buildAlertsTable(){
+//       	let tableHTML = "";
+//       	for(let i = 0; i < alertsData.length + 1; i++){
+//       	  tableHTML += "<tr>";
+//           for(let ii = 0; ii < Object.keys(alertsData[0]).length; ii++){
+//           	if(i === 0){
+//           	  (ii > 5) ? tableHTML += "<th>" : tableHTML += `<th class="alertID">`;
+//           	  let header = Object.keys(alertsData[i])[ii];
+//           	  switch(header){
+//           	    case "Silenced":
+//           	  	  silencedCol = ii;
+//           	  	  break;
+//           	    case "Alert":
+//           	  	  alertCol[0] = ii;
+//           	  	  break;
+//           	  	case "AlertURI":
+//           	  	  alertCol[1] = ii;
+//           	  	  break;
+//           	    case "Object":
+//           	  	  objCol[0] = ii;
+//           	  	  break;
+//           	  	case "ObjectURI":
+//           	  	  objCol[1] = ii;
+//           	  	  break;
+//           	    case  "Node":
+//           	  	  nodeCol[0] = ii;
+//           	  	  break;
+//           	  	case  "NodeURI":
+//           	  	  nodeCol[1] = ii;
+//           	  	  break;
+//           	  	case  "Notes":
+//           	  	  notesCol[0] = ii;
+//           	  	  break;
+//           	  	case  "NotesData":
+//           	  	  notesCol[1] = ii;
+//           	  	  break;
+//           	  }
+//           	  tableHTML += header;
+//           	}
+//           	else{
+//           	  if(ii === 13){
+//                 tableHTML += `<td class="silenceCell">`;
+//               }
+//               else if(ii > 5){ 
+//                 tableHTML += "<td>";
+//               }
+//               else{
+//                 tableHTML += `<td class="alertID">`;
+//               }
+//           	  switch(ii){
+//           	    case silencedCol:
+//           	  	  if(Object.values(alertsData[i - 1])[ii] === "True"){ 
+//                     tableHTML += `<input class="silenceCB" type="checkbox" checked disabled debugClick="0"/>`;
+//           	  	  }
+//           	  	  else{
+//           	  	  	tableHTML += `<input class="silenceCB" type="checkbox" debugClick="0"/>`;
+//           	  	  }
+//           	      break;
+// //           	    case notesCol[0]:
+// //           	      tableHTML += `<span style="user-select: none;">${Object.values(alertsData[i - 1])[ii]}</span>`;
+// //           	      break;
+//           	    case alertCol[0]:      	      
+//           	    case objCol[0]:
+//           	    case nodeCol[0]:
+// //           	      tableHTML += `<a class="swLink" href="https://i-solarwinds.is-u.jrtc.army.mil${Object.values(alertsData[i - 1])[objCol[1]]}">${Object.values(alertsData[i - 1])[ii]}</a>`;
+//           	      tableHTML += `<a class="swLink" href="javascript:void(0);">${Object.values(alertsData[i - 1])[ii]}</a>`;
+//                   break;
+//                 case notesCol[0]:
+//                   if(Object.values(alertsData[i - 1])[ii] === "...") tableHTML += `<svg width="18" height="18"><circle class="swLink" cx="9" cy="9" r="8" style="fill: #e9e900; cursor: pointer;"/></svg>`;
+//                   else tableHTML += `<svg width="18" height="18"><circle class="swLink" cx="9" cy="9" r="8" style="fill: #787878; cursor: pointer;"/></svg>`;
+//           	      break;
+//           	    default:
+//           	  	  tableHTML += Object.values(alertsData[i - 1])[ii];
+//           	  }
+//           	}
+//           	(i === 0) ? tableHTML += "</th>" : tableHTML += "</td>";
+//           }
+//       	  tableHTML += "</tr>";
+//       	}
+// //       	console.log(objCol);
+//       	document.querySelector("#table_alerts").innerHTML = tableHTML;
+//       }
+
+//       function gotoTableLink(e,nested){
+//         let selector = "";
+//         if(!nested) selector = `#table_alerts > tbody > tr:first-child > th:nth-child(${e.target.parentNode.cellIndex + 1})`;
+//         else selector = `#table_alerts > tbody > tr:first-child > th:nth-child(${e.target.parentNode.parentNode.cellIndex + 1})`;
+//       	switch(document.querySelector(selector).innerText){
+//       	  case "Alert":
+//             window.open("https://i-solarwinds.is-u.jrtc.army.mil" + document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${alertCol[1] + 1})`).innerText);
+//       	    break;
+//       	  case "Object":
+//       	    window.open("https://i-solarwinds.is-u.jrtc.army.mil" + document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${objCol[1] + 1})`).innerText);
+//       	    break;
+//       	  case "Node":
+//       	    window.open("https://i-solarwinds.is-u.jrtc.army.mil" + document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${nodeCol[1] + 1})`).innerText);
+//       	    break;
+//       	  case "Notes":
+//       	    //alert(document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${notesCol[1] + 1})`).innerText);
+//             selectedNotesID = document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:first-child`).innerText;
+//             if(document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:nth-child(12)`).innerText === ""){
+//               ackAlertBtnHTML = `<button class="class_btn_unconfirmed" id="btn_ackAlert" onclick="ackAlert()">Acknowledge Alert</button>`;
+//             }
+//             else{
+//               ackAlertBtnHTML = `<button class="class_btn_confirmed" id="btn_ackAlert" onclick="ackAlert()">Alert Acknowledged</button>`;
+//             }
+//             let notes = document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${notesCol[1] + 1})`).innerText;
+//       	    if(/\n/.test(notes)){
+//       	      notes = notes.split("\n");
+//       	    }
+//       	    else{
+//       	      notes = [notes];
+//       	    }
+//       	    let notesHTML = "";
+//             notesHTML += `<h3 id="h_SWAlertNotes">Notes ${ackAlertBtnHTML} <button id="btn_editNotes_edit" onclick="editSWAlertNotes('edit')">Edit Notes</button></h3>`;
+//             notesHTML += `<span>${document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${nodeCol[0] + 1})`).innerText}</span><br/>`;
+//             notesHTML += `<span>${document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${objCol[0] + 1})`).innerText}</span><br/>`;
+//             notesHTML += `<span>${document.querySelector(`#table_alerts > tbody > tr:nth-child(${e.target.parentNode.parentNode.parentNode.rowIndex + 1}) > td:nth-child(${alertCol[0] + 1})`).innerText}</span>`;
+//             notesHTML += `<ul id="ul_SWAlertNotes">`;
+//             for(let note of notes){
+//               notesHTML += `<li>${note}</li>`;
+//             }
+//             notesHTML += "</ul>";
+//       	    document.querySelector("#div_extraData").innerHTML = notesHTML;
+//       	    document.querySelector("#div_extraDataOverlay").style.display = "block";
+//       	    break;
+//       	}
+//       }
+
+//       function editSWAlertNotes(action){
+//         if(action === "edit"){
+//           previousSWAlertNotes = document.querySelector("#ul_SWAlertNotes").innerHTML;
+//           document.querySelectorAll("#ul_SWAlertNotes > li").forEach(li => {
+//             let liText = li.innerText;
+//             li.innerText = "";
+//             let liInput = document.createElement("input");
+//             liInput.value = liText;
+//             //liInput.style = "width: 85%; padding: 0.25em 0.25em; text-align: left; background-color: #404040; color: #ffffff; border-style: ridge;";
+//             liInput.className = "swAlertNoteEdit";
+//             li.appendChild(liInput);
+//           });
+//           document.querySelector("#h_SWAlertNotes").innerHTML = `Notes ${ackAlertBtnHTML} <button id="btn_editNotes_cancel" onclick="editSWAlertNotes('cancel')">Cancel Edit</button> <button id="btn_editNotes_submit" onclick="editSWAlertNotes('submit')">Submit</button>`;
+//         }
+//         else if(action === "cancel"){
+//           document.querySelector("#ul_SWAlertNotes").innerHTML = previousSWAlertNotes;
+//           document.querySelector("#h_SWAlertNotes").innerHTML = `Notes ${ackAlertBtnHTML} <button id="btn_editNotes_edit" onclick="editSWAlertNotes('edit')">Edit Notes</button>`;
+//         }
+//         else if(action === "submit"){
+//           document.querySelector("#h_SWAlertNotes").innerHTML = `Notes ${ackAlertBtnHTML}`;
+//           let pack = [];
+//           document.querySelectorAll("#ul_SWAlertNotes > li > input").forEach(liIn => {
+//             if(liIn.value.replace(/\s+/,"") !== ""){
+//               pack.push(liIn.value);
+//             }
+//           });
+//           document.querySelectorAll("#ul_SWAlertNotes > li").forEach(li => {
+//             let liText = ""; 
+//             if(li.children[0].value.replace(/\s+/,"") !== ""){
+//               liText = li.children[0].value;
+//               li.children[0].remove();
+//               li.innerText = liText;
+//             }
+//             else{
+//               li.remove();
+//             }
+//           });
+//           let SWAlertNotesPut = new XMLHttpRequest();
+//           SWAlertNotesPut.onreadystatechange = function(){
+//             if(this.readyState == 4 && this.status == 200){          
+//               document.querySelector("#h_SWAlertNotes").innerHTML = `Notes ${ackAlertBtnHTML} <button id="btn_editNotes_edit" onclick="editSWAlertNotes('edit')">Edit Notes</button>`;
+//             }
+//           };
+//           SWAlertNotesPut.open("PUT", "swAlertNotesEdit", true);
+//           SWAlertNotesPut.send(selectedNotesID.split("<~>")[1] + "<~~>" + pack.join("<~>"));
+//         }
+//       }
+
+//       function ackAlert(){
+//         if(document.querySelector("#btn_ackAlert").className === "class_btn_unconfirmed"){
+//           document.querySelector("#btn_ackAlert").className = "class_btn_partialConfirmed";
+//         }
+//         else if(document.querySelector("#btn_ackAlert").className === "class_btn_partialConfirmed"){       
+//           let SWAlertAckPut = new XMLHttpRequest();
+//           SWAlertAckPut.onreadystatechange = function(){
+//             if(this.readyState == 4 && this.status == 200){          
+//               document.querySelector("#btn_ackAlert").innerText = "Alert Acknowledged";
+//             }
+//           };
+//           document.querySelector("#btn_ackAlert").className = "class_btn_confirmed";
+//           document.querySelector("#btn_ackAlert").innerText = "Acknowledging...";
+//           SWAlertAckPut.open("PUT", "swAcknowledgeAlert", true);
+//           SWAlertAckPut.send(selectedNotesID.split("<~>")[0]);
+//         }
+//       }
+
+//       function removeDownNeighbors(){
+//         let rmNeighborsGet = new XMLHttpRequest();
+//         rmNeighborsGet.onreadystatechange = function(){
+//           if(this.readyState == 4 && this.status == 200){
+//             setTimeout(()=>{document.querySelector("#btn_removeDownNeighbors").innerText = "Remove Down Neighbor Alerts";},3000);
+//           }
+//         };
+//         document.querySelector("#btn_removeDownNeighbors").innerText = "Processing...";
+//         rmNeighborsGet.open("GET", "removeDownNeighborAlerts", true);
+//         rmNeighborsGet.send();
+//       }
+
+//       function getAlerts(){
+//         let alertsGet = new XMLHttpRequest();
+//         alertsGet.onreadystatechange = function(){
+//           if(this.readyState == 4 && this.status == 200){          
+//             if(alertsGet.responseText !== "ND"){
+//               alertsCount = +(alertsGet.responseText).split("<~~~>")[0];
+//               alertsData = JSON.parse((alertsGet.responseText).split("<~~~>")[1]);
+//               if(!(Array.isArray(alertsData))){
+//                 alertsData = [alertsData];
+//               }             
+//               document.querySelector("#span_bell").innerText = "\uD83D\uDD14";
+//               if(alertsNeverOpened){
+//                 document.querySelector("#span_activeAlertsCount").innerText = `\r\n${alertsCount}`;
+//               }
+//               else{
+//                 document.querySelector("#span_activeAlertsCount").innerText = alertsCount;
+//               }
+//               buildAlertsTable();
+//               if(initialLoad){
+//                 document.querySelector("#div_workspaceSelectionContainer").innerHTML = `<span id="span_currentWorkspace">${selectedWorkspace}</span>`;
+//                 initialLoad = false;
+//               }
+//               else{
+//               	if(alertsCount > 0){
+//                   if(warningAudioCounter < 3){
+//                     alertSounds.warning.play();
+//                     setTimeout(()=>{document.querySelector("#span_bell").className = "ringInfinite";},1000);
+//                     document.querySelector("#span_bell").className = "ringSingle";
+//                     warningAudioCounter++;
+//                   }
+//                   else{
+//                     alertSounds.alarm.play();
+//                     document.querySelector("#span_bell").className = "ringInfinite";
+//                   }
+//                 }
+//                 else{
+//                   for(let audioName of audioNames){
+//                     if(!alertSounds[audioName].paused){
+//                       alertSounds[audioName].pause();
+//                       alertSounds[audioName].currentTime = 0;
+//                     }
+//                   }
+//                   warningAudioCounter = 0;
+//                   document.querySelector("#span_bell").className = "";
+//                 }
+//               }
+//             }
+//           }
+//         };
+//         alertsGet.open("GET", "getAlerts", true);
+//         alertsGet.send();
+//       }
+
+      function maintenanceChecks(){
+        getMaintenanceStatus();
+        getLoginStatus();
+      }
+
+      function getMaintenanceStatus(){
+        let maintenanceDataGet = fetch("maintenanceStatus").then(
+          res => {
+            if(res.ok && res.status === 200){
+              res.json().then(resJson => {
+                if(resJson.InProgress === "True"){
+                  document.querySelector("#span_maintenanceMessage").innerText = resJson.Message;
+                  document.querySelector("#div_maintenanceMessageCon").style.display = "block";
+                }
+                else document.querySelector("#div_maintenanceMessageCon").style.display = "none";
+              });
+            }
+            else console.log("Bad Maintenance Status Request");
+          }
+        );
+      }
+
+      function getLoginStatus(){
+        fetch("lc").then(
+          res => {
+            if(res.ok && res.status === 200){
+              res.text().then(resText => {
+                if(resText === "NLI"){
+                  // alert("\r\nYour session has expired. Please refresh your page.\r\n\r\n...the refresh was coded to happen automatically, but Javascript really hates that for some reason, then the page refreshes on an infinite loop...");
+                  // console.log(`"reload"`);
+                  // window.location.reload();
+                  alert("\r\n\r\nYour Session has expired.\r\n\r\n...or there may have been an issue with the web server, so it was restarted.");
+                  //window.parent.postMessage("pageRefresh");
+                }
+                else if(document.querySelector("#span_currentWorkspace").innerText === "Loading...") document.querySelector("#span_currentWorkspace").innerText = "Select Workspace";
+              });
+            }
+            else console.log("Bad Login Status Request");
+          }
+        );
+      }
+
+      // let wakeLock;
+      // const requestWakeLock = async () => {
+      //   try {
+      //     wakeLock = await navigator.wakeLock.request('screen');
+      //     // console.log("WakeLock:","Requested");
+      //     wakeLock.addEventListener('release', () => {
+      //       // console.log("WakeLock:","Released");
+      //       wakeLockToggle(true);
+      //     });
+      //   } 
+      //   catch (err) {
+      //     console.log("Wake Lock Failure"/*, err*/);
+      //   }
+      // }
+      // const handleVisibilityChange = () => {
+      //   // console.log("WakeLock:", "Visibility Change:", document.visibilityState);
+      //   if (wakeLock === null && document.visibilityState === 'visible' && document.querySelector("#div_wakeLock").getAttribute("wlactive") === "inactive") {
+      //     wakeLockToggle();
+      //     document.querySelector("#cir_wakeLockMain").style.fill = "#000000";
+      //   }
+      //   else if(document.visibilityState !== "visible" && document.querySelector("#div_wakeLock").getAttribute("wlactive") === "active"){
+      //     document.querySelector("#cir_wakeLockMain").style.fill = "#ffff00";
+      //   }
+      // }
+      // document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      // function toggleTeamNotes(){
+      //   // document.querySelector("#div_teamNotepad").style.display = "block";
+      //   let hideStatus = document.querySelector("#div_teamNotepad").getAttribute("hideStatus");
+      //   if(hideStatus === "hiding"){
+      //     getTeamNotes();
+      //     updatingTeamNotes = setInterval(getTeamNotes,15000);
+      //     document.querySelector("#div_teamNotepad").style.bottom = "4%";
+      //     document.querySelector("#div_teamNotepad").setAttribute("hideStatus","showing");
+      //   }
+      //   else if(hideStatus === "showing"){
+      //     clearInterval(updatingTeamNotes);
+      //     document.querySelector("#div_teamNotepad").style.bottom = "105%";
+      //     document.querySelector("#div_teamNotepad").setAttribute("hideStatus","hiding");
+      //   }      
+      // }
+
+      // function getTeamNotes(){
+      //   document.querySelector("#div_loadingCubeParentCon").style.opacity = "100%";
+      //   fetch("teamNotes").then(res => res.json().then(notes => {
+      //     buildTeamNotes(notes);
+      //     document.querySelector("#div_loadingCubeParentCon").style.opacity = "0%";
+      //     setTimeout(()=>{
+      //       if(document.querySelector("#div_addTeamNote").getAttribute("inputState") === "btn"){
+      //         if(+lastNoteSeen !== +notes[0].ID){
+      //           lastNoteSeen = +notes[0].ID;
+      //           setUserNewTeamNotesPos(lastNoteSeen);
+      //         }
+      //         document.querySelector("#span_teamNotesNotepadIconCount").innerText = "";
+      //       }
+      //     },2000);
+      //   }));
+      // }
+
+      // function buildTeamNotes(notes){
+      //   // console.log(notes);
+      //   // let debug = 0;
+      //   let list = "<ul id='ul_teamNotes'>";
+      //   for(note of notes){
+      //     // console.log(debug);
+      //     list += `<ul class="teamNote teamNoteHeader">${note.User}</ul>`;
+      //     list += `<ul class="teamNote teamNoteBody">${note.Note.replace(/!~~/g,"<br/>")}</ul>`;
+      //     list += `<ul class="teamNote teamNoteFooter">${note.Date}</ul>`;
+      //     // debug++;
+      //   }
+      //   list += "<br/></ul>";
+      //   document.querySelector("#div_teamNotepadNotes").innerHTML = list;
+      //   // console.log(list);
+      // }
+
+      // function addTeamNoteToggle(inputState){
+      //   //let inputState = document.querySelector("#div_addTeamNote").getAttribute("inputState");
+      //   if(inputState === "btn"){
+      //     document.querySelector("#div_addTeamNote").setAttribute("inputState","input");
+      //     document.querySelector("#div_teamNotepadHead").style.height = "100%";
+      //     document.querySelector("#div_addTeamNote").setAttribute("onclick", "");
+      //     document.querySelector("#div_addTeamNote").className = "addTeamNoteInput";
+      //     document.querySelector("#span_addTeamNoteBtn").style.opacity = "0%";
+      //     document.querySelector("#div_addTeamNoteSubmit").style.display = "inline-block";
+      //     setTimeout(()=>{
+      //       document.querySelector("#div_addTeamNoteSubmit").style.opacity = "100%";
+      //       document.querySelector("#span_addTeamNoteBtn").style.display = "none";
+      //       document.querySelector("#text_addTeamNote").focus();
+      //     },500);
+      //   }
+      //   else if(inputState === "input"){
+      //     document.querySelector("#div_addTeamNote").setAttribute("inputState","btn");
+      //     document.querySelector("#div_teamNotepadHead").style.height = "15%";
+      //     document.querySelector("#div_addTeamNote").className = "addTeamNoteBtn";
+      //     document.querySelector("#div_addTeamNoteSubmit").style.opacity = "0%";
+      //     document.querySelector("#span_addTeamNoteBtn").style.display = "inline-block";
+      //     setTimeout(()=>{
+      //       document.querySelector("#span_addTeamNoteBtn").style.opacity = "100%";
+      //       document.querySelector("#div_addTeamNoteSubmit").style.display = "none";
+      //       document.querySelector("#div_addTeamNote").setAttribute("onclick", "addTeamNoteToggle('btn')");
+      //     },500);
+      //   }      
+      // }
+
+      // function submitTeamNote(){
+      //   if(!submittingTeamNote){
+      //     submittingTeamNote = true;
+      //     fetch("teamNotesSubmit",{
+      //       method: "PUT",
+      //       body: JSON.stringify({User: currentUser, Note: document.querySelector("#text_addTeamNote").value.replace(/\n/g,"!~~"), Time: new Date})
+      //     }).then(res => {
+      //       if(res.ok){
+      //         getTeamNotes();
+      //         addTeamNoteToggle("input");
+      //         document.querySelector("#text_addTeamNote").value = "";
+      //         submittingTeamNote = false;
+      //       }
+      //       else console.log("Team Note Submit Error");
+      //     });;
+      //   }
+      // }
+
+      // function checkNewTeamNotes(){
+      //   // console.log("Team Note Pos Check");
+      //   fetch("teamNotesPos").then( res => {
+      //     if(res.ok){
+      //       res.text().then(resText => {
+      //         if(lastNoteSeen === "Unknown"){
+      //           lastNoteSeen = +resText;
+      //         }
+      //         else if(+resText > lastNoteSeen){
+      //           document.querySelector("#span_teamNotesNotepadIconCount").innerText = +resText - lastNoteSeen;
+      //           alertSounds.newNote.play();
+      //         }
+      //       });
+      //     }
+      //     else console.log("checkNewTeamNotes Error");
+      //   });
+      // }
+
+      // function initNewTeamNotesCheck(){
+      //   fetch("userTeamNotesPos",{
+      //     method: "PUT",
+      //     body: `get,${currentUser}`
+      //   }).then(res => {
+      //     if(res.ok){
+      //       res.text().then(resText => {
+      //         lastNoteSeen = +resText;
+      //         teamNotesInitialized = true;
+      //         console.log("Team Notes Initialized",teamNotesInitialized);
+      //         checkNewTeamNotes();
+      //       });
+      //     }
+      //     else {
+      //       console.log("initNewTeamNotesCheck Error");
+      //       lastNoteSeen = "Unknown";
+      //     }
+      //   });
+      // }
+
+      // function setUserNewTeamNotesPos(notePos){
+      //   fetch("userTeamNotesPos",{
+      //     method: "PUT",
+      //     body: `set,${currentUser},${notePos}`
+      //   });
+      // }
+
+      // function newWorkspaceWindow(){
+      //   window.open("EverythingPageWorkspace","","location=yes,scrollbars=yes,status=yes");
+      // }
+          
+      // getAlerts();
+      // let updatingAlerts = setInterval(()=>{
+      //   getAlerts();     
+      //   if(teamNotesInitialized) checkNewTeamNotes();
+      //   else initNewTeamNotesCheck();
+      // }, 30000);
+      maintenanceChecks();
+      let updatingMaintenanceStatus = setInterval(maintenanceChecks, 180000);
+          
+    </script>
+  </body>
+</html>

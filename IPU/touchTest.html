@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <!--
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    -->
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+        touch-action: none;
+      }
+
+      canvas{
+        background-color: #333333;      	
+      }
+      
+      div{
+      	display: inline-block;
+      }
+
+      #div_infoCon{
+      	float: right;
+      }
+
+      #span_info{
+      	font-size: x-large;
+      	margin-right: 75px;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Touch Test</title>
+    <h1>Touch Test</h1>
+    <div id="div_canvasCon">
+      <canvas id="can_touchTest"></canvas>
+	</div>
+	<div id="div_infoCon">
+      <span id="span_info"></span>
+	</div>
+    <script>
+      document.querySelector("#can_touchTest").width = document.body.clientWidth;
+      document.querySelector("#can_touchTest").height = document.body.clientHeight;
+      document.querySelector("#can_touchTest").width = document.body.offsetWidth - 350;
+      document.querySelector("#can_touchTest").height = document.body.offsetHeight - 150;
+
+      document.querySelector("#can_touchTest").addEventListener("touchmove",e => {
+      	console.log(e);
+      	let t1 = "N/A";
+      	let distance = "N/A";
+      	let t0x = Math.round(e.targetTouches["0"].clientX * 10000) / 10000;
+      	let t0y = Math.round(e.targetTouches["0"].clientY * 10000) / 10000;
+      	t0 = `${t0x}, ${t0y}`;
+      	if(e.targetTouches.length > 1){
+      	  let t1x = Math.round(e.targetTouches["1"].clientX * 10000) / 10000;
+          let t1y = Math.round(e.targetTouches["1"].clientY * 10000) / 10000;
+      	  t1 = `${t1x}, ${t1y}`;
+      	  distance = Math.round(Math.hypot(t1x - t0x, t1y - t0y) * 10000) / 10000;
+      	}
+      	document.querySelector("#span_info").innerText = `Touch 1: ${t0};\r\nTouch 2: ${t1};\r\nTouch Distance: ${distance};`
+      });
+    </script>
+  </body>
+</html>

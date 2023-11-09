@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select,option,#div_controllers{
+        text-align: center;
+      }
+      table{
+        border-collapse: separate;
+        border-spacing: 0px;
+		/*display: inline-table;*/
+      }
+      table, th, td{
+        border: 0.5px solid #bbbbbb;
+        white-space: nowrap;
+        /* user-select: none; */
+      }
+      th, td{
+        padding: 2.5px;
+      }
+      #table_watchlist > tbody > tr > td,
+      #table_compOTAs > tbody > tr > td{
+	  	border: 0px solid white;
+	  	border-top: 0.5px solid #333333;
+	  	border-bottom: 0.5px solid #333333;
+	  }
+	  #div_compOTAs{
+	    display: none;
+	    margin-left: 10px;
+	    width: 47rem;
+	  }
+	  #table_compOTAs{
+	    float: left;
+	  }
+	  #table_otaBotQueue{
+	    display: none;
+	    margin-left: 10px;
+        clear: left;
+	  }
+	   #div_intro{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background-color: #000000;
+	  	display: none;
+	  }
+	  #div_introCont{
+	  	position: absolute;
+	  	left: 50%;
+	  	top: 50%;
+	  	transform: translate(-50%, -50%);
+	  }
+	  #span_intoText{
+	  	font-family: monospace;
+	  	font-size: -webkit-xxx-large;
+	  }
+    </style>
+  </head>
+  <body>  
+    <title>Completed IPU OTAs</title>  
+    <div id="div_intro">
+      <div id="div_introCont">
+        <span id="span_intoText">Developed by Derek Poe</span>
+      </div>
+    </div>
+    <div id="div_main">
+      <h1 id="header_title">Completed IPU OTAs</h1>
+      <h4>( Laurie's Page )<h4><br/>
+      <div id="div_compOTAs">
+      <table id="table_compOTAs"></table><br/>
+      <table id="table_otaBotQueue"></table>
+	</div>
+      <span id="span_status">Loading...</span>
+    </div>
+    <script>
+
+      function getCompOTAs(){
+        compOTAGet = new XMLHttpRequest();
+        compOTAGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){          
+            if(compOTAGet.responseText !== "NC"){
+              compOTACount = (compOTAGet.responseText).split("<~~~~~>")[0];
+              leaderboardChamp = (compOTAGet.responseText).split("<~~~~~>")[1];
+              compOTAData = JSON.parse((compOTAGet.responseText).split("<~~~~~>")[2]);
+              if(!(Array.isArray(compOTAData))){
+                compOTAData = [compOTAData];
+              }
+              buildCompOTATable();
+              fillCompOTATable();
+            }
+			document.querySelector("#div_compOTAs").style.display = "inline-block";
+            document.querySelector("#table_compOTAs").style.display = "inline-table";
+            document.querySelector("#table_otaBotQueue").style.display = "inline-table";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        getOTABotQueue();
+        document.querySelector("#table_compOTAs").style.display = "none";
+        document.querySelector("#table_otaBotQueue").style.display = "none";
+        document.querySelector("#span_status").style.display = "block";
+        compOTAGet.open("PUT", "16dsfSFfgsf3/compOTAGet", true);
+        let recordCount = 25;
+        let latestIPU = "";
+        (document.querySelector("#table_compOTAs > tbody > tr:nth-child(2) > td:nth-child(2)") !== null) ? latestIPU = document.querySelector("#table_compOTAs > tbody > tr:nth-child(2) > td:nth-child(2)").innerText : latestIPU = "fresh";
+        compOTAGet.send(`${recordCount}<~~~>${latestIPU}`);
+      }
+
+      function buildCompOTATable(){
+        let tableRows = compOTAData.length + 0;
+        let tableCols = Object.keys(compOTAData[0]).length;
+        let tableCont = "";
+        //-------------------------------
+        leaderboardChamp = "N/A";
+        //-------------------------------
+        if(leaderboardChamp !== "N/A"){
+          tableCont += `<tr><th colspan='${tableCols}'>Completed OTAs <button id='btn_refreshCompOTAs' onclick='getCompOTAs()'>Refresh</button><br/>Total Completed Today - ${compOTACount}<br/>Current OTA Leader - &#x1F451;${leaderboardChamp}&#x1F451;</th></tr>`;
+        }
+        else{
+          tableCont += `<tr><th colspan='${tableCols}'>Completed OTAs <button id='btn_refreshCompOTAs' onclick='getCompOTAs()'>Refresh</button><br/>Total Completed Today - ${compOTACount}</th></tr>`;
+        }
+        for(let i = 0; i < tableRows; i++){
+          tableCont += "<tr>";
+          for(let ii = 0; ii < tableCols; ii++){
+            tableCont += "<td></td>";
+          }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_compOTAs").innerHTML = tableCont;
+      }
+
+      function fillCompOTATable(){
+        for(let i = 0; i < compOTAData.length; i++){
+          for(let ii = 0; ii < Object.keys(compOTAData[0]).length; ii++){
+		    let cellData = compOTAData[i][Object.keys(compOTAData[i])[ii]];
+			(cellData !== "OTA_Bot") ? cellData = cellData : cellData = "\uD83E\uDD16OTA_Bot\uD83E\uDD16";
+            document.querySelector(`#table_compOTAs > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = cellData;
+          }
+        }
+      }
+
+      function getOTABotQueue(){
+        otaBotQueueGet = new XMLHttpRequest();
+        otaBotQueueGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){          
+            if(otaBotQueueGet.responseText !== "ND"){
+              otaBotQueueData = JSON.parse(otaBotQueueGet.responseText);
+              if(!(Array.isArray(otaBotQueueData))){
+                otaBotQueueData = [otaBotQueueData];
+              }
+              buildOtaBotQueueTable();
+              fillOtaBotQueueTable();
+              document.querySelector("#table_otaBotQueue").style.display = "inline-table";
+            }
+            else{
+              document.querySelector("#table_otaBotQueue").innerHTML = "<tr><th>OTA Bot Queue</th></tr><tr><td>No OTA Sends Pending...</td></tr>";
+            }
+          }
+        };
+        otaBotQueueGet.open("GET", "16dsfSFfgsf3/otaBotQueueGet", true);
+        otaBotQueueGet.send();
+      }
+
+      function buildOtaBotQueueTable(){
+        let tableRows = otaBotQueueData.length + 0;
+        let tableCols = Object.keys(otaBotQueueData[0]).length;
+        let tableCont = "";
+        tableCont += `<tr><th colspan='${tableCols}'>OTA Bot Queue</th></tr>`;
+        for(let i = 0; i < tableRows; i++){
+          tableCont += "<tr>";
+          for(let ii = 0; ii < tableCols; ii++){
+            tableCont += "<td></td>";
+          }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_otaBotQueue").innerHTML = tableCont;
+      }
+
+      function fillOtaBotQueueTable(){
+        for(let i = 0; i < otaBotQueueData.length; i++){
+          for(let ii = 0; ii < Object.keys(otaBotQueueData[0]).length; ii++){
+		    let cellData = otaBotQueueData[i][Object.keys(otaBotQueueData[i])[ii]];
+            document.querySelector(`#table_otaBotQueue > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = cellData;
+          }
+        }
+      }
+
+      getCompOTAs();
+
+      function intro(){
+      	document.cookie = "intro=shown;";
+      	document.querySelector("#div_intro").style.display = "block";
+        document.querySelector("#div_main").style.opacity = 0;
+        let i;
+        let ii;
+        let iii;
+        i = 1;
+        ii = 1;
+        iii = 0;
+        let iCatch = false;
+        let fadeIntro = () => {
+          if(i > 0){
+            document.querySelector("#div_intro").style.backgroundColor = `rgba(0,0,0,${i})`;
+            document.querySelector("#span_intoText").style.color = `rgba(255,255,255,${ii})`;
+            if(ii >= 0.5){
+              i -= 0.05;
+            }
+            else if(ii >= 0.25){
+              if(!(iCatch)){
+              	ii = i;
+              	iCatch = true;
+              }
+              ii -= 0.25;
+            }
+            else{
+              ii -= 0.1;
+            }
+            if(i <= 0.50){
+              document.querySelector("#div_main").style.opacity = iii;
+              iii += 0.25;
+            }
+            i -= 0.05;
+            setTimeout(fadeIntro,50);
+          }
+          else{
+          	document.querySelector("#div_intro").style.display = "none";
+          }
+        }
+        setTimeout(fadeIntro,1000);
+      }
+      /*
+	  function checkForIntro(){
+        try{
+          if(!(/intro=shown/i.test(document.cookie))){
+            intro();
+          }
+          else{
+          	document.querySelector("#div_main").style.opacity = 1;
+          }
+        }
+        catch{
+          document.querySelector("#div_main").style.opacity = 1;
+        }
+      }
+      checkForIntro();
+     */
+     intro();
+    </script>
+  </body>
+</html>

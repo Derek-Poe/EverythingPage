@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #span_status,#div_stopRefresh,#button_refreshData{
+        display: none;
+      }
+      #div_stats{
+        display: inline-block;
+        float: left;
+      }
+      #div_processControl{
+      	display: none;
+      	float: left;
+      	margin-left: 15px;
+      }
+
+      #div_autoRefreshButtons{
+	    float: right;
+		text-align: center;
+	  }	  
+	  #in_refreshInterval{
+	    width: 100px;
+	    text-align: center;
+	  }
+
+	  table{
+        border-collapse: separate;
+        border-spacing: 0px;
+		display: inline-table;
+      }
+      table, th, td{
+        border: 0.5px solid white;
+        white-space: nowrap;
+        /* user-select: none; */
+      }
+      .selectableRow:hover{
+        color: yellow;
+      }
+      th, td{
+        padding: 2.5px;
+      }
+
+      .ep_hide {
+        display: none;
+      }
+
+      #div_statsGraph {
+        position: absolute;
+        right: 2%;
+      }
+
+      #can_statsGraph {
+        border: #e7e7e76e outset;
+      }
+
+      #btn_restartSitebossHubServices {
+        position: absolute;
+        right: 8.7%;
+        top: 28%;
+      }
+
+      #btn_restartIPUOTAServices {
+        position: absolute;
+        right: 9.38%;
+        top: 31%;
+      }
+
+      #btn_restartAllServices {
+        position: absolute;
+        right: 9%;
+        top: 34%;
+      }
+
+      #btn_restartAuto1 {
+        position: absolute;
+        right: 8.85%;
+        top: 37%;
+      }
+
+/*       #sel_restartServices {
+        position: absolute;
+        right: 9.2%;
+        top: 27%;
+      } */
+
+      #div_restartServicesCon {
+        position: absolute;
+        right: 5.25%;
+        top: 27.5%;
+        width: 18%;
+      }
+
+      #btn_restartServices {
+        margin-left: 1%;
+      }
+
+    </style>
+  </head>
+  <body>  
+    <title>Automation Server Monitor</title> 
+    <h1 class="ep_hide" id="header_title">Automation Server Monitor</h1>
+    <div id="div_content">      
+      <div id="div_stats">
+        <table id="table_stats"></table><br>
+        <span id="span_statsUpdateTime"></span><br>
+        <button id="button_refreshData" onclick="refreshData()">Refresh</button>
+      </div>
+      <div id="div_statsGraph">
+        <canvas id="can_statsGraph" width="400" height="225"></canvas>
+      </div>
+      <div id="div_restartServicesCon">
+        <button class="ep_hide" id="btn_restartSitebossHubServices" onclick="restartServicesClickHandler('sitebossHub')">Restart Siteboss Hub</button>
+        <button class="ep_hide" id="btn_restartIPUOTAServices" onclick="restartServicesClickHandler('IPUOTA')">Restart IPU OTA</button>
+        <button class="ep_hide" id="btn_restartAllServices" onclick="restartServicesClickHandler('allServices')">Restart All Services</button>
+        <button class="ep_hide" id="btn_restartAuto1" onclick="restartServicesClickHandler('auto1')">Restart Auto1 Server</button>
+        <select id="sel_restartServices">
+          <option>Restart Everything Services</option>
+          <option>Restart Siteboss Hub</option>
+          <option>Restart IPU OTA</option>
+          <option>Restart All Services</option>
+          <option>Restart Auto1 Server</option>
+            </select><button id="btn_restartServices" onclick="restartServicesHandler()">Restart</button>
+      </div>
+      <div id="div_processControl">
+        <table id="table_processControl">
+          <tr><th colspan="2">Process Controller</th></tr>
+          <tr><td colspan="2">Process</td></tr>
+          <tr><td><button id="btn_stopProcess" onclick="putProcessUpdate('stop')">Stop</button></td><td><button id="btn_startProcess" onclick="putProcessUpdate('start')">Start / Restart</button></td></tr>
+        </table>
+      </div>
+      <div class="ep_hide" id="div_autoRefreshButtons">
+	    <span id="span_autoRefresh">Auto-Refresh</span><br><br>
+  	    <div id="div_startRefresh">
+          <label id="lab_refreshInterval">Refresh Interval (seconds):</label><br>
+          <input id="in_refreshInterval"></input><button id="btn_startAutoRefresh" onclick="startRefresh()">Start</button>
+        </div>
+        <div id="div_stopRefresh">
+	      <span id="span_refreshStatus"></span><br>
+	      <button id="btn_stopAutoRefresh" onclick="stopRefresh()">Stop</button>
+        </div>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <script>
+      
+      let loadingData = false;
+      let refreshingData;
+      let processSel = "";
+      const graph = document.querySelector("#can_statsGraph");
+      const ctx = graph.getContext("2d");
+      let auto1CPUInter = 0;
+      let auto1RAMInter = 0;
+      let auto1StorageInter = 0;
+      let auto2CPUInter = 0;
+      let auto2RAMInter = 0;
+      let auto2StorageInter = 0;
+      let redrawCounter = 0;
+      let statsData = {};
+      let resourceData = {};
+      let apiKey = "";
+      
+      document.querySelector("#in_refreshInterval").onkeyup = function(e){if(e.keyCode == 13){startRefresh();}};
+      
+      document.querySelector("#table_stats").addEventListener("click", e => {
+        if(!(loadingData) && e.target.parentNode.className === "selectableRow"){
+          processSel = e.target.parentNode.firstChild.innerText;
+          updateProcessController();
+        }
+      });
+
+      function restartServicesClickHandler(restartType){
+        let uRes = "";
+        switch(restartType){
+          case "sitebossHub":
+            uRes = prompt("\r\nRestarting Siteboss Hub Services...\r\nAre You Sure?\r\n (yes/no)");
+            break;
+          case "IPUOTA":
+            uRes = prompt("\r\nRestarting IPU OTA Services...\r\nAre You Sure?\r\n (yes/no)");
+            break;
+          case "allServices":
+            uRes = prompt("\r\nRestarting All Automation Services...\r\nAre You Sure?\r\n (yes/no)");
+            break;
+          case "auto1":
+            uRes = prompt("\r\nRestarting Automation Server 1...\r\nAre You Sure?\r\n (yes/no)");
+            break;
+        }
+        if(uRes === "yes"){
+          alert("Attempting Restart. Click OK to continue.");
+          restartServices(restartType);
+        }
+        else if(uRes === "no") alert("Ok, Cool.");
+        else alert("Invalid Input");
+      }
+
+      function restartServicesHandler(){
+        let restartType = "";
+        let uRes = "";
+        switch(document.querySelector("#sel_restartServices").value){
+          case "Restart Everything Services":
+            uRes = prompt("\r\nRestarting Everything Services...\r\nAre You Sure?\r\n (yes/no)");
+            restartType = "everything";
+            break;
+          case "Restart Siteboss Hub":
+            uRes = prompt("\r\nRestarting Siteboss Hub Services...\r\nAre You Sure?\r\n (yes/no)");
+            restartType = "sitebossHub";
+            break;
+          case "Restart IPU OTA":
+            uRes = prompt("\r\nRestarting IPU OTA Services...\r\nAre You Sure?\r\n (yes/no)");
+            restartType = "IPUOTA";
+            break;
+          case "Restart All Services":
+            uRes = prompt("\r\nRestarting All Automation Services...\r\nAre You Sure?\r\n (yes/no)");
+            restartType = "allServices";
+            break;
+          case "Restart Auto1 Server":
+            uRes = prompt("\r\nRestarting Automation Server 1...\r\nAre You Sure?\r\n (yes/no)");
+            restartType = "auto1";
+            break;
+          default:
+            alert("Error Occurred...");
+        }
+        if(uRes === "yes"){
+          alert("Attempting Restart. Click OK to continue.");
+          restartServices(restartType);
+        }
+        else if(uRes === "no") alert("Ok, Cool.");
+        else alert("Invalid Input");
+      }
+
+      function getStatsData(){
+        let statsDataGet = new XMLHttpRequest();
+        statsDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            let allData = JSON.parse(statsDataGet.responseText);
+            for(let i = 0; i < Object.keys(allData).length; i++){
+              (i < 6) ? resourceData[Object.keys(allData)[i]] = Object.values(allData)[i] : statsData[Object.keys(allData)[i]] = Object.values(allData)[i];
+            }
+            buildStatsTable();
+            fillStatsTable();
+            assignSelectableRows();
+            document.querySelector("#span_statsUpdateTime").innerText = `Last Updated: ${statsData["Time"]}`;
+            document.querySelector("#div_stats").style.display = "inline-block";
+            document.querySelector("#button_refreshData").innerText = "Refresh";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#button_refreshData").innerText = "Loading...";
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        statsDataGet.open("GET", `${apiKey}resourceStats`, true);
+        statsDataGet.send();
+      }
+
+      function putProcessUpdate(upType){
+        proPut = new XMLHttpRequest();
+        proPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+          	loadingData = false;
+            document.querySelector("#btn_stopProcess").innerText = "Stop";
+            document.querySelector("#btn_startProcess").innerText = "Start / Restart";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#btn_stopProcess").innerText = "Loading...";
+        document.querySelector("#btn_startProcess").innerText = "Loading...";
+        proPut.open("put", "kj235b4lk/proUp", true);
+        proPut.send(`${upType},${processSel}`);
+      }
+
+      function restartServices(service){
+        switch(service){
+          case "everything":
+            fetch(`${apiKey}restartEverythingServices`);
+            break;
+          case "sitebossHub":
+            fetch(`${apiKey}restartSitebossHub`);
+            break;
+          case "IPUOTA":
+            fetch(`${apiKey}restartIPUOTA`);
+            break;
+          case "allServices":
+            fetch(`${apiKey}restartAllServices`);
+            break;
+          case "auto1":
+            fetch(`${apiKey}restartAuto1`);
+            break;
+        }
+      }
+
+      function buildStatsTable(){
+        let tableRows = Object.keys(statsData).length + 0;
+        let tableColumns = 2;
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "";
+          rowCont += "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+            rowCont += "<td></td>";
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_stats").innerHTML = tableCont;
+        document.querySelector("#table_stats > tbody > tr:first-child").innerHTML = `<th colspan="2">Diagnostics</th>`;
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_stats > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+          else{
+            try{
+              document.querySelector(`#table_stats > tbody > tr:nth-child(${i})`).style.backgroundColor = "#000000";
+            }
+            catch{}
+          }
+        }
+      }
+
+      function fillStatsTable(){
+        for(let i = 0; i < Object.keys(statsData).length - 1; i++){
+          let row = document.querySelector(`#table_stats > tbody > tr:nth-child(${i+2})`);
+          switch(Object.keys(statsData)[i]){
+            case "adAPI":
+              row.childNodes[0].innerText = "AD API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "autoServMonAPI":
+              row.childNodes[0].innerText = "Automation Server Monitor API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "autoServResourceDataBuilder":
+              row.childNodes[0].innerText = "Resource Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "crmAPI":
+              row.childNodes[0].innerText = "CRM API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "ipuAPI":
+              row.childNodes[0].innerText = "IPU API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "ipuDataBuilder":
+              row.childNodes[0].innerText = "IPU Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "nrDataBuilder":
+              row.childNodes[0].innerText = "NR Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbAPI":
+              row.childNodes[0].innerText = "Siteboss API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+               if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbhBuilder":
+              row.childNodes[0].innerText = "Siteboss History Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+               if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbPoller":
+              row.childNodes[0].innerText = "Siteboss Poller";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "sbrAPI":
+              row.childNodes[0].innerText = "Siteboss Report API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "IPUOTADataBuilder_multiInstance":
+              row.childNodes[0].innerText = "IPU OTA Data Collector";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "WebSessionAPI":
+              row.childNodes[0].innerText = "Web Sessions API";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "IPUAPIChaperone":
+              row.childNodes[0].innerText = "IPU API Chaperone";
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+              break;
+            case "Processor":
+              row.childNodes[0].innerText = "CPU";
+              row.childNodes[1].innerText = `${Object.values(statsData)[i]}%`;
+              break;
+            case "Memory":
+              row.childNodes[0].innerText = "RAM";
+              row.childNodes[1].innerText = `${Object.values(statsData)[i]}%`;
+              break;
+            case "Auto1_CPU":
+            case "Auto1_RAM":
+            case "Auto1_Storage":
+            case "Auto2_CPU":
+            case "Auto2_RAM":
+            case "Auto2_Storage":
+              row.childNodes[0].innerText = Object.keys(statsData)[i];
+              row.childNodes[1].innerText = `${Object.values(statsData)[i]}%`;
+              break;
+            default:
+              row.childNodes[0].innerText = Object.keys(statsData)[i];
+              row.childNodes[1].innerText = Object.values(statsData)[i];
+              if(Object.values(statsData)[i] === "Offline"){
+                row.style.backgroundColor = "orange";  
+              }
+          }
+        }
+      }
+
+      function refreshData(){
+        getStatsData();
+      }
+
+      function startRefresh(){
+        refreshingData = setInterval(getStatsData, (parseInt(document.querySelector("#in_refreshInterval").value) * 1000));
+        document.querySelector("#span_refreshStatus").innerText = `Refreshing Every ${document.querySelector("#in_refreshInterval").value} Seconds`;
+		document.querySelector("#div_startRefresh").style.display = "none";
+		document.querySelector("#div_stopRefresh").style.display = "block";
+      }
+
+      function stopRefresh(){
+        clearInterval(refreshingData);
+        document.querySelector("#div_startRefresh").style.display = "block";
+		document.querySelector("#div_stopRefresh").style.display = "none";
+      }
+
+      function assignSelectableRows(){
+        for(let cell of document.querySelectorAll("#table_stats > tbody > tr > td:first-child")){
+          switch(cell.innerText){
+            case "AD API":
+            case "Automation Server Monitor API":
+            case "Resource Data Collector":
+            case "CRM API":
+            case "IPU API":
+            case "IPU Data Collector":
+            case "IPU OTA Data Collector":
+            case "IPU API Chaperone":
+            case "Web Sessions API":
+            case "NR Data Collector":
+            case "Siteboss API":
+            case "Siteboss History Collector":
+            case "Siteboss Poller":
+            case "Siteboss Report API":
+              //cell.parentNode.classList.add("selectableRow");
+              break;
+          }
+        }
+      }
+
+      function updateProcessController(){
+      	switch(processSel){
+      	  case "AD API":
+      	  case "CRM API":
+      	    processSel = "CRM";
+      	    break;
+          case "Automation Server Monitor API":
+          case "Resource Data Collector":
+            processSel = "Automation Server Monitor";
+            break;     
+          case "IPU API":
+          case "IPU Data Collector":
+          case "IPU OTA Data Collector":
+          case "IPU API Chaperone":
+          case "Web Sessions API":
+            processSel = "IPU";
+            break;
+          case "NR Data Collector":
+            processSel = "AutoNR";
+            break;
+          case "Siteboss API":
+          case "Siteboss History Collector":
+          case "Siteboss Poller":
+          case "Siteboss Report API":
+            processSel = "Siteboss Hub";
+            break;
+      	}
+        document.querySelector("#table_processControl > tbody > tr:nth-child(2) > td").innerText = processSel;
+        document.querySelector("#div_processControl").style.display = "inline-block";
+      }
+
+      function drawGraph(){
+        ctx.clearRect(0, 0, graph.width, graph.height);
+        ctx.fillStyle = "#222222";
+        ctx.fillRect(0, 0, graph.width, graph.height);
+        ctx.lineWidth = 1;
+        // ctx.strokeStyle = "#ff0000";
+        // ctx.beginPath();
+        // ctx.moveTo(graph.width / 2, graph.height);
+        // ctx.lineTo(graph.width / 2, 0);
+        // ctx.closePath();
+        // ctx.stroke();
+        // ctx.beginPath();
+        // ctx.moveTo(graph.width * 0.25, graph.height);
+        // ctx.lineTo(graph.width * 0.25, 0);
+        // ctx.closePath();
+        // ctx.stroke();
+        // ctx.beginPath();
+        // ctx.moveTo(graph.width * 0.75, graph.height);
+        // ctx.lineTo(graph.width * 0.75, 0);
+        // ctx.closePath();
+        // ctx.stroke();
+        // ctx.beginPath();
+        // ctx.moveTo(0, graph.height - 65);
+        // ctx.lineTo(graph.width, graph.height - 65);
+        // ctx.closePath();
+        // ctx.stroke();
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px Arial";
+        ctx.fillText("Resource Overview",(graph.width / 2) - 87, 26);
+        ctx.font = "18px Arial";
+        ctx.fillText("Auto 1", 75, 55);
+        ctx.font = "18px Arial";
+        ctx.fillText("Auto 2", 275, 55);
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "#aaaaaa";
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.25, graph.height);
+        ctx.lineTo(graph.width * 0.25, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.25 + 60, graph.height);
+        ctx.lineTo(graph.width * 0.25 + 60, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.25 - 60, graph.height);
+        ctx.lineTo(graph.width * 0.25 - 60, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.75, graph.height);
+        ctx.lineTo(graph.width * 0.75, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.75 + 60, graph.height);
+        ctx.lineTo(graph.width * 0.75 + 60, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(graph.width * 0.75 - 60, graph.height);
+        ctx.lineTo(graph.width * 0.75 - 60, graph.height * 0.4);
+        ctx.closePath();
+        ctx.stroke();
+            
+        // ctx.textBaseline = "top";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "14px Arial";
+        // ctx.save();
+
+        ctx.fillText("CPU", graph.width * 0.25 - 97, graph.height - 60);
+        ctx.fillText("RAM", graph.width * 0.25 - 45, graph.height - 60);
+        ctx.fillText("Storage", graph.width * 0.25 + 6, graph.height - 60);
+        ctx.fillText("CPU", graph.width * 0.75 - 97, graph.height - 60);
+        ctx.fillText("RAM", graph.width * 0.75 - 45, graph.height - 60);
+        ctx.fillText("Storage", graph.width * 0.75 + 6, graph.height - 60);
+
+        // ctx.translate(graph.width * 0.25 - 60, graph.height - 55);
+        // ctx.rotate((3*Math.PI) / 2);
+        // ctx.fillText("CPU", graph.width * 0.25 - 60, graph.height - 55);
+        // ctx.fillText("CPU", 1, 15);
+
+        // ctx.rotate(Math.PI / 2);
+        // ctx.translate(graph.width * 0.25 - 60, graph.height - 65);
+        // ctx.fillText("CPU", 1, 15);
+        // ctx.translate(graph.width * 0.25, graph.height - 65);
+        // ctx.fillText("RAM", 25, 25);
+        // ctx.translate(graph.width * 0.25 + 60, graph.height - 65);
+        // ctx.fillText("Storage", 0, 0);
+        // ctx.translate(graph.width * 0.75 - 60, graph.height - 65);
+        // ctx.fillText("CPU", 0, 0);
+        // ctx.translate(graph.width * 0.75, graph.height - 65);
+        // ctx.fillText("RAM", 0, 0);
+        // ctx.translate(graph.width * 0.75 + 60, graph.height - 65);
+        // ctx.fillText("Storage", 0, 0);
+        // ctx.restore();
+        
+      }
+      drawGraph();
+
+      function updateGraph(){
+        if(typeof resourceData !== "undefined"){
+          if(redrawCounter >= 3000){
+            drawGraph(); 
+            redrawCounter = 0;
+          }
+          else redrawCounter++;
+          
+          let barTop = graph.height * 0.4;
+          let barHeight = graph.height - (graph.height * 0.4);        
+          ctx.clearRect(0, 57, graph.width, 31);
+          ctx.clearRect((graph.width * 0.25) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.clearRect((graph.width * 0.25 + 60) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.clearRect((graph.width * 0.25 - 60) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.clearRect((graph.width * 0.75) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.clearRect((graph.width * 0.75 + 60) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.clearRect((graph.width * 0.75 - 60) - 4, barTop - 1, 8, barHeight + 1);
+          ctx.fillStyle = "#222222";
+          ctx.fillRect(0, 57, graph.width, 31);
+          ctx.lineWidth = 8;
+          ctx.strokeStyle = "#aaaaaa";
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25 - 60, graph.height);
+          ctx.lineTo(graph.width * 0.25 - 60, barTop);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25, graph.height);
+          ctx.lineTo(graph.width * 0.25, barTop);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25 + 60, graph.height);
+          ctx.lineTo(graph.width * 0.25 + 60, barTop);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75 - 60, graph.height);
+          ctx.lineTo(graph.width * 0.75 - 60, barTop);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75, graph.height);
+          ctx.lineTo(graph.width * 0.75, barTop);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75 + 60, graph.height);
+          ctx.lineTo(graph.width * 0.75 + 60, barTop);
+          ctx.closePath();
+          ctx.stroke();
+
+          let slideBrake = 0.7;
+          let highWarn = 80;
+          let midWarn = 60;
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "14px Arial";
+          ctx.fillText(`${resourceData.Auto1_CPU}%`, graph.width * 0.25 - 70, barTop - 5);
+          let auto1CPUStep = Math.abs(+resourceData.Auto1_CPU - auto1CPUInter) / (slideBrake * 50);
+          if(Math.abs(auto1CPUInter - +resourceData.Auto1_CPU) > 1){
+            if(auto1CPUInter < +resourceData.Auto1_CPU){
+              auto1CPUInter += auto1CPUStep;
+            }
+            else if(auto1CPUInter > +resourceData.Auto1_CPU){
+              auto1CPUInter -= auto1CPUStep;
+            }
+          }
+          let auto1CPUPos = graph.height - barHeight * (auto1CPUInter * 0.01);
+          if(+resourceData.Auto1_CPU > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto1_CPU > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25 - 60, graph.height);
+          ctx.lineTo(graph.width * 0.25 - 60, auto1CPUPos);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillText(`${resourceData.Auto1_RAM}%`, graph.width * 0.25 - 10, barTop - 5);
+          let auto1RAMStep = Math.abs(+resourceData.Auto1_RAM - auto1RAMInter) / (slideBrake * 50);
+          if(Math.abs(auto1RAMInter - +resourceData.Auto1_RAM) > 1){
+            if(auto1RAMInter < +resourceData.Auto1_RAM){
+              auto1RAMInter += auto1RAMStep;
+            }
+            else if(auto1RAMInter > +resourceData.Auto1_RAM){
+              auto1RAMInter -= auto1RAMStep;
+            }
+          }
+          let auto1RAMPos = graph.height - barHeight * (auto1RAMInter * 0.01);
+          if(+resourceData.Auto1_RAM > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto1_RAM > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25, graph.height);
+          ctx.lineTo(graph.width * 0.25, auto1RAMPos);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillText(`${resourceData.Auto1_Storage}%`, graph.width * 0.25 + 50, barTop - 5);
+          // ctx.fillText("0%", graph.width * 0.25 + 50, barTop - 5);
+          let auto1StorageStep = Math.abs(+resourceData.Auto1_Storage - auto1StorageInter) / (slideBrake * 50);
+          if(Math.abs(auto1StorageInter - +resourceData.Auto1_Storage) > 1){
+            if(auto1StorageInter < +resourceData.Auto1_Storage){
+              auto1StorageInter += auto1StorageStep;
+            }
+            else if(auto1StorageInter > +resourceData.Auto1_Storage){
+              auto1StorageInter -= auto1StorageStep;
+            }
+          }
+          let auto1StorageStorage = graph.height - barHeight * (auto1StorageInter * 0.01);
+          if(+resourceData.Auto1_Storage > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto1_Storage > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.25 + 60, graph.height);
+          ctx.lineTo(graph.width * 0.25 + 60, auto1StorageStorage);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillText(`${resourceData.Auto2_CPU}%`, graph.width * 0.75 - 70, barTop - 5);
+          let auto2CPUStep = Math.abs(+resourceData.Auto2_CPU - auto2CPUInter) / (slideBrake * 50);
+          if(Math.abs(auto2CPUInter - +resourceData.Auto2_CPU) > 1){
+            if(auto2CPUInter < +resourceData.Auto2_CPU){
+              auto2CPUInter += auto2CPUStep;
+            }
+            else if(auto2CPUInter > +resourceData.Auto2_CPU){
+              auto2CPUInter -= auto2CPUStep;
+            }
+          }
+          let auto2CPUPos = graph.height - barHeight * (auto2CPUInter * 0.01);
+          if(+resourceData.Auto2_CPU > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto2_CPU > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75 - 60, graph.height);
+          ctx.lineTo(graph.width * 0.75 - 60, auto2CPUPos);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillText(`${resourceData.Auto2_RAM}%`, graph.width * 0.75 - 10, barTop - 5);
+          let auto2RAMStep = Math.abs(+resourceData.Auto2_RAM - auto2RAMInter) / (slideBrake * 50);
+          if(Math.abs(auto2RAMInter - +resourceData.Auto2_RAM) > 1){
+            if(auto2RAMInter < +resourceData.Auto2_RAM){
+              auto2RAMInter += auto2RAMStep;
+            }
+            else if(auto2RAMInter > +resourceData.Auto2_RAM){
+              auto2RAMInter -= auto2RAMStep;
+            }
+          }
+          let auto2RAMPos = graph.height - barHeight * (auto2RAMInter * 0.01);
+          if(+resourceData.Auto2_RAM > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto2_RAM > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75, graph.height);
+          ctx.lineTo(graph.width * 0.75, auto2RAMPos);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillText(`${resourceData.Auto2_Storage}%`, graph.width * 0.75 + 50, barTop - 5);
+          // ctx.fillText("0%", graph.width * 0.75 + 50, barTop - 5);
+          let auto2StorageStep = Math.abs(+resourceData.Auto2_Storage - auto2StorageInter) / (slideBrake * 50);
+          if(Math.abs(auto2StorageInter - +resourceData.Auto2_Storage) > 1){
+            if(auto2StorageInter < +resourceData.Auto2_Storage){
+              auto2StorageInter += auto2StorageStep;
+            }
+            else if(auto2StorageInter > +resourceData.Auto2_Storage){
+              auto2StorageInter -= auto2StorageStep;
+            }
+          }
+          let auto2StorageStorage = graph.height - barHeight * (auto2StorageInter * 0.01);
+          if(+resourceData.Auto2_Storage > highWarn){
+            ctx.strokeStyle = "#ff0000";
+          }
+          else if(+resourceData.Auto2_Storage > midWarn){
+            ctx.strokeStyle = "#ffa700";
+          }
+          else{
+            ctx.strokeStyle = "#11e011";
+          }
+          ctx.beginPath();
+          ctx.moveTo(graph.width * 0.75 + 60, graph.height);
+          ctx.lineTo(graph.width * 0.75 + 60, auto2StorageStorage);
+          ctx.closePath();
+          ctx.stroke();
+        }
+      }
+
+      function checkURL(){
+        let search = window.location.search;
+        if(search === "standalone"){
+          apiKey = "v190b2712uysgdi/";
+        }
+      }
+      checkURL();
+
+      getStatsData();
+      updatingStatsData = setInterval(getStatsData, 10000);
+      updatingGraph = setInterval(updateGraph, 20);
+          
+    </script>
+  </body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select{
+        text-align: center;
+      }
+      #span_status,#div_summary,#a_downloadReport{
+        display: none;
+      }
+      div_summary{
+        display: inline-block;
+      }
+      #div_ipus{
+        float: right;
+      }
+      .selectableRow:hover{
+        color: yellow;
+      }
+      #div_dynSingle{
+      	display: inline-block;
+      	overflow: auto;
+      	resize: both;
+      }
+      th{
+      	position: sticky;
+      	top: 0px;
+      	z-index: 2;
+        border-top-width: 1px;
+        background-color: black;	
+      }
+      th:first-child{
+      	left: 0px;
+      	border-left-width: 1px;
+        z-index: 3;
+      }
+      tr > td:first-child{
+      	position: sticky;
+      	left: 0px;
+      	z-index: 1;
+      	border-left-width: 1px;
+      }
+      tr:nth-child(even) > td:first-child{
+        background-color: #333333;
+      }
+      tr:nth-child(odd) > td:first-child{
+        background-color: black;
+      }
+      td{
+        display: table-cell;
+        vertical-align: center;
+        horizontal-align: center;
+        text-align: center;
+      }
+      tr > td:last-child, tr > th:last-child{
+      	padding-right: 3px;
+      }
+      #div_intro{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background-color: #000000;
+	  	display: none;
+	  }
+	  #div_introCont{
+	  	position: absolute;
+	  	left: 50%;
+	  	top: 50%;
+	  	transform: translate(-50%, -50%);
+	  }
+	  #span_intoText{
+	  	font-family: monospace;
+	  	font-size: -webkit-xxx-large;
+	  }
+    </style>
+  </head>
+  <body>  
+    <title>TCE/LT2 Compare</title>  
+    <h1 id="header_title">TCE/LT2 Compare</h1>
+    <div id="div_intro">
+      <div id="div_introCont">
+        <span id="span_intoText">Developed by Derek Poe</span>
+      </div>
+    </div>
+    <div id="div_main">
+      <!--
+      <div id="div_summary">
+        <table id="table_summary"></table>
+        <span id="span_summaryUpdateTime"></span><br>
+        <button id="button_refreshData" onclick="refreshData()">Refresh</button>
+        <button id="btn_downloadReport" onclick="startReportDownload()">Download Report</button>
+      </div>
+      -->
+      <div id="div_dyndivButtons">
+        <button id="btn_dyndivSelTceEnt" onclick="getIPUData('tceEnt',true)">TCE Entities</button><button id="btn_dyndivSelLt2Ent" onclick="getIPUData('lt2Ent',true)">LT2 Entities</button><button id="btn_dyndivSelTceDiff" onclick="getIPUData('tceDiff',true)">TCE Delta</button><button id="btn_dyndivSelLt2Diff" onclick="getIPUData('lt2Diff',true)">LT2 Delta</button>
+        <span id="span_dataWarning">These buttons will potentially use a lot of data over LTE.</span><br/><br/>
+        <span id="span_tceTime"></span><br/>
+        <span id="span_lt2Time"></span>
+      </div>
+      <div id="div_tceEnt">
+        <table id="table_tceEnt"></table>
+      </div>
+      <div id="div_lt2Ent">
+        <table id="table_lt2Ent"></table>
+      </div>
+      <div id="div_tceDiff">
+        <table id="table_tceDiff"></table>
+      </div>
+      <div id="div_lt2Diff">
+        <table id="table_lt2Diff"></table>
+      </div>
+      <div id="div_dynSingle">
+        <table id="table_dynSingle"></table>
+      </div>
+    </div><br>
+    <span id="span_status">Loading...</span>
+    <a id="a_downloadReport"></a>
+    <script>
+      let loadingAniIn;
+      let loadingAniSeq = 0;
+
+      function getIPUData(dataType,dyndiv){
+        if(!(dyndiv)){
+          dyndiv = false;
+        }
+        let ipuDataPut = new XMLHttpRequest();
+        ipuDataPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(ipuDataPut.responseText !== "ND"){
+              let ipuData = JSON.parse(ipuDataPut.responseText);
+              if(dataType !== "summary"){
+                if(!(Array.isArray(ipuData))){
+                  ipuData = [ipuData];
+                }
+                createIPUTable(dataType,ipuData,dyndiv);
+                //document.querySelector("#span_summaryUpdateTime").innerText = `Last Updated: ${summaryData["Time"]}`;
+                //document.querySelector("#div_summary").style.display = "inline-block";
+                //document.querySelector("#button_refreshData").innerText = "Refresh";
+                //document.querySelector("#span_status").style.display = "none";
+                loadingAni("stop");
+          
+                //console.log(ipuData);
+              }
+              else{
+                addSummmaryData(ipuData);
+                loadingAni("stop");
+                //document.querySelector("#span_status").style.display = "none";
+              }
+            }
+            else{
+              document.querySelector("#span_status").innerText = "No Data Found";
+            }
+          }
+        };
+        //document.querySelector("#button_refreshData").innerText = "Loading...";
+        loadingData = true;
+        //document.querySelector("#span_status").innerText = "Loading...";
+        //document.querySelector("#span_status").style.display = "block";      
+        loadingAni("start");
+        ipuDataPut.open("PUT", `16dsfSFfgsf3/tcelt2comp`, true);
+        ipuDataPut.send(dataType);
+      }
+
+      function createIPUTable(dataType,ipuData,dyndiv){
+        let tableSelect;
+        if(!(dyndiv)){
+          tableSelect = `#table_${dataType}`;
+        }
+        else{
+          tableSelect = "#table_dynSingle";
+        }
+        let tableRows = Object.keys(ipuData).length + 1;
+        let tableHeaders = Object.keys(ipuData[0]);
+        let tableColumns = tableHeaders.length;
+        //let tableColumns = 10;
+        /*
+        let tableHeaders = [
+          "IPU Name",
+          "Rate",
+          "Distance",
+          "Battery",
+          "Created",
+          "EPE",
+          "Heading",
+          "Msg #",
+          "Serial",
+          "Speed"
+        ];
+        */
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 0){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               rowCont += "<td></td>";
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector(tableSelect).innerHTML = tableCont;
+        //document.querySelector("#table_ipus > tbody > tr:first-child").innerHTML = `<th colspan="10">Reporting Rate -- ${rate}</th>`;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector(`${tableSelect} > tbody > tr:nth-child(1)`).childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`${tableSelect} > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+        
+        /*
+        for(let i = 0; i < ipuData.length; i++){
+          let row = document.querySelector(`#table_ipus > tbody > tr:nth-child(${i+3})`);
+          row.childNodes[0].innerText = ipuData[i]["IPUName"];
+          row.childNodes[1].innerText = ipuData[i]["Time"];
+          row.childNodes[2].innerText = ipuData[i]["Distance"];
+          row.childNodes[3].innerText = ipuData[i]["Battery"];
+          let time = (new Date(parseInt(`${ipuData[i]["Created"]}000`)));
+          row.childNodes[4].innerText = `${time.toLocaleDateString("en-US",{timeZone: "America/Chicago"})} ${time.toLocaleTimeString("en-US",{timeZone: "America/Chicago"})}`;
+          row.childNodes[5].innerText = ipuData[i]["EPE"];
+          row.childNodes[6].innerText = ipuData[i]["Heading"];
+          row.childNodes[7].innerText = ipuData[i]["MsgNum"];
+          row.childNodes[8].innerText = ipuData[i]["Serial"];
+          row.childNodes[9].innerText = ipuData[i]["Speed"];
+        }
+        */
+        for(let i = 0; i < ipuData.length; i++){
+          let row = document.querySelector(`${tableSelect} > tbody > tr:nth-child(${i+2})`);
+          for(let ii = 0; ii < Object.values(ipuData[i]).length; ii++){
+            row.childNodes[ii].innerText = Object.values(ipuData[i])[ii];
+          }
+        }
+        if(dyndiv){
+          document.querySelector("#div_dynSingle").style.width = (window.innerWidth - 25) + "px";
+          document.querySelector("#div_dynSingle").style.height = (window.innerHeight  - 215) + "px";
+        }
+      }
+      //getIPUData("tceEnt");
+
+      function addSummmaryData(summaryData){
+        //console.log(summaryData);
+        document.querySelector("#btn_dyndivSelTceEnt").innerText = `TCE Entities (${summaryData.tceDataCount})`;
+        document.querySelector("#btn_dyndivSelLt2Ent").innerText = `LT2 Entities (${summaryData.lt2DataCount})`;
+        document.querySelector("#btn_dyndivSelTceDiff").innerText = `TCE Delta (${summaryData.tceDiffCount})`;
+        document.querySelector("#btn_dyndivSelLt2Diff").innerText = `LT2 Delta (${summaryData.lt2DiffCount})`;
+        document.querySelector("#span_tceTime").innerText = `TCE: ${summaryData.tceTime}`;
+        document.querySelector("#span_lt2Time").innerText = `LT2: ${summaryData.lt2Time}`;
+      }
+
+      function loadingAni(action){
+        if(action === "start"){
+          if(loadingAniSeq === 0){
+            document.querySelector("#span_status").innerText = "";
+            document.querySelector("#span_status").style.display = "inline-block";
+            loadingAniSeq = 1;
+          }
+          if(loadingAniSeq === 1){
+            let loadSpan = document.querySelector("#span_status");
+            let loadText = "Loading...";
+            if(loadSpan.innerText !== loadText){
+              loadSpan.innerText = loadText.substr(loadText.length - loadSpan.innerText.length - 1);
+              setTimeout(loadingAni("start"),1000);
+            }
+            else{
+              loadingAniSeq = 1.5;
+              return;
+            }
+          } 
+        }   
+        else if(action === "stop"){
+          if(loadingAniSeq === 1.5){
+            let loadSpan = document.querySelector("#span_status");
+            if(loadSpan.innerText.replace(/ /g,"") !== ""){
+              loadSpan.innerText = " " + loadSpan.innerText.slice(0,loadSpan.innerText.length - 1);
+              setTimeout(loadingAni("stop"),1000);
+            }
+            else{
+              loadSpan.innerText = "";
+              loadingAniSeq = 0;
+              return;
+            }
+          }
+        }
+      }
+
+      function loadingAni_(action){
+        clearInterval(loadingAniIn);
+        document.querySelector("#span_status").innerText = "";
+        document.querySelector("#span_status").style.display = "none";
+        if(action === "start"){
+          document.querySelector("#span_status").style.display = "inline-block";
+          loadingAniIn = setInterval(()=>{
+            let loadSpan = document.querySelector("#span_status");
+            let loadText = "Loading...";
+            if(loadingAniSeq === 1){
+              if(loadSpan.innerText !== loadText){
+                loadSpan.innerText = loadText.substr(loadText.length - loadSpan.innerText.length - 1);
+              }
+              else{
+                loadingAniSeq = 1.5;
+              }
+            }
+            else if(loadingAniSeq === 1.5){
+              if(loadSpan.innerText.replace(/ /g,"") !== ""){
+                loadSpan.innerText = " " + loadSpan.innerText.slice(0,loadSpan.innerText.length - 1);
+              }
+              else{
+                loadSpan.innerText = "";
+                loadingAniSeq = 1;
+              }
+            }
+          },100);
+        }
+      }
+
+      getIPUData("summary");
+
+      function intro(){
+      	document.cookie = "intro=shown;";
+      	document.querySelector("#div_intro").style.display = "block";
+        document.querySelector("#div_main").style.opacity = 0;
+        let i;
+        let ii;
+        let iii;
+        i = 1;
+        ii = 1;
+        iii = 0;
+        let iCatch = false;
+        let fadeIntro = () => {
+          if(i > 0){
+            document.querySelector("#div_intro").style.backgroundColor = `rgba(0,0,0,${i})`;
+            document.querySelector("#span_intoText").style.color = `rgba(255,255,255,${ii})`;
+            if(ii >= 0.5){
+              i -= 0.05;
+            }
+            else if(ii >= 0.25){
+              if(!(iCatch)){
+              	ii = i;
+              	iCatch = true;
+              }
+              ii -= 0.25;
+            }
+            else{
+              ii -= 0.1;
+            }
+            if(i <= 0.50){
+              document.querySelector("#div_main").style.opacity = iii;
+              iii += 0.25;
+            }
+            i -= 0.05;
+            setTimeout(fadeIntro,50);
+          }
+          else{
+          	document.querySelector("#div_intro").style.display = "none";
+          }
+        }
+        setTimeout(fadeIntro,1000);
+      }
+	  function checkForIntro(){
+        try{
+          //if(!(/intro=shown/i.test(document.cookie))){
+          if(true){
+            intro();
+          }
+          else{
+          	document.querySelector("#div_main").style.opacity = 1;
+          }
+        }
+        catch{
+          document.querySelector("#div_main").style.opacity = 1;
+        }
+      }
+      checkForIntro();
+      /*
+      let summaryData;
+      let ipuData;
+      let rate = "";
+      let downloadingReport = false;
+      let loadingData = false;
+
+      document.querySelector("#table_summary").addEventListener("click", e => {
+        if(!(loadingData) && e.target.parentNode.sectionRowIndex > 1){
+          rate = e.target.parentNode.firstChild.innerText;
+          getIPUData(rate);
+          getSummaryData();
+        }
+      });
+
+      function getSummaryData(){
+        summaryDataGet = new XMLHttpRequest();
+        summaryDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            summaryData = JSON.parse(summaryDataGet.responseText);
+            buildSummaryTable();
+            fillSummaryTable();
+            document.querySelector("#span_summaryUpdateTime").innerText = `Last Updated: ${summaryData["Time"]}`;
+            document.querySelector("#div_summary").style.display = "inline-block";
+            document.querySelector("#button_refreshData").innerText = "Refresh";
+            document.querySelector("#span_status").style.display = "none";
+          }
+        };
+        loadingData = true;
+        document.querySelector("#button_refreshData").innerText = "Loading...";
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";    
+        summaryDataGet.open("GET", "16dsfSFfgsf3/IPURRSummaryData", true);
+        summaryDataGet.send();
+      }
+
+      function getIPUData(rate){
+        //console.log(rate);
+        ipuDataGet = new XMLHttpRequest();
+        ipuDataGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(ipuDataGet.responseText !== "NF"){
+              ipuData = JSON.parse(ipuDataGet.responseText);
+              if(!(Array.isArray(ipuData))){
+                ipuData = [ipuData];
+              }
+              buildIPUTable();
+              fillIPUTable();
+              //document.querySelector("#span_summaryUpdateTime").innerText = `Last Updated: ${summaryData["Time"]}`;
+              //document.querySelector("#div_summary").style.display = "inline-block";
+              //document.querySelector("#button_refreshData").innerText = "Refresh";
+              document.querySelector("#span_status").style.display = "none";
+          
+              //console.log(ipuData);
+            }
+            else{
+              document.querySelector("#span_status").innerText = "No Data Found; Refresh Summary Data...";
+            }
+          }
+        };
+        //document.querySelector("#button_refreshData").innerText = "Loading...";
+        loadingData = true;
+        document.querySelector("#span_status").innerText = "Loading...";
+        document.querySelector("#span_status").style.display = "block";      
+        ipuDataGet.open("GET", `16dsfSFfgsf3/IPURRRateData/${rate}`, true);
+        ipuDataGet.send();
+      }
+
+      function buildSummaryTable(){
+        let tableRows = Object.keys(summaryData).length + 1;
+        let tableColumns = 2;
+        let tableHeaders = [
+          "- Reporting Rate -",
+          "- IPUs -"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "";
+          if(i < 2){
+            rowCont += "<tr>";
+          }
+          else{
+            rowCont += `<tr class="selectableRow">`;
+          }
+          for(let ii = 0; ii < tableColumns; ii++){
+            if(i === 1){ 
+              rowCont += "<th></th>";
+            }
+            else{
+              rowCont += "<td></td>";
+            }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_summary").innerHTML = tableCont;
+        document.querySelector("#table_summary > tbody > tr:first-child").innerHTML = `<th colspan="2">Summary</th>`;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_summary > tbody > tr:nth-child(2)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_summary > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillSummaryTable(){
+        for(let i = 0; i < Object.keys(summaryData).length - 1; i++){
+          let row = document.querySelector(`#table_summary > tbody > tr:nth-child(${i+3})`);
+          row.childNodes[0].innerText = Object.keys(summaryData)[i]
+          row.childNodes[1].innerText = Object.values(summaryData)[i]
+        }
+      }
+
+      function buildIPUTable(){
+        let tableRows = Object.keys(ipuData).length + 2;
+        let tableColumns = 10;
+        let tableHeaders = [
+          "IPU Name",
+          "Rate",
+          "Distance",
+          "Battery",
+          "Created",
+          "EPE",
+          "Heading",
+          "Msg #",
+          "Serial",
+          "Speed"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "<tr>";
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i == 1){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               rowCont += "<td></td>";
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_ipus").innerHTML = tableCont;
+        document.querySelector("#table_ipus > tbody > tr:first-child").innerHTML = `<th colspan="10">Reporting Rate -- ${rate}</th>`;
+        for(let i = 0; i < tableColumns; i++){
+          document.querySelector("#table_ipus > tbody > tr:nth-child(2)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 == 0 && i != 0){
+            document.querySelector(`#table_ipus > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+      }
+
+      function fillIPUTable(){
+        for(let i = 0; i < ipuData.length; i++){
+          let row = document.querySelector(`#table_ipus > tbody > tr:nth-child(${i+3})`);
+          row.childNodes[0].innerText = ipuData[i]["IPUName"];
+          row.childNodes[1].innerText = ipuData[i]["Time"];
+          row.childNodes[2].innerText = ipuData[i]["Distance"];
+          row.childNodes[3].innerText = ipuData[i]["Battery"];
+          let time = (new Date(parseInt(`${ipuData[i]["Created"]}000`)));
+          row.childNodes[4].innerText = `${time.toLocaleDateString("en-US",{timeZone: "America/Chicago"})} ${time.toLocaleTimeString("en-US",{timeZone: "America/Chicago"})}`;
+          row.childNodes[5].innerText = ipuData[i]["EPE"];
+          row.childNodes[6].innerText = ipuData[i]["Heading"];
+          row.childNodes[7].innerText = ipuData[i]["MsgNum"];
+          row.childNodes[8].innerText = ipuData[i]["Serial"];
+          row.childNodes[9].innerText = ipuData[i]["Speed"];
+        }
+      }
+
+      function refreshData(){
+        getSummaryData();
+        if(document.querySelector("#table_ipus").innerHTML !== ""){
+          getIPUData(rate);
+        }
+      }
+
+      function s2ab(s){
+      	let buf =  new ArrayBuffer(s.length);
+      	let view = new Uint8Array(buf);
+      	for(let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+      	return buf
+      }
+
+      function startReportDownload(){
+      	let btn = document.querySelector("#btn_downloadReport");
+        if(!(downloadingReport)){
+          downloadingReport = true;
+          btn.innerText = "Loading...";
+          rGet = new XMLHttpRequest();
+          rGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              finishReportDownload();
+            }
+          };
+          rGet.open("GET", "16dsfSFfgsf3/IPURRReport", true);
+          rGet.send();
+        }
+      }
+
+      function finishReportDownload(){
+        //console.log("start finish: " + rGet.responseText);
+        let link = document.querySelector("#a_downloadReport");
+      	let btn = document.querySelector("#btn_downloadReport");
+        if(rGet.responseText !== "offline"){
+          //console.log("start report");
+          rDateGet = new XMLHttpRequest();
+          rDateGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              let blob = new Blob ([s2ab(atob(rGet.response))],{type: ''});
+              link.href =  URL.createObjectURL(blob);
+      	      link.download = `${rDateGet.responseText} - IPU Reporting Rates.xlsx`;
+         	  link.click();
+         	  btn.innerText = "Download Report";
+         	  downloadingReport = false;
+            }
+          };
+          rDateGet.open("GET", "16dsfSFfgsf3/IPURRReportDate", true);
+          rDateGet.send();
+        }
+        else{
+          btn.innerText = "Download Report (Offline)";
+        }
+      }
+      
+      getSummaryData();
+
+      */
+
+    </script>
+  </body>
+</html>

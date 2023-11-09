@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body{
+        background-color: #000000;
+        color: #ffffff;
+      }
+      input,table,select,option,#div_controllers{
+        text-align: center;
+      }
+      #span_status{
+        display: none;
+      }
+      #div_content{
+        float: left;
+      }
+      #div_ipus{
+        display: none;
+        float: left;
+        margin-left: 5px;
+        margin-right: 10px;
+      }
+      #div_controllers,#btn_backupReload,#div_changeTableCount,#div_watchlist{
+        display: none;
+      }
+      #span_lastReloadTime{
+        margin-top: 5px;
+        margin-left: 5px;
+      }
+      #btn_reloadData{
+        margin-left: 5px;
+      }
+      .selectableRow:hover,#span_scrollStatus{
+        color: yellow;
+      }
+      #btn_showAllIPUs{
+        background-color: yellow;
+      }
+      table{
+        border-collapse: separate;
+        border-spacing: 0px;
+		/*display: inline-table;*/
+      }
+      table, th, td{
+        border: 0.5px solid #bbbbbb;
+        white-space: nowrap;
+        /* user-select: none; */
+      }
+      #div_controllers > table > tbody > tr > th, 
+      #div_controllers > table > tbody > tr > td{
+        border: 0.25px solid #555555;
+      }
+      th, td{
+        padding: 2.5px;
+      }
+      #div_watchlist{
+        float: right;
+        position: absolute;
+        right: 0.5%;
+        top: 9%;
+      }
+      #table_watchlist > tbody > tr > td,
+      #table_compOTAs > tbody > tr > td{
+	  	border: 0px solid white;
+	  	border-top: 0.5px solid #333333;
+	  	border-bottom: 0.5px solid #333333;
+	  }
+	  #div_compOTAs{
+	    display: none;
+	    margin-left: 10px;
+	    width: 47rem;
+	  }
+	  #table_compOTAs{
+	    float: left;
+	  }
+	  #table_otaBotQueue{
+	    display: none;
+	    margin-left: 10px;
+        clear: left;
+	  }
+	  
+	  .testTL1 {
+        transition: transform 4s;
+        transform: translateX(442px);
+      }
+      .testTL2 {
+        transition: transform 2s;
+        transform: translateX(0px);
+      }
+    </style>
+  </head>
+  <body>  
+    <title>IPU OTA</title>  
+    <h1 style="display: none;" id="header_title">IPU OTA</h1>
+    <div id="div_content">
+      <div id="div_ipus">
+        <table id="table_ipus"></table>
+      </div>
+      <div id="div_controllers">
+        <table id="table_controllers">
+          <tr><th colspan="2">OTA Action</th></tr>
+          <tr>
+            <td style="/*border-right: 0px; border-bottom: 0px;*/">
+              <select id="sel_otaAction" onchange="updateOTAActions()">
+                <option>Time / Distance</option>
+                <option>Software Update</option>
+              </select>
+            </td>
+            <td style="/*border-left: 0px; border-bottom: 0px;*/">
+              <select id="sel_otaOptions">
+                <option>15 -- 10</option>
+                <option>30 -- 100</option>
+                <option>300 -- 10</option>
+              </select>
+            </td>
+          </tr>
+          <tr><td colspan="2" style="/*border-top: 0px;*/"><button id="btn_submitOTA" onclick="submitOTA()">Send OTAs</button></td></tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Sort</th></tr>
+          <tr>
+            <td>
+              <select id="sel_sortOptions" onchange="sortIPUs()">
+                <option>Serial Number</option>
+                <option>Time</option>
+                <option>Distance</option>
+                <option>Software Version</option>
+              </select>
+            </td>
+            <td>
+              <select id="sel_sortOptions2" onchange="sortIPUs()">
+                <option>Ascending</option>
+                <option>Descending</option>
+              </select>
+            </td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Table Options</th></tr>
+          <tr>
+            <td>
+              <span id="span_limitLabel"># of IPUs</span>
+            </td>
+            <td>
+              <select id="sel_limitOptions" onchange="limitOptionsUpdate()">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>All</option>
+              </select>
+            </td>
+            <tr id="row_allPageButtons">
+              <td colspan="2">
+                <div id="div_pageButtons">
+                  <button id="btn_prevPage" onclick="prevPage()">Prev Page</button><button id="btn_nextPage" onclick="nextPage()">Next Page</button>
+                </div>
+                <div id="div_changeTableCount">
+                  <button id="btn_showAllIPUs" onclick="changeTableCount()">Update Table</button>
+                </div>
+              </td>
+            </tr>
+            <tr id="row_pageInfo">
+              <td><span>Page</span></td><td id="span_pageNum"><span></span></td>
+            </tr>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Filter on Page</th></tr>
+          <tr>
+            <td colspan="2">
+              <select id="sel_filOptions" onchange="ipuFilterPredict()">
+                <option>Serial Number</option>
+                <option>Time</option>
+                <option>Distance</option>
+                <option>Software Version</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><input id="in_filterIPUs"/></td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Search All</th></tr>
+          <tr>
+            <td colspan="2"><input id="in_searchIPUs"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><button id="btn_searchIPUs" onclick="changeTableCount('search')">Submit</button></td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Watchlist</th></tr>
+          <tr>
+            <td colspan="2">
+              <button id="btn_toggleWatchlist" onclick="toggleWatchlist()";>Start</button>
+            </td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Completed OTAs</th></tr>
+          <tr>
+            <td colspan="2"><button id="btn_showCompletedOTAs" onclick="showCompletedOTAs()">Show</button></td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">OTA Bot</th></tr>
+          <tr>
+            <td colspan="2"><button id="btn_toggleOTABot" onclick="toggleOTABot()">Loading...</button></td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Web Page</th></tr>
+          <tr>
+            <td colspan="2"><button id="btn_reloadData" onclick="changeTableCount()"></button></td>
+          </tr>
+          <tr><th colspan="2" style="padding-top: 10px;">Server Backend Data</th></tr>
+          <tr>
+            <td colspan="2"><span id="span_lastReloadTime"></span></td>
+          </tr>
+          <tr>
+            <td colspan="2"><span id="span_inCommsLength"></span></td>
+          </tr>
+        </table><br/>
+        <span id="span_scrollStatus"></span>
+      </div>
+    </div>
+    <div id="div_compOTAs">
+      <table id="table_compOTAs"></table><br/>
+      <table id="table_otaBotQueue"></table>
+	</div>
+    <div id="div_watchlist">
+      <table id="table_watchlist">
+        <tr><th>Complete</th><th>IPU</th><th>Action</th><th>Goal</th><th>Initiator</th></tr>
+      </table>
+	</div><br/>
+    <button id="btn_backupReload" onclick="changeTableCount()"></button>
+    <span id="span_status">Loading...</span>
+    <script>
+      
+      let ipuData;
+      let tableData;
+      let watchlistData;
+      let watchlistRows = [];
+      let loadingData = false;
+      let ipuSelect = [];
+      let currentPage = 1;
+      let lastPage = false;
+      let currentTableCount = 25;
+      let currentSort = "Time";
+      let currentSort2 = "Ascending";
+      let currentOTAAction = "Time / Distance";
+      let currentOTAOption = "300 -- 10";
+      let currentFil = "Serial Number";
+      let reloadingIPUData = false;
+      let initialDataLoading = true;
+      let showCheckAllCount = 0;
+      let watchlistInitializing = true;
+      let updatingWatchlist;
+      let checkDate = false;
+      let lastRefresh;
+      let showingCompOTAs = false;
+      let compOTACount = 0;
+      let leaderboardChamp;
+      let otaBotToggleLoading = false;
+      let initializing = true;
+
+      //document.querySelector("#table_controllers > tbody > tr:nth-child(13) > th").innerText = "Search (Alpha \uD83D\uDE10)";
+
+      function clickEvent(e){
+        let action;
+        if(e.target.className === "ipuCB"){
+          if(e.target.checked){
+            action = "add";
+          }
+          else{
+            action = "remove";
+          }
+          ipuSelectUpdate(e.target.parentNode.parentNode.firstChild.innerText,action);
+        }
+        else if(e.target.id === "header_title"){
+          showCheckAll();
+        }
+        else if(e.target.id === "in_checkAll"){
+          checkAll();
+        }
+      }
+
+      function keyUpEvent(e){
+        if(e.target.id === "in_filterIPUs"){
+          ipuFilterPredict();
+        }
+        else if(e.target.id === "in_searchIPUs" && e.key === "Enter"){
+          changeTableCount("search");
+        }
+      }
+
+      function wheelEvent(e){
+        if(e.target.localName === "select"){
+          let selChanged = false;
+          if(e.wheelDeltaY < 0 && e.target.selectedIndex < (e.target.length - 1)){
+            e.target.selectedIndex++
+            selChanged = true;
+          }
+          else if(e.wheelDeltaY > 0 && e.target.selectedIndex > 0){
+            e.target.selectedIndex--
+            selChanged = true;
+          }
+          if(/sort/i.test(e.target.id) && selChanged){
+            sortIPUs();
+          }
+          else if(/action/i.test(e.target.id) && selChanged){
+            updateOTAActions();
+          }
+          else if(/fil/i.test(e.target.id) && selChanged){
+            ipuFilterPredict();
+          }
+          else if(/limit/i.test(e.target.id) && selChanged){
+            limitOptionsUpdate();
+          }
+        }
+      }
+
+      function getIPUProperty(prop){
+        let type;
+        switch(prop){
+          case "Serial Number":
+            type = "serialNumber";
+            break;
+          case "Time":
+            type = "actualTimeReportingRate";
+            break;
+          case "Distance":
+            type = "actualDistanceReportingRate";
+            break;
+          case "Software Version":
+            type = "ipuSoftwareVersion";
+            break;
+        }
+        return type;
+      }
+
+      function updatePagePosDisplay(){
+        if(document.querySelector("#sel_limitOptions").value !== "All"){
+          document.querySelector("#span_pageNum").innerText = `${currentPage} of ${Math.ceil(parseInt(parseInt(document.querySelector("#span_inCommsLength").innerText.substr(9))) / parseInt(document.querySelector("#sel_limitOptions").value))}`;
+        }
+      }
+
+      function limitOptionsUpdate(){
+        if(document.querySelector("#sel_limitOptions").value !== `${currentTableCount}` || document.querySelector("#sel_sortOptions").value !== currentSort || document.querySelector("#sel_sortOptions2").value !== currentSort2){
+          document.querySelector("#row_allPageButtons").style.display = "table-row";
+          document.querySelector("#div_pageButtons").style.display = "none";
+          document.querySelector("#row_pageInfo").style.display = "none";
+          document.querySelector("#div_changeTableCount").style.display = "block";
+        }
+        else if(document.querySelector("#sel_limitOptions").value !== "All"){
+          document.querySelector("#row_allPageButtons").style.display = "table-row";
+          document.querySelector("#div_changeTableCount").style.display = "none";
+          document.querySelector("#row_pageInfo").style.display = "table-row";
+          document.querySelector("#div_pageButtons").style.display = "block";
+        }
+        else{     
+          document.querySelector("#row_allPageButtons").style.display = "none";
+          document.querySelector("#row_pageInfo").style.display = "none";
+        }
+      }
+
+      function ipuSelectUpdate(ipu,action){
+        if(action === "add"){
+          ipuSelect.push(ipu);
+        }
+        else if(action === "remove"){
+          ipuSelect.splice(ipuSelect.indexOf(ipu),1);
+        }
+      }
+
+      function updateOTAActions(){
+        if(document.querySelector("#sel_otaAction").value === "Time / Distance"){
+          document.querySelector("#sel_otaOptions").innerHTML = `<option>15 -- 10</option>
+                <option>30 -- 100</option>
+                <option>300 -- 10</option>`;
+        }
+        else if(document.querySelector("#sel_otaAction").value === "Software Update"){
+          document.querySelector("#sel_otaOptions").innerHTML = `<option>1.7.1.1 >> 1.7.1.2</option>`;
+        }
+        document.querySelector("#sel_otaOptions").value = currentOTAOption;
+      }
+
+      function changeTableCount(search){
+        ipuSelect = [];
+        currentTableCount = document.querySelector("#sel_limitOptions").value;
+        currentPage = 1;
+        updatePagePosDisplay();
+        if(search !== "search"){
+          instrDataPull();
+        }
+        else{
+          instrDataSearch();
+        }
+        sortIPUs();
+        document.querySelector("#btn_reloadData").style.backgroundColor = "#efefef";
+        if(currentPage > 1){
+          document.querySelector("#in_filterIPUs").value = "";
+        }
+        lastPage = false;
+        limitOptionsUpdate();
+      }
+
+      function nextPage(){
+        if(!(lastPage)){
+          ipuSelect = [];
+          currentPage++;
+          updatePagePosDisplay();
+          instrDataPull();
+          sortIPUs();         
+          document.querySelector("#in_filterIPUs").value = "";
+          lastPage = false;
+        }
+      }
+
+      function prevPage(){
+        if(currentPage > 1){
+          ipuSelect = [];
+          currentPage--;
+          updatePagePosDisplay();
+          instrDataPull();
+          sortIPUs();
+          document.querySelector("#in_filterIPUs").value = "";
+          lastPage = false;
+        }
+      }
+
+      function sortIPUs(){
+        let type = getIPUProperty(document.querySelector("#sel_sortOptions").value);
+        if(document.querySelector("#sel_sortOptions2").value === "Ascending"){
+          tableData.sort((a,b) => (a[type] > b[type]) ? 1 : -1);
+        }
+        else if(document.querySelector("#sel_sortOptions2").value === "Descending"){
+          tableData.sort((a,b) => (a[type] < b[type]) ? 1 : -1);
+        }
+        document.querySelectorAll(".ipuCB").forEach(cb => {cb.checked = false;});
+        ipuSelect = [];
+        limitOptionsUpdate();
+        buildIPUTable();
+        fillIPUTable();
+      }
+
+      function ipuFilterPredict(){
+        if(document.querySelector("#in_filterIPUs").value.length > 0){
+          ipuSelect = [];
+          let filType = getIPUProperty(document.querySelector("#sel_filOptions").value);
+          let filResults = ipuData.filter(ipu => (new RegExp(document.querySelector("#in_filterIPUs").value, "i")).test(ipu[filType]));
+          tableData = filResults;
+          sortIPUs();
+        }
+        else{
+          ipuSelect = [];
+          tableData = ipuData;
+          sortIPUs();
+        }
+      }
+
+      function showCheckAll(){
+        if(showCheckAllCount > 3){
+          document.querySelector("#in_checkAll").style.display = "block";
+        }
+        else{
+          showCheckAllCount++;
+        }
+      }
+
+      function checkAll(){
+        if(document.querySelector("#in_checkAll").checked){
+          ipuSelect = [];
+          for(let cb of document.querySelectorAll(".ipuCB")){
+            cb.checked = true;
+            ipuSelect.push(cb.parentElement.parentElement.firstChild.innerText);
+          }
+        }
+        else{
+          ipuSelect = [];
+          for(let cb of document.querySelectorAll(".ipuCB")){
+            cb.checked = false;
+          }
+        }
+      }
+
+      function getRecordCountSelection(){
+        if(document.querySelector("#sel_limitOptions").value === "All"){
+          return 50000;
+        }
+        else{
+          return document.querySelector("#sel_limitOptions").value;
+        }
+      }
+
+      function instrDataReload(){
+        if(!(loadingData)){
+          instrDataReloadGet = new XMLHttpRequest();
+          instrDataReloadGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              loadingData = false;
+              changeTableCount();
+            }
+          };
+          loadingData = true;
+          reloadingIPUData = true;
+          document.querySelector("#div_controllers").style.display = "none"; 
+          document.querySelector("#div_ipus").style.display = "none";
+          document.querySelector("#btn_reloadData").innerText = "Loading...";
+          document.querySelector("#btn_backupReload").innerText = "Loading...";
+          document.querySelector("#span_status").innerText = "Loading...";
+          document.querySelector("#span_status").style.display = "block";    
+          instrDataReloadGet.open("GET", "instrDataReload", true);
+          instrDataReloadGet.send();
+        }
+      }
+
+      function instrDataSearch(){
+        if(!(loadingData)){
+          //if(reloadingIPUData || initialDataLoading){
+            getLastReloadTime();
+            getIPUsInCommsLength();
+            initialDataLoading = false; 
+          //}
+          ipuDataGet = new XMLHttpRequest();
+          ipuDataGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              loadingData = false;
+              if(ipuDataGet.responseText !== "NF" && ipuDataGet.responseText !== "IL" && ipuDataGet.responseText !== "TM"){
+                lastRefresh = (new Date).toJSON();
+                ipuData = JSON.parse(ipuDataGet.responseText);
+                if(!(Array.isArray(ipuData))){
+                  ipuData = [ipuData];
+                }
+                tableData = ipuData
+                buildIPUTable();
+                fillIPUTable();
+                if(reloadingIPUData){
+                  ipuFilterPredict();
+                  reloadingIPUData = false;
+                }
+                currentSort = document.querySelector("#sel_sortOptions").value;
+                currentSort2 = document.querySelector("#sel_sortOptions2").value;
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+              else if(ipuDataGet.responseText === "IL"){
+                parent.postMessage("logout");
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#span_status").style.display = "none"; 
+              }
+              else if(ipuDataGet.responseText === "TM"){
+                document.querySelector("#table_ipus").innerHTML = `<table><tr><th>Serial Number</th><th>Time</th><th>Distance</th><th>Software Vesion</th></tr><tr><td colspan="4">Too Many Matches Found</td></tr></table>`;
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+              else if(ipuDataGet.responseText === "NF"){
+                document.querySelector("#table_ipus").innerHTML = `<table><tr><th>Serial Number</th><th>Time</th><th>Distance</th><th>Software Vesion</th></tr><tr><td colspan="4">No Matches Found</td></tr></table>`;
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+              else{
+                document.querySelector("#span_status").innerText = "Error...";
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+            }
+          };
+          loadingData = true;
+          document.querySelector("#span_status").innerText = "Loading...";
+          document.querySelector("#span_status").style.display = "block";      
+          ipuDataGet.open("PUT", `instrDataSearch`, true);
+          ipuDataGet.send(document.querySelector("#in_searchIPUs").value);
+        }
+      }
+
+      function getLastReloadTime(){
+        lastReloadtimeGet = new XMLHttpRequest();
+        lastReloadtimeGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            if(lastReloadtimeGet.responseText !== "IL"){
+              document.querySelector("#span_lastReloadTime").innerText = `Last Updated: ${lastReloadtimeGet.responseText}`;
+            }
+          }
+        };
+        loadingData = true;
+        document.querySelector("#span_lastReloadTime").innerText = `Last Updated: loading...`;
+        lastReloadtimeGet.open("GET", "instrDate", true);
+        lastReloadtimeGet.send();
+      }
+
+      function getIPUsInCommsLength(){
+        inCommsLengthGet = new XMLHttpRequest();
+        inCommsLengthGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            loadingData = false;
+            if(inCommsLengthGet.responseText !== "IL"){
+              document.querySelector("#span_inCommsLength").innerText = `In Comms: ${inCommsLengthGet.responseText}`;
+              updatePagePosDisplay();
+            }
+            if(inCommsLengthGet.responseText === "0"){
+              document.querySelector("#span_pageNum").innerText = "0 of 0";
+            }
+          }
+        };
+        loadingData = true;
+        document.querySelector("#span_inCommsLength").innerText = `In Comms: loading...`;
+        inCommsLengthGet.open("GET", "inCommsLength", true);
+        inCommsLengthGet.send();
+      }
+
+      function instrDataPull(){
+        if(!(loadingData)){
+          //if(reloadingIPUData || initialDataLoading){
+            getLastReloadTime();
+            getIPUsInCommsLength();
+            initialDataLoading = false; 
+          //}
+          ipuDataGet = new XMLHttpRequest();
+          ipuDataGet.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              loadingData = false;
+              if(ipuDataGet.responseText === "CTIA PROBLEM!"){
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#table_ipus").innerHTML = "<tr><td>CTIA Problem!</td></tr><tr><td>This issue can be confirmed with WICA.</td></tr><tr><td>Click the \"Reload\" button when issue has been resolved.</td></tr>";
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#span_status").style.display = "none";
+                document.querySelector("#btn_backupReload").innerText = "Reload";
+                document.querySelector("#btn_backupReload").style.display = "block";
+              }
+              else if(ipuDataGet.responseText === "LP"){
+                lastPage = true;
+                currentPage--;
+                updatePagePosDisplay();
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+              else if(ipuDataGet.responseText !== "NF" && ipuDataGet.responseText !== "IL" && ipuDataGet.responseText !== "ND"){
+                lastRefresh = (new Date).toJSON();
+                ipuData = JSON.parse(ipuDataGet.responseText);
+                if(!(Array.isArray(ipuData))){
+                  ipuData = [ipuData];
+                }
+                tableData = ipuData
+                buildIPUTable();
+                fillIPUTable();
+                if(reloadingIPUData){
+                  ipuFilterPredict();
+                  reloadingIPUData = false;
+                }
+                currentSort = document.querySelector("#sel_sortOptions").value;
+                currentSort2 = document.querySelector("#sel_sortOptions2").value;
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+                if(initializing){
+                  showCompletedOTAs();
+                  toggleWatchlist();
+                  initializing = false;
+                }
+              }
+              else if(ipuDataGet.responseText === "IL"){
+                parent.postMessage("logout");
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#span_status").style.display = "none"; 
+              }
+              else if(ipuDataGet.responseText === "ND"){
+                document.querySelector("#table_ipus").innerHTML = `<table><tr><th>Serial Number</th><th>Time</th><th>Distance</th><th>Software Vesion</th></tr><tr><td colspan="4">No IPUs in Comms...</td></tr></table>`;
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+              else{
+                document.querySelector("#span_status").innerText = "Error...";
+                document.querySelector("#div_ipus").style.display = "inline-block";
+                document.querySelector("#div_controllers").style.display = "inline-block"; 
+                document.querySelector("#btn_reloadData").innerText = "Refresh";
+                document.querySelector("#btn_backupReload").style.display = "none";
+                document.querySelector("#span_status").style.display = "none";
+              }
+            }
+          };
+          loadingData = true;
+          document.querySelector("#span_status").innerText = "Loading...";
+          document.querySelector("#span_status").style.display = "block";      
+          ipuDataGet.open("POST", `instrDataPull`, true);
+          ipuDataGet.send(`${currentPage},${getRecordCountSelection()},${getIPUProperty(document.querySelector("#sel_sortOptions").value)},${document.querySelector("#sel_sortOptions2").value}`);
+        }
+      }
+
+      function buildIPUTable(){
+        let tableRows = Object.keys(tableData).length + 1;
+        let tableColumns = 5;
+        let tableHeaders = [
+          "Serial Number",
+          "Time",
+          "Distance",
+          "Software Version"
+        ];
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          let rowCont = "";
+          if(i < 1){
+            rowCont += "<tr>";
+          }
+          else{
+            rowCont += `<tr class="selectableRow">`;
+          }
+          for(let ii = 0; ii < tableColumns; ii++){
+             if(i === 0){ 
+               rowCont += "<th></th>";
+             }
+             else{
+               rowCont += "<td></td>";
+             }
+          }
+          rowCont += "</tr>";
+          tableCont += rowCont;
+        }
+        document.querySelector("#table_ipus").innerHTML = tableCont;
+        for(let i = 0; i < tableColumns ; i++){
+          document.querySelector("#table_ipus > tbody > tr:nth-child(1)").childNodes[i].innerHTML = tableHeaders[i];
+        }
+        for(let i = 0; i <= tableRows; i++){
+          if(i % 2 === 0 && i !== 0){
+            document.querySelector(`#table_ipus > tbody > tr:nth-child(${i})`).style.backgroundColor = "#333333";
+          }
+        }
+        document.querySelector("#table_ipus > tbody > tr:first-child > th:last-child").innerHTML = `<input id="in_checkAll" style="display: none" type="checkbox"/>`;
+        document.querySelectorAll("#table_ipus > tbody > tr > td:last-child").forEach(cell => {
+          cell.innerHTML = `<input type="checkbox" class="ipuCB"/>`;
+        });
+      }
+
+      function fillIPUTable(){
+        for(let i = 0; i < tableData.length; i++){
+          let row = document.querySelector(`#table_ipus > tbody > tr:nth-child(${i+2})`);
+          row.childNodes[0].innerText = tableData[i]["serialNumber"];
+          row.childNodes[1].innerText = tableData[i]["actualTimeReportingRate"];
+          row.childNodes[2].innerText = tableData[i]["actualDistanceReportingRate"];
+          row.childNodes[3].innerText = tableData[i]["ipuSoftwareVersion"];
+        }
+      }
+
+      function toggleWatchlist(){
+        if(document.querySelector("#btn_toggleWatchlist").innerText === "Start"){	  	  
+	  	  getWatchlistData();
+	  	  updatingWatchlist = setInterval(getWatchlistData,10000);
+          updatingOTABotStatus = setInterval(()=>{toggleOTABot(true);},10000);
+          updatingCompOTAs = setInterval(()=>{getCompOTAs();if(document.querySelector("#btn_refreshCompOTAs") !== null) document.querySelector("#btn_refreshCompOTAs").style.display = "none";},10000);
+	  	  document.querySelector("#div_watchlist").style.display = "block";
+	  	  document.querySelector("#btn_toggleWatchlist").innerText = "Stop";
+	  	}
+	  	else{	      
+          clearInterval(updatingWatchlist);
+          clearInterval(updatingOTABotStatus);
+          clearInterval(updatingCompOTAs);
+          document.querySelector("#btn_refreshCompOTAs").style.display = "inline-block";
+          document.querySelector("#btn_toggleWatchlist").innerText = "Start";
+          document.querySelector("#div_watchlist").style.display = "none";
+	  	}
+      }
+
+      function buildWatchlistTable(){
+        let tableRows = watchlistData.length + 1;
+        let tableCols = Object.keys(watchlistData[0]).length;
+        let tableCont = "";
+        for(let i = 0; i < tableRows; i++){
+          tableCont += "<tr>";
+          for(let ii = 0; ii < tableCols; ii++){
+            if(i === 0){
+              /*if(Object.keys(watchlistData[0])[ii] === "Goal"){
+                tableCont += `<th>Change</th>`;
+              }
+              else*/ if(Object.keys(watchlistData[0])[ii] === "Type"){
+                tableCont += `<th>Action</th>`;
+              }
+              else{
+                tableCont += `<th>${Object.keys(watchlistData[0])[ii]}</th>`;
+              }
+            }
+            else{
+              tableCont += "<td></td>";
+            }
+          }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_watchlist").innerHTML = tableCont;
+        tableBuilt = true;
+      }
+
+      function fillWatchlistTable(){
+        for(let i = 0; i < watchlistData.length; i++){
+          for(let ii = 0; ii < Object.keys(watchlistData[0]).length; ii++){
+            if(ii === 0){
+          	  if(watchlistData[i][Object.keys(watchlistData[i])[ii]] === "True"){
+                if(document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1}) > svg`) === null){
+                  //
+                 //  let ran = Math.round((Math.random()/2) * 10) / 10;
+          	      // document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerHTML = `<svg class="watchlistBubbleCon" width="18" height="18" style="transform: rotateY(0deg); transition: transform 0.5s ease-in-out ${ran}s;"><circle class="watchlistBubble" cx="9" cy="9" r="8" style="fill: #888888; transition: fill 0s ease ${(ran/2) + 0.25}s;"/></svg>`;
+                 //  document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1}) > svg`).style.transform = "rotateY(180deg)";
+                 //  document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1}) > svg > circle`).style.fill = "#00e000";
+                  //
+                      
+                  let ran = Math.round((Math.random()/2) * 10) / 10;
+          	      document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerHTML = `<svg class="watchlistBubbleCon" width="18" height="18" style="transform: rotateY(0deg); transition: transform 0.5s ease-in-out ${ran}s;"><circle class="watchlistBubble" cx="9" cy="9" r="8" style="fill: #00e000; transition: fill 0s ease ${(ran/2) + 0.25}s;"/></svg>`;
+                }
+                else{
+                  document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1}) > svg`).style.transform = "rotateY(180deg)";
+                  document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1}) > svg > circle`).style.fill = "#00e000";
+                }
+              }
+          	  else{
+                // console.log("hit");
+                let ran = Math.round((Math.random()/2) * 10) / 10;
+          	    document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerHTML = `<svg class="watchlistBubbleCon" width="18" height="18" style="transform: rotateY(0deg); transition: transform 0.5s ease-in-out ${ran}s;"><circle class="watchlistBubble" cx="9" cy="9" r="8" style="fill: #888888; transition: fill 0s ease ${(ran/2) + 0.25}s;"/></svg>`;
+          	  }
+            }
+            else if(ii === 2){
+              if(watchlistData[i][Object.keys(watchlistData[i])[ii]] === "T -- D"){
+                document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = "Time/Distance";
+              }
+              else if(watchlistData[i][Object.keys(watchlistData[i])[ii]] === "SWUP"){
+                document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = "Software Update";
+              }
+            }
+            else if(ii === 4){
+              if(watchlistData[i][Object.keys(watchlistData[i])[ii]] === "OTA_Bot"){
+                document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = "\uD83E\uDD16OTA_Bot\uD83E\uDD16";
+              }
+              else{
+                document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = watchlistData[i][Object.keys(watchlistData[i])[ii]];
+              }
+            }
+            else{
+              document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = watchlistData[i][Object.keys(watchlistData[i])[ii]];
+            }
+          }
+        }
+      }
+
+      function buildWatchlistTable_v2(){
+        for(let i = 0; i < watchlistData.length; i++){
+          let addRow = true;
+          if(watchlistRows.length > 0){
+            for(let ii = 0; ii < watchlistRows.length; ii++){
+              if(watchlistData[i].ID === watchlistRows[ii].children[5].innerText){
+                addRow = false;
+                if(watchlistData[i].Complete === "True"){
+                  watchlistRows[ii].querySelector("svg").style.transform = "rotateY(180deg)";
+                  watchlistRows[ii].querySelector("circle").style.fill = "#00e000";
+                }
+                else{
+                  watchlistRows[ii].querySelector("svg").style.transform = "rotateY(0deg)";
+                  watchlistRows[ii].querySelector("circle").style.fill = "#888888";
+                }
+                break;
+              }
+            }
+          }
+          if(addRow){
+            let ran = Math.round(Math.random() * 100) / 100;
+            let tr = document.createElement("tr");
+            tr.style.transition = "opacity 1.5s";
+            let bubbleState = "";
+            if(watchlistData[i].Complete !== "True") bubbleState = `<svg width="18" height="18" style="transform: rotateY(0deg); transition: transform 1s ease-in-out ${ran}s;"><circle cx="9" cy="9" r="8" style="fill: #888888; transition: fill 0s ease ${(ran/2) + 0.5}s;"/></svg>`;
+            else bubbleState = `<svg width="18" height="18" style="transform: rotateY(0deg); transition: transform 1s ease-in-out ${ran}s;"><circle cx="9" cy="9" r="8" style="fill: #00e000; transition: fill 0s ease ${(ran/2) + 0.5}s;"/></svg>`;
+            let actLab = "";
+            if(watchlistData[i].Type === "T -- D") actLab = "Time/Distance"; 
+            else if(watchlistData[i].Type === "SWUP") actLab = "Software Update";
+            else actLab = watchlistData[i].Type;
+            let intitiator = "";
+            if(watchlistData[i].Initiator === "OTA_Bot") initiator = "\uD83E\uDD16OTA_Bot\uD83E\uDD16";
+            else if(watchlistData[i].Initiator === "Serial_Bot") initiator = "\uD83E\uDD16Serial_Bot\uD83E\uDD16";
+            else initiator = watchlistData[i].Initiator;
+            tr.innerHTML = `
+              <td style="transition: padding 1s, border 1s;"><div style="overflow: hidden; transition: max-height 1s; max-height: 0px;">${bubbleState}</div></td>
+              <td style="transition: padding 1s, border 1s;"><div style="overflow: hidden; transition: max-height 1s; max-height: 0px;">${watchlistData[i].IPU}</div></td>
+              <td style="transition: padding 1s, border 1s;"><div style="overflow: hidden; transition: max-height 1s; max-height: 0px;">${actLab}</div></td>
+              <td style="transition: padding 1s, border 1s;"><div style="overflow: hidden; transition: max-height 1s; max-height: 0px;">${watchlistData[i].Goal}</div></td>
+              <td style="transition: padding 1s, border 1s;"><div style="overflow: hidden; transition: max-height 1s; max-height: 0px;">${initiator}</div></td>
+              <td style="display: none;"><div>${watchlistData[i].ID}</div></td>
+              <td style="display: none;"><div>NewRow</div></td>
+            `;
+            watchlistRows.push(tr);
+          }
+        }
+        let remIn = [];
+        for(let i = watchlistRows.length - 1; i > -1; i--){
+          let removeRow = true;
+          for(let ii = 0; ii < watchlistData.length; ii++){
+            if(watchlistRows[i].children[5].innerText === watchlistData[ii].ID){
+              removeRow = false;
+              break;
+            }
+          }
+          if(removeRow) remIn.push(i);
+        }
+        for(let i of remIn){
+          watchlistRows[i].style.opacity = 0;
+          setTimeout(()=>{
+            watchlistRows[i].querySelectorAll("div").forEach(div => div.style.maxHeight = 0);
+            setTimeout(()=>{
+              watchlistRows[i].querySelectorAll("td").forEach(td => {td.style.padding = "0px"; td.style.border = "0px";});
+            },500);
+            setTimeout(()=>{
+              watchlistRows[i].remove();
+              watchlistRows.splice(i,1);
+            },1000);
+          },500);
+        }
+        document.querySelector("#div_watchlist").style.display = "inline-block";
+        if(watchlistRows.length > 0 && document.querySelector("#table_watchlist").innerHTML === `<tbody><tr><th>Complete</th><th>IPU</th><th>Action</th><th>Goal</th><th>Initiator</th></tr><tr><td colspan="5">List Empty...</td></tr></tbody>`){
+          document.querySelector("#table_watchlist").innerHTML = `<tbody><tr><th>Complete</th><th>IPU</th><th>Action</th><th>Goal</th><th>Initiator</th></tr></tbody>`
+          document.querySelector("#table_watchlist > tbody > tr:nth-child(2)").remove();
+          watchlistRows.forEach(tr => tr.children[6].innerText = "NewRow");
+        }
+        for(let tr of watchlistRows){
+          if(tr.children[6].innerText === "NewRow"){
+            tr.children[6].innerText = "";
+            document.querySelector("#table_watchlist > tbody").appendChild(tr);
+            if(!watchlistInitializing) setTimeout(()=>{tr.querySelectorAll("div").forEach(div => div.style.maxHeight = "100px");},50);
+            else tr.querySelectorAll("div").forEach(div => div.style.maxHeight = "100px");
+          }
+        }
+        watchlistInitializing = false;
+      }
+
+      function getWatchlistData(){
+        watchlistPut = new XMLHttpRequest();
+        watchlistPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){
+            if(watchlistPut.responseText !== "NC"){
+              if(watchlistPut.responseText !== "ND"){
+                watchlistData = JSON.parse(watchlistPut.responseText);
+                if(!(Array.isArray(watchlistData))){
+                  watchlistData = [watchlistData];
+                }
+                buildWatchlistTable_v2();
+                // buildWatchlistTable();
+                // fillWatchlistTable();
+              }
+              else{
+                document.querySelector("#table_watchlist").innerHTML = `<table><tr><th>Complete</th><th>IPU</th><th>Action</th><th>Goal</th><th>Initiator</th></tr><tr><td colspan="5">List Empty...</td></tr></table>`;
+              }
+            }
+          }
+        };
+        if(!(checkDate)){
+          checkDate = true;
+        }
+        else{
+          getCheckDate();
+          checkDate = false;
+        }
+        let qData = "";
+        if(document.querySelector("#table_watchlist > tbody > tr:nth-child(2) > td:nth-child(6)") !== null){
+          let pack = [];
+          for(let i = 0; i < watchlistRows.length; i++){
+            let bubbleStatus;
+            (document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i + 2}) > td:nth-child(1) circle`).style.fill !== "rgb(136, 136, 136)") ? bubbleStatus = "True" : bubbleStatus = "False";
+            pack.push(document.querySelector(`#table_watchlist > tbody > tr:nth-child(${i + 2}) > td:nth-child(6)`).innerText + "<~>" + bubbleStatus);
+          }
+          qData = pack.join(",");
+        }
+        else{
+          qData = "fresh";
+        }
+        watchlistPut.open("PUT", "watchGet", true);
+        watchlistPut.send(qData);
+      }
+
+      function getCheckDate(){
+        checkDateGet = new XMLHttpRequest();
+        checkDateGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){          
+            if(checkDateGet.responseText === "BD"){
+              document.querySelector("#btn_reloadData").style.backgroundColor = "Yellow";
+            }
+          }
+        };   
+        checkDateGet.open("PUT", "dateCheck", true);
+        checkDateGet.send(lastRefresh);
+      }
+
+      function toggleOTABot(updatingStatus){
+        if(!(otaBotToggleLoading)){
+          let tglBtnTxt = document.querySelector("#btn_toggleOTABot").innerText;
+          let toggleType = "";
+          if(tglBtnTxt === "Loading..." || tglBtnTxt === "Error" || updatingStatus){
+            toggleType = "getSWUP";
+          }
+          else if(tglBtnTxt === "Deactivated"){
+            toggleType = "enableSWUP";
+          }
+          else if(tglBtnTxt === "Activated"){
+            toggleType = "disableSWUP";
+          }
+          OTABotTogglePut = new XMLHttpRequest();
+          OTABotTogglePut.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+              otaBotToggleLoading = false;
+              if(OTABotTogglePut.responseText === "Enabled"){
+                document.querySelector("#btn_toggleOTABot").innerText = "Activated";
+                document.querySelector("#btn_toggleOTABot").style.backgroundColor = "#00ff00";
+              }
+              else if(OTABotTogglePut.responseText === "Disabled"){
+                document.querySelector("#btn_toggleOTABot").innerText = "Deactivated";
+                document.querySelector("#btn_toggleOTABot").style.backgroundColor = "#efefef";
+              }
+              else{
+                document.querySelector("#btn_toggleOTABot").innerText = "Error";
+                document.querySelector("#btn_toggleOTABot").style.backgroundColor = "#ffff00";
+              }
+            }
+          };
+          if(!updatingStatus) document.querySelector("#btn_toggleOTABot").innerText = "Loading...";
+          otaBotToggleLoading = true;
+          OTABotTogglePut.open("PUT", "OTABotToggle", true);
+          OTABotTogglePut.send(toggleType);
+        }
+      }
+
+      function showCompletedOTAs(){
+        if(!showingCompOTAs){
+          getCompOTAs();
+          document.querySelector("#div_compOTAs").style.display = "inline-block";
+          showingCompOTAs = true;
+        }
+        else{
+          document.querySelector("#div_compOTAs").style.display = "none";
+          showingCompOTAs = false;
+        }
+      }
+
+      function getCompOTAs(){
+        compOTAPut = new XMLHttpRequest();
+        compOTAPut.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){          
+            if(compOTAPut.responseText !== "NC"){
+              compOTACount = (compOTAPut.responseText).split("<~~~~~>")[0];
+              leaderboardChamp = (compOTAPut.responseText).split("<~~~~~>")[1];
+              compOTAData = JSON.parse((compOTAPut.responseText).split("<~~~~~>")[2]);
+              if(!(Array.isArray(compOTAData))){
+                compOTAData = [compOTAData];
+              }
+              buildCompOTATable();
+              fillCompOTATable();
+            }
+          }
+        };
+        if(document.querySelector("#btn_toggleOTABot").innerText === "Activated"){
+          getOTABotQueue();
+        }
+        compOTAPut.open("PUT", "compOTAGet", true);
+        let recordCount = 25;
+        let latestIPU = "";
+        (document.querySelector("#table_compOTAs > tbody > tr:nth-child(2) > td:nth-child(2)") !== null) ? latestIPU = document.querySelector("#table_compOTAs > tbody > tr:nth-child(2) > td:nth-child(2)").innerText : latestIPU = "fresh";
+        compOTAPut.send(`${recordCount}<~~~>${latestIPU}`);
+      }
+
+      function buildCompOTATable(){
+        let tableRows = compOTAData.length + 0;
+        let tableCols = Object.keys(compOTAData[0]).length;
+        let tableCont = "";
+        //-----------------------------------------------------------------------
+        leaderboardChamp = "N/A";
+        //-----------------------------------------------------------------------
+        if(leaderboardChamp !== "N/A"){
+          tableCont += `<tr><th colspan='${tableCols}'>Completed OTAs <button id='btn_refreshCompOTAs' onclick='getCompOTAs()'>Refresh</button><br/>Total Completed Today - ${compOTACount}<br/>Current OTA Leader - &#x1F451;${leaderboardChamp}&#x1F451;</th></tr>`;
+        }
+        else{
+          tableCont += `<tr><th colspan='${tableCols}'>Completed OTAs <button id='btn_refreshCompOTAs' onclick='getCompOTAs()'>Refresh</button><br/>Total Completed Today - ${compOTACount}</th></tr>`;
+        }
+        for(let i = 0; i < tableRows; i++){
+          tableCont += "<tr>";
+          for(let ii = 0; ii < tableCols; ii++){
+            tableCont += "<td></td>";
+          }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_compOTAs").innerHTML = tableCont;
+        if(document.querySelector("#btn_toggleWatchlist").innerText !== "Start") document.querySelector("#btn_refreshCompOTAs").style.display = "none";
+      }
+
+      function fillCompOTATable(){
+        for(let i = 0; i < compOTAData.length; i++){
+          for(let ii = 0; ii < Object.keys(compOTAData[0]).length; ii++){
+		    let cellData = compOTAData[i][Object.keys(compOTAData[i])[ii]];
+			(cellData !== "OTA_Bot") ? cellData = cellData : cellData = "\uD83E\uDD16OTA_Bot\uD83E\uDD16";
+            document.querySelector(`#table_compOTAs > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = cellData;
+          }
+        }
+      }
+
+      function getOTABotQueue(){
+        otaBotQueueGet = new XMLHttpRequest();
+        otaBotQueueGet.onreadystatechange = function(){
+          if(this.readyState == 4 && this.status == 200){          
+            if(otaBotQueueGet.responseText !== "ND"){
+              otaBotQueueData = JSON.parse(otaBotQueueGet.responseText);
+              if(!(Array.isArray(otaBotQueueData))){
+                otaBotQueueData = [otaBotQueueData];
+              }
+              buildOtaBotQueueTable();
+              fillOtaBotQueueTable();
+              document.querySelector("#table_otaBotQueue").style.display = "inline-table";
+            }
+            else{
+              document.querySelector("#table_otaBotQueue").innerHTML = "<tr><th>OTA Bot Queue</th></tr><tr><td>No OTA Sends Pending...</td></tr>";
+            }
+          }
+        };
+        otaBotQueueGet.open("GET", "otaBotQueueGet", true);
+        otaBotQueueGet.send();
+      }
+
+      function buildOtaBotQueueTable(){
+        let tableRows = otaBotQueueData.length + 0;
+        let tableCols = Object.keys(otaBotQueueData[0]).length;
+        let tableCont = "";
+        tableCont += `<tr><th colspan='${tableCols}'>OTA Bot Queue</th></tr>`;
+        for(let i = 0; i < tableRows; i++){
+          tableCont += "<tr>";
+          for(let ii = 0; ii < tableCols; ii++){
+            tableCont += "<td></td>";
+          }
+          tableCont += "</tr>";
+        }
+        document.querySelector("#table_otaBotQueue").innerHTML = tableCont;
+      }
+
+      function fillOtaBotQueueTable(){
+        for(let i = 0; i < otaBotQueueData.length; i++){
+          for(let ii = 0; ii < Object.keys(otaBotQueueData[0]).length; ii++){
+		    let cellData = otaBotQueueData[i][Object.keys(otaBotQueueData[i])[ii]];
+            document.querySelector(`#table_otaBotQueue > tbody > tr:nth-child(${i+2}) > td:nth-child(${ii+1})`).innerText = cellData;
+          }
+        }
+      }
+
+      function submitOTA(){
+        if(!(loadingData)){
+          if(ipuSelect.length > 0){
+            let packedData = {};
+            switch(document.querySelector("#sel_otaOptions").value){
+              case "15 -- 10":
+                packedData.rate = "15";
+                break;
+              case "30 -- 100":
+                packedData.rate = "30";
+                break;
+              case "300 -- 10":
+                packedData.rate = "300";
+                break;
+              case "1.7.1.1 >> 1.7.1.2":
+                packedData.rate = "SWUP";
+                break;
+            }
+            packedData.IPUs = ipuSelect;
+            otaSendPost = new XMLHttpRequest();
+            otaSendPost.onreadystatechange = function(){
+              if(this.readyState == 4 && this.status == 200){
+                loadingData = false;
+                //instrDataReload();
+                instrDataPull();
+              }
+            };
+            loadingData = true;
+            document.querySelector("#div_controllers").style.display = "none"; 
+            document.querySelector("#div_ipus").style.display = "none";
+            document.querySelector("#span_status").innerText = "Loading...";
+            document.querySelector("#span_status").style.display = "block";
+            otaSendPost.open("POST", "otaSend", true);
+            otaSendPost.send(JSON.stringify(packedData));
+            ipuSelect = [];
+          }
+        }    
+      }
+      
+      document.documentElement.addEventListener("click", e => clickEvent(e));
+      document.documentElement.addEventListener("keyup", e => keyUpEvent(e));
+      document.documentElement.addEventListener("wheel", e => wheelEvent(e));
+      document.querySelector("#table_controllers").addEventListener("mouseover", () => {
+        document.querySelector("#span_scrollStatus").innerText = "Page Scrolling Locked";
+        document.body.style.overflow = "hidden";
+      });
+      document.querySelector("#table_controllers").addEventListener("mouseout", () => {
+        document.querySelector("#span_scrollStatus").innerText = "";
+        document.body.style.overflow = "visible";
+      });
+      document.querySelector("#sel_otaAction").value = currentOTAAction;
+      document.querySelector("#sel_otaOptions").value = currentOTAOption;
+      document.querySelector("#sel_sortOptions").value = currentSort;
+      document.querySelector("#sel_sortOptions2").value = currentSort2;
+      document.querySelector("#sel_filOptions").value = currentFil;
+      document.querySelector("#sel_limitOptions").value = currentTableCount;
+      instrDataPull();
+      updateOTAActions();
+      limitOptionsUpdate();
+      toggleOTABot(true);
+
+    </script>
+  </body>
+</html>
