@@ -33,6 +33,6 @@ From Windows PowerShell 5.1:
 
 This checks reference hashes and the absence of deployable scripts and data artifacts. It does not execute the historical source or establish its runtime correctness.
 
-Current-tree cleanup does not erase previously published Git history. This repository makes no claim that earlier commits were scrubbed.
+On 2026-10-18, public branch history was rewritten to exclude identified historical sensitive data. Re-clone if you have an older checkout; merging its history back can reintroduce removed data. GitHub cached views or retained references, if present, need separate cleanup; external copies are not erased.
 
 MIT license for Derek Poe's source. No third-party runtime binaries or original operational media are distributed in this reference tree.

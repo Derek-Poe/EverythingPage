@@ -8,4 +8,6 @@ Original HTML interfaces were omitted from this cleanup because they mix present
 
 `source-manifest.json` records original source hashes and the hashes of the sanitized references. Hashes identify the selected source and its derivative; they do not make the original deployment safe or prove that the programs were correct.
 
-Original files were preserved privately, never executed, and Git history was not rewritten. Earlier published commits can still contain the material removed from the current tree. Credential validity was not tested. Any historical access material still in use requires replacement independently of source cleanup.
+Original files remain preserved privately and were never executed during maintenance.
+
+On 2026-10-18, public branch history was rewritten to exclude identified historical sensitive data. Re-clone if you have an older checkout; merging its history back can reintroduce removed data. GitHub cached views or retained references, if present, need separate cleanup; external copies are not erased.
