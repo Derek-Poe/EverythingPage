@@ -1,0 +1,425 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00770]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00049]'
+
+                                                                                                                                                                                                            
+                                                                                                                                                                                          
+                                                                                                                                                                                                 
+                                                                                                                                                                                                                       
+                                                                                                                                                                                                                    
+$conn = New-Object System.Data.OleDb.OleDbConnection('[SANITIZED_00771]')
+$conn.Open()
+$cmd = $conn.CreateCommand()
+$dt = New-Object System.Data.DataTable
+$dbnull = [System.DBNull]::Value
+$snmp = New-Object -ComObject olePrn.oleSNMP
+
+$listener = New-Object System.Net.HttpListener
+                                                                           
+                                                         
+$apiPort = 9747
+                                            
+$hostName = '[SANITIZED_00290]'
+$listener.Prefixes.Add('[SANITIZED_00012]')
+                                                      
+                                               
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+
+function getPackedDT($datTab){
+  if($datTab -ne $null){
+    $allCol = $datTab[0].Columns.ColumnName
+    $selCol = @()
+    forEach($col in $allCol){
+      if(($datTab[0].$col)[0] -ne $dbnull){
+        $selCol += $col
+      }
+    }
+    $datTabArray = $true
+    if($datTab.($selCol[0]) -isnot [array]){
+      $datTabArray = $false
+    }
+    $packedData = @()
+    if($datTab.($selCol[0]) -is [array]){
+      $len = $datTab.($selCol[0]).Length
+    }
+    else{
+      $len = 1
+    }
+    for($i = 0; $i -lt $len; $i++){
+      $obj = New-Object -TypeName PSCustomObject
+      forEach($prop in $selCol){
+        if($datTabArray){
+          $obj | Add-Member -Name $prop -Value ($datTab.$prop)[$i] -MemberType NoteProperty
+        }
+        else{
+          $obj | Add-Member -Name $prop -Value $datTab.$prop -MemberType NoteProperty
+        }
+      }
+      $packedData += $obj
+    }
+    return $packedData
+  }
+  else{
+    return $null
+  }
+}
+
+$query = '[SANITIZED_00772]'
+$cmd.CommandText = $query
+$rdr = $cmd.ExecuteReader()
+$dt.Clear() 
+$dt.Load($rdr)
+$snmpData = getPackedDT($dt)
+
+do{
+                                                                           
+                                                         
+  $apiKey = '[SANITIZED_00773]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+                                                                                                    
+  '[SANITIZED_00774]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+  if($request[0] -eq $apiKey){
+    
+    switch($request[1]){
+      '[SANITIZED_00775]' {
+        $query = '[SANITIZED_00776]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $byteMess = $enc.GetBytes((getPackedDT($dt) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00777]' {
+        $get = $request[2].Split('[SANITIZED_00022]')
+        $query = '[SANITIZED_00778]'
+                                                                                                                                                                                                                                                                                                                                                                                    
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+                                                                       
+        $mess = $null
+                                                                                
+        $mess = (getPackedDT($dt) | ConvertTo-JSON)
+        if($mess -ne $null){
+          $byteMess = $enc.GetBytes($mess)
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        break
+      }
+
+      '[SANITIZED_00779]' {
+        $get = $request[2].Split('[SANITIZED_00022]')
+        $site = $get[0]
+        $type = $get[1]
+        $time = '[SANITIZED_00780]'
+        $histLen = $get[4]
+        $query = '[SANITIZED_00781]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr)
+        $byteMess = $enc.GetBytes(((getPackedDT($dt) | Select CellSite,$type,ChangeTime) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break        
+      }
+
+      '[SANITIZED_00782]' {
+        $query = '[SANITIZED_00783]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $byteMess = $enc.GetBytes((getPackedDT($dt) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00784]' {
+        $statusReq = $null
+        $status = $null
+        $statusReq = Invoke-WebRequest -Uri '[SANITIZED_00785]' -Method Get
+        $status = $enc.GetString($statusReq.Content)
+        if($status -eq '[SANITIZED_00070]'){
+          $reportReq = Invoke-WebRequest -Uri '[SANITIZED_00786]' -Method Get
+          $context.Response.OutputStream.Write($reportReq.Content,0,$reportReq.Content.Length)
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00071]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        break
+      }
+
+      '[SANITIZED_00787]' {
+        $byteMess = $enc.GetBytes((Import-Csv '[SANITIZED]' | Select -First ($request[2]) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00788]' {
+        $query = '[SANITIZED_00789]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $byteMess = $enc.GetBytes((getPackedDT($dt) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00790]' {
+        $query = '[SANITIZED_00791]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $byteMess = $enc.GetBytes((getPackedDT($dt) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00792]'{
+        $genRuns = Import-Csv '[SANITIZED]'
+        if($genRuns -ne $null){
+          $byteMess = $enc.GetBytes('[SANITIZED_00793]')
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00475]')
+        }
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00794]'{
+        $query = '[SANITIZED_00795]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $sensors = getPackedDT($dt)
+        if($request[2] -notlike '[SANITIZED_00796]'){
+          $snmp.Open(($snmpData | ? {$_.CellSite -eq $request[2]}).IP, '[SANITIZED_00797]',2,1000)
+        }
+        else{
+          $snmp.Open(($snmpData | ? {$_.CellSite -eq $request[2]}).IP, '[SANITIZED_00798]',2,1000)
+        }
+        forEach($sensor in $sensors){
+          $poll = $snmp.Get('[SANITIZED_00799]')
+          if($poll -eq '[SANITIZED_00264]'){
+            $poll = $snmp.Get('[SANITIZED_00800]')
+          }
+          $query = '[SANITIZED_00801]'
+          $cmd.CommandText = $query
+          $execute = $cmd.ExecuteNonQuery()
+        }
+        $query = '[SANITIZED_00795]'
+        $cmd.CommandText = $query
+        $rdr = $cmd.ExecuteReader()
+        $dt.Clear() 
+        $dt.Load($rdr) 
+        $sensors = getPackedDT($dt)
+        $byteMess = $enc.GetBytes((($sensors | Select SensorName,PollValue,LastPoll) | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+    
+      default{
+        $context.Response.StatusCode = 404
+      }
+    }
+    $context.Response.Close()
+  }
+  elseIf($request[0] -eq '[SANITIZED_00200]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+                                                   
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  elseIf($request[0] -eq '[SANITIZED_00802]'){
+    if($hopping){
+      $url = $context.Request.RawUrl.Replace('[SANITIZED_00803]','[SANITIZED_00804]')
+      $url = $hopHost + $url.Substring($url.IndexOf('[SANITIZED_00019]',1))
+                      
+    }
+    else{
+      $url = $context.Request.RawUrl.Replace('[SANITIZED_00803]','[SANITIZED_00804]')
+      $url = ($url.Split('[SANITIZED_00805]'))[2]
+      $hopHost = $url
+    }
+    $hopRequester = $context.Request.RemoteEndPoint.Address.IPAddressToString
+                            
+    $hop = Invoke-WebRequest -Uri $url
+    $byteMess = $hop.RawContentStream.ToArray()
+    $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    $hopping = $true
+  }
+  elseIf($request[0] -eq '[SANITIZED_00806]'){
+    $hopping = $false;
+  }
+  elseIf($hopping){
+    if($hopRequester -eq $context.Request.RemoteEndPoint.Address.IPAddressToString){
+      $url = $hopHost + $context.Request.RawUrl
+                                           
+      $hop = Invoke-WebRequest -Uri $url
+      $byteMess = $hop.RawContentStream.ToArray()
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+  }
+  elseIf($request[0] -eq '[SANITIZED_00807]'){
+                                                                                                              
+                                                                                            
+                                                                                                                  
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  elseIf($request[0] -eq '[SANITIZED_00808]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  elseIf($request[0] -eq '[SANITIZED_00809]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  elseIf($request[0] -eq '[SANITIZED_00353]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+    
+                                              
+                                                                                                               
+                                                                                            
+                                                                    
+   
+    
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 500
+}
+while($true)
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                          
+                           

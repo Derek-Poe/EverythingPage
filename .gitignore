@@ -1,0 +1,14 @@
+# Operational state does not belong in this historical reference tree.
+*.csv
+*.sqlite
+*.accdb
+*.xlsx
+*.pfx
+*.p12
+*.key
+*.lnk
+*.log
+*.dll
+*--PID.txt
+.env
+.env.*

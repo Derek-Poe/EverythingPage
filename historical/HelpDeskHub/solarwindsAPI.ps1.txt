@@ -1,0 +1,274 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: solarwindsAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00453]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00454]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00397]'
+
+$conn = New-Object System.Data.SqlClient.SqlConnection
+$conn.ConnectionString = '[SANITIZED_00455]'+ $([System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content '[SANITIZED]' | ConvertTo-SecureString -Key (Get-Content '[SANITIZED]'))))) + '[SANITIZED_00456]' + $([System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content '[SANITIZED]' | ConvertTo-SecureString -Key (Get-Content '[SANITIZED]')))))
+$conn.Open()
+$cmd = New-Object System.Data.SqlClient.SqlCommand
+$cmd.Connection = $conn
+$sqladpt = New-Object System.Data.SqlClient.SqlDataAdapter
+$ds = New-Object System.Data.DataSet
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 1321
+                                            
+$hostName = '[SANITIZED_00457]'
+$listener.Prefixes.Add('[SANITIZED_00458]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+
+while(1){
+  $apiKey = '[SANITIZED_00459]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+  '[SANITIZED_00460]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+  $reqSess = $null
+  if($request[0] -eq $apiKey){
+    switch($request[1]){
+
+      '[SANITIZED_00461]' {
+        $query = '[SANITIZED_00462]'
+        $ds.Clear()
+        $cmd.CommandText = $query
+        $sqladpt.SelectCommand = $cmd
+        $null = $sqladpt.Fill($ds)
+
+        ($ds.Tables[0].Rows | Select AlertActiveID,AcknowledgedBy,AcknowledgedDateTime,AlertObjectID,TriggeredDateTime,TriggeredMessage) | Export-Csv '[SANITIZED]' -NoTypeInformation -Force
+        
+        $query = '[SANITIZED_00463]
+
+
+
+
+
+
+
+
+
+
+'
+        forEach($record in $ds.Tables[0].Rows){
+          $query += '[SANITIZED_00464]'
+        }
+        $query = $query.Substring(0, $query.Length - 4)
+        $query += '[SANITIZED_00465]';
+        $ds.Clear()
+        $cmd.CommandText = $query
+        $sqladpt.SelectCommand = $cmd
+        $null = $sqladpt.Fill($ds)
+
+        ($ds.Tables[0].Rows | Select AlertObjectID,AlertID,EntityCaption,EntityDetailsUrl,RelatedNodeCaption,RelatedNodeDetailsUrl,TriggeredCount,LastTriggeredDateTime,AlertNote) | Export-Csv '[SANITIZED]' -NoTypeInformation -Force
+
+        break 
+      }
+
+      '[SANITIZED_00466]' {
+        $activeSWAlerts = Import-Csv '[SANITIZED]'
+        $alertsStatus = @() ; Import-Csv '[SANITIZED]' | % {$alertsStatus += $_}
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $alertIDs = ($bodyRead.ReadToEnd()).Split('[SANITIZED_00022]')
+        if($alertIDs -isnot [array]){
+          $alertIDs = @($alertIDs)
+        }
+        switch($request[2]){
+          '[SANITIZED_00467]' {
+            forEach($ID in $alertIDs){
+              $alertsStatus += New-Object PSCustomObject -Property ([ordered]@{AlertID=$ID;AlertObjectId=($activeSWAlerts | ? {$_.AlertActiveID -eq $ID}).AlertObjectID;Silenced=$false})
+            }
+            break
+          }
+          '[SANITIZED_00468]' {           
+            $alertsStatus = $alertsStatus | ? {$_.AlertID -notin $alertIDs}
+            break
+          }
+          '[SANITIZED_00469]' {
+            forEach($alert in $alertsStatus){
+              if($alert.AlertID -in $alertIDs){
+                $alert.Silenced = $true
+              }
+            }
+            break
+          }
+          '[SANITIZED_00470]' {
+            forEach($alert in $alertsStatus){
+              if($alert.AlertID -in $alertIDs){
+                $alert.Silenced = $false
+              }
+            }
+            break
+          }
+        }
+        $alertsStatus | Export-Csv '[SANITIZED]' -NoTypeInformation -Force
+        break
+      }
+
+      '[SANITIZED_00471]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $bodyContent = ($bodyRead.ReadToEnd())
+        $searchType = ($bodyContent -split '[SANITIZED_00358]')[0]
+        $searchParams = ($bodyContent -split '[SANITIZED_00358]')[1] -split '[SANITIZED_00022]'
+        if($searchType -eq '[SANITIZED_00472]'){
+          $ip = $searchParams[0]
+          $sDate = [DateTime]::Parse($searchParams[1]).ToString('[SANITIZED_00473]')
+          $eDate = [DateTime]::Parse($searchParams[2]).ToString('[SANITIZED_00473]')
+          $query = '[SANITIZED_00474]
+
+
+
+
+
+
+
+
+
+
+
+'
+          $ds.Clear()
+          $cmd.CommandText = $query
+          $sqladpt.SelectCommand = $cmd
+          $null = $sqladpt.Fill($ds)
+          if($ds.Tables[0].Rows.Count -gt 0){
+            $byteMess = $enc.GetBytes(($ds.Tables[0].Rows | Select LogID, LogMessage, LogDate, DisplayName, IPAddress, LogEntryName, NodeID, Caption, SourceName, SourceType | ConvertTo-JSON))
+          }
+          else{
+            $byteMess = '[SANITIZED_00475]'
+          }
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        break
+      }
+
+      '[SANITIZED_00476]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $bodyContent = ($bodyRead.ReadToEnd())
+        $objectID = ($bodyContent -split '[SANITIZED_00477]')[0]
+        $objectNotes = (($bodyContent -split '[SANITIZED_00477]')[1] -split '[SANITIZED_00478]') -join '[SANITIZED_00265]'
+        $query = '[SANITIZED_00479]'
+        $ds.Clear()
+        $cmd.CommandText = $query
+        $sqladpt.SelectCommand = $cmd
+        $null = $sqladpt.Fill($ds)
+        break
+      }
+
+      '[SANITIZED_00480]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $bodyContent = ($bodyRead.ReadToEnd())
+        $initiator = ($bodyContent -split '[SANITIZED_00478]')[0]
+        $alertID = ($bodyContent -split '[SANITIZED_00478]')[1]
+        $query = '[SANITIZED_00481]'
+        $ds.Clear()
+        $cmd.CommandText = $query
+        $sqladpt.SelectCommand = $cmd
+        $null = $sqladpt.Fill($ds)
+        break
+      }
+
+      '[SANITIZED_00371]' {
+        $query = '[SANITIZED_00482]'
+        $ds.Clear()
+        $cmd.CommandText = $query
+        $sqladpt.SelectCommand = $cmd
+        $null = $sqladpt.Fill($ds)
+        break
+      }
+
+      '[SANITIZED_00483]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding) 
+        $alertsData = ($bodyRead.ReadToEnd())
+                                                   
+        $alertsData = $alertsData | ConvertFrom-JSON 
+        $alertsData | Export-Csv '[SANITIZED]' -NoTypeInformation -Force
+        break
+      }
+
+      '[SANITIZED_00484]' {
+        $activeSWAlerts = Import-Csv '[SANITIZED]'
+        $activeSWAlertsObjects = Import-Csv '[SANITIZED]'
+        $alertsStatus = Import-Csv '[SANITIZED]'
+        $alerts = @()
+        $date = (Get-Date).ToUniversalTime()
+                                                                                                  
+        forEach($alert in $activeSWAlertsObjects){
+          $activeTime = New-TimeSpan ([DateTime]::Parse($alert.LastTriggeredDateTime)) $date
+          if($activeTime.Days -gt 0){
+            $activeTime = '[SANITIZED_00485]'
+          }
+          elseIf($activeTime.Hours -gt 0){
+            $activeTime = '[SANITIZED_00486]'
+          }
+          else{
+            $activeTime = '[SANITIZED_00487]'
+          }
+          if($alert.AlertNote.Length -gt 0){
+            $notes = '[SANITIZED_00488]'
+          }
+          else{
+            $notes = '[SANITIZED_00264]'
+          }
+          $props = [ordered]@{
+            AlertID = '[SANITIZED_00489]'
+            AlertURI = '[SANITIZED_00490]'
+            ObjectURI = $alert.EntityDetailsUrl
+            NodeURI = $alert.RelatedNodeDetailsUrl
+            NotesData = $alert.AlertNote
+            LastTriggeredDate = [DateTime]::Parse($alert.LastTriggeredDateTime)
+            Alert = ($activeSWAlerts | ? {$_.AlertObjectID -eq $alert.AlertObjectID}).TriggeredMessage
+            Object = $alert.EntityCaption
+            TimesTriggered = $alert.TriggeredCount
+            LastTriggered = $activeTime
+            Node = $alert.RelatedNodeCaption
+            AcknowledgedBy = ($activeSWAlerts | ? {$_.AlertObjectID -eq $alert.AlertObjectID}).AcknowledgedBy
+            Notes = $notes
+            Silenced = ($alertsStatus | ? {$_.AlertObjectId -eq $alert.AlertObjectId}).Silenced
+          }
+          $alerts += New-Object PSCustomObject -Property $props
+        }
+        $alerts = $alerts | Sort LastTriggeredDate -Descending
+        
+        $alerts | Export-Csv '[SANITIZED]' -NoTypeInformation -Force
+                                                                                                                                      
+        break
+      }
+
+      default{
+        $context.Response.StatusCode = 404;
+      }  
+    }
+    $context.Response.Close()
+  }
+  else{
+    $context.Response.StatusCode = 404;
+  }
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 100
+}
+
+
+
+$ds.Clear()
+$cmd.CommandText = '[SANITIZED_00491]'
+$sqladpt.SelectCommand = $cmd
+$null = $sqladpt.Fill($ds)
+$ds.Tables[0].Rows.Name
+
+$query = '[SANITIZED_00492]'
+$ds.Clear()
+$cmd.CommandText = $query
+$sqladpt.SelectCommand = $cmd
+$null = $sqladpt.Fill($ds)
+
+$conn.Close()

@@ -1,0 +1,90 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: rebuildSQLite.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+[void][System.Reflection.Assembly]::LoadFrom('[SANITIZED_00639]')
+$conn = New-Object System.Data.SQLite.SQLiteConnection('[SANITIZED_00747]')
+$conn.Open()
+$cmd = $conn.CreateCommand()
+$dt = New-Object System.Data.DataTable
+
+function getPackedDT($datTab){
+  if($datTab -ne $null){
+    $allCol = $datTab[0].Columns.ColumnName
+    $selCol = @()
+    forEach($col in $allCol){
+      try{
+        if(($datTab[0].$col)[0] -ne $dbnull){
+          $selCol += $col
+        }
+      }
+      catch{}
+    }
+    $datTabArray = $true
+    if($datTab.($selCol[0]) -isnot [array]){
+      $datTabArray = $false
+    }
+    $packedData = @()
+    if($datTab.($selCol[0]) -is [array]){
+      $len = $datTab.($selCol[0]).Length
+    }
+    else{
+      $len = 1
+    }
+    for($i = 0; $i -lt $len; $i++){
+      $obj = New-Object -TypeName PSCustomObject
+      forEach($prop in $selCol){
+        if($datTabArray){
+          $obj | Add-Member -Name $prop -Value ($datTab.$prop)[$i] -MemberType NoteProperty
+        }
+        else{
+          $obj | Add-Member -Name $prop -Value $datTab.$prop -MemberType NoteProperty
+        }
+      }
+      $packedData += $obj
+    }
+    return $packedData
+  }
+  else{
+    return $null
+  }
+}
+
+$query = '[SANITIZED_00748]'
+$cmd.CommandText = $query
+$rdr = $cmd.ExecuteReader()
+$dt.Clear() 
+$dt.Load($rdr)
+$tables = getPackedDT($dt)
+
+forEach($name in $tables.name){
+  $query = '[SANITIZED_00749]'
+  $cmd.CommandText = $query
+  $cmd.ExecuteNonQuery()
+}
+
+$query = '[SANITIZED_00750]'
+$cmd.CommandText = $query
+$cmd.ExecuteNonQuery()
+
+$query = '[SANITIZED_00751]'
+$cmd.CommandText = $query
+$cmd.ExecuteNonQuery()
+
+$query = '[SANITIZED_00752]'
+$cmd.CommandText = $query
+$cmd.ExecuteNonQuery()
+
+$query = '[SANITIZED_00753]'
+$cmd.CommandText = $query
+$rdr = $cmd.ExecuteReader()
+$dt.Clear() 
+$dt.Load($rdr)
+$data = getPackedDT($dt)
+
+$query = '[SANITIZED_00754]'
+$cmd.CommandText = $query
+$execute = $cmd.ExecuteNonQuery()
+
+$conn.Close()

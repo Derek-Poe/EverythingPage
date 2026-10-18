@@ -1,0 +1,61 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossHubChaperone.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00897]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00436]'
+
+$pidwl = @(
+  '[SANITIZED_00046]',
+  '[SANITIZED_00049]',
+  '[SANITIZED_00047]',
+  '[SANITIZED_00389]'
+)
+$firstRun = $true
+Write-Host '[SANITIZED_00439]'
+while($true){
+  if((Import-Csv '[SANITIZED]').SitebossHub -eq $true){
+    continue
+  }
+  forEach($pro in $pidwl){
+    $proCheck = (Get-Process -Id (Get-Content '[SANITIZED_00390]') -ErrorAction SilentlyContinue)
+    if($proCheck -ne $null){
+      if($firstRun){
+        Write-Host -f Magenta '[SANITIZED_00440]'
+        $proCheck = $null
+      }
+    }
+    else{
+      Write-Host -f Yellow '[SANITIZED_00441]'
+    }
+    if($proCheck -eq $null){
+      switch($pro){
+        '[SANITIZED_00046]'{
+          Start-Process '[SANITIZED_00052]' '[SANITIZED_00442]'
+          Start-Sleep -Seconds 30
+          break
+        }
+        '[SANITIZED_00049]'{
+          Start-Process '[SANITIZED_00052]' '[SANITIZED_00442]'
+          Start-Sleep -Seconds 7
+          break
+        }
+        '[SANITIZED_00047]'{
+          Start-Process '[SANITIZED_00052]' '[SANITIZED_00442]'
+          Start-Sleep -Seconds 3
+          break
+        }
+        '[SANITIZED_00389]'{
+          Start-Process '[SANITIZED_00052]' '[SANITIZED_00442]'
+          Start-Sleep -Seconds 3
+          break
+        }
+      }
+    }
+  }
+  $firstRun = $false
+  Start-Sleep -Seconds 5
+}

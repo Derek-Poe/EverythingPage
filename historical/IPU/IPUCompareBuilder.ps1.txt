@@ -1,0 +1,186 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUCompareBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00631]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00632]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+function tfToYN($in){
+  if($in -eq $true -or $in -like '[SANITIZED_00572]'){
+    return '[SANITIZED_00633]'
+  }
+  elseIf($in -eq $false -or $in -like '[SANITIZED_00573]'){
+    return '[SANITIZED_00634]'
+  }
+  else{
+    return $null
+  }
+}
+
+$runCounter = 0
+
+while($true){
+  $startTime = (Get-Date)
+  Write-Host '[SANITIZED_00420]' -NoNewline
+
+  $sessKey = '[SANITIZED_00264]'
+  for($i = 0; $i -lt 4; $i++){
+    switch(Get-Random -Minimum 1 -Maximum 4){
+      1 {
+        $sessKey += '[SANITIZED_00291]'
+        break
+      }
+      2 {
+        $sessKey += [char](Get-Random -Minimum 65 -Maximum 91)
+        break
+      }
+      3 {
+        $sessKey += [char](Get-Random -Minimum 97 -Maximum 123)
+        break
+      }
+    }
+  }
+  
+  $entities = @()
+  $dbPos = 0
+  $querySize = 100000
+  $posLimit = 1000000
+  $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+  $time = $time.Insert(10,'[SANITIZED_00307]')
+  $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+  $exerData = ((Invoke-WebRequest -UseBasicParsing -WebSession $webSess -Uri '[SANITIZED_00635]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00635]';} -ContentType '[SANITIZED_00331]').Content) | ConvertFrom-Json
+  $exer = $exerData.payload.exercises.id.uuid
+  $exerName = $exerData.payload.exercises.name -replace '[SANITIZED_00515]','[SANITIZED_00553]'
+  $entData = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00636]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00636]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00637]'
+  $lt2Time = (Get-Date).ToString('[SANITIZED_00014]')
+  $entData = $entData.Content | ConvertFrom-Json
+  $entities += $entData.payload.entities
+                                        
+  $totalEnt = $entData.payload.totalCount -as [int]
+
+  Copy-Item -Path '[SANITIZED_00638]' -Destination '[SANITIZED_00509]' -Force
+  $tceTime = (Get-Date).ToString('[SANITIZED_00014]')
+                                                                               
+  $databaseRead = Start-Job -ScriptBlock {
+    [void][System.Reflection.Assembly]::LoadFrom('[SANITIZED_00639]')
+    $conn = New-Object System.Data.SQLite.SQLiteConnection('[SANITIZED_00640]')
+    $conn.Open()
+    $cmd = $conn.CreateCommand()
+    $dt = New-Object System.Data.DataTable
+    $query = '[SANITIZED_00641]'
+    $cmd.CommandText = $query
+    $rdr = $cmd.ExecuteReader()
+    $dt.Clear() 
+    $dt.Load($rdr)
+    $tceData = $dt.Rows
+    return $tceData
+  }
+  $null = Wait-Job $databaseRead
+  $tceData = Receive-Job $databaseRead
+  $enc = [System.Text.Encoding]::ASCII
+  forEach($row in $tceData){
+    $timeProps = @('[SANITIZED_00642]','[SANITIZED_00643]','[SANITIZED_00644]','[SANITIZED_00645]')
+    forEach($prop in $timeProps){
+      try{
+        $row.('[SANITIZED_00646]') = [DateTimeOffset]::FromUnixTimeMilliseconds(($row.('[SANITIZED_00646]') -as [double])).ToString('[SANITIZED_00014]')
+      }
+      catch{}
+      if($row.('[SANITIZED_00646]') -lt '[SANITIZED_00647]'){
+        $row.('[SANITIZED_00646]') = '[SANITIZED_00577]'
+      }
+    }
+    $row | Add-Member -MemberType NoteProperty -Name contentString -Value $enc.GetString($row.content)
+    $row | Add-Member -MemberType AliasProperty -Name timeCreated -Value '[SANITIZED_00648]'
+    $row | Add-Member -MemberType AliasProperty -Name timeExpires -Value '[SANITIZED_00649]'
+    $row | Add-Member -MemberType AliasProperty -Name timeLastModified -Value '[SANITIZED_00650]'
+    $row | Add-Member -MemberType AliasProperty -Name timeReceived -Value '[SANITIZED_00651]'
+  }
+  $tceData = $tceData | Select * -ExcludeProperty RowError,RowState,Table,ItemArray,HasErrors,CAST*,content
+  $tceData = $tceData | ? {$_.type -lt 350}
+
+                                                                               
+
+  $comp = $tceData.id | Compare-Object $entities.id.uuid
+  $tceDiff = ($comp | ? {$_.SideIndicator -eq '[SANITIZED_00423]'}).InputObject
+  $lt2Diff = ($comp | ? {$_.SideIndicator -eq '[SANITIZED_00422]'}).InputObject
+  $tceEnt = $tceData | ? {$tceDiff -contains $_.id}
+  $lt2Ent = $entities | ? {$lt2Diff -contains $_.id.uuid}
+  $props = ('[SANITIZED_00652]').Split('[SANITIZED_00022]')
+  forEach($lt2Entities in @($entities,$lt2Ent)){
+    forEach($ent in $lt2Entities){
+      forEach($prop in $props){
+        if($ent.($prop) -eq $null){
+          continue
+        }
+        if($prop -like '[SANITIZED_00653]' -or $prop -like '[SANITIZED_00654]'){
+          $ent.($prop) = tfToYN($ent.($prop))
+          continue
+        }
+        switch($prop){
+          '[SANITIZED_00655]' {
+            $ent.($prop) = ($ent.($prop)).Split('[SANITIZED_00269]')[4]
+            break
+          }
+          '[SANITIZED_00656]' {
+            $ent.($prop) = $ent.($prop).uuid
+            break
+          }
+          '[SANITIZED_00657]' {
+            $ent.($prop) = $ent.($prop).uuid
+            break
+          }
+          '[SANITIZED_00658]' {
+            $ent.($prop) = $ent.($prop).uuid
+            break
+          }
+          '[SANITIZED_00659]' {
+            $ent.($prop) = $ent.($prop) -as [String[]] | Out-String
+            break
+          }
+          '[SANITIZED_00660]' {
+            $ent.($prop) = tfToYN($ent.($prop).isUnderTest)
+            break
+          }
+        }
+      }
+    }
+  }
+  New-Object PSCustomObject -Property ([ordered]@{tceTime=$tceTime;lt2Time=$lt2Time;tceDataCount=$tceData.Length;lt2DataCount=$entities.Length;tceDiffCount=$tceEnt.Length;lt2DiffCount=$lt2Ent.Length}) | Export-Csv '[SANITIZED_00661]' -Force -NoTypeInformation
+  $tceData | Select name,releasableTo,timeCreated,latitude,longitude,timeLastModified,timeReceived,timeExpires,source,symbolCode,ownerProducer,priority,id,trid,version,type,classification,boundingLatitude,boundingLongitude | Sort name| Export-Csv '[SANITIZED_00662]' -Force -NoTypeInformation
+  $entities | Select name,class,id,disEntityType,entityType,uniqueName,parentOrganization,isFlagBearer,spatialRelationship,damageStateController,exercises,tspiSource,tacticalSymbols,isOutOfComms,tacticalSymbolColor,tacticalSymbolStandardCurrent,gatewayNetworkType,displayOrder,isExcludedFromFireEffects,isExcludedFromDetonationEffects,isRFOutOfComms,isVisible,isHiddenFromExercise,systemsUnderTestData,isReal,percentObscured,isFratricided,xroeViolation,isBDAComplete,instrumentationOverrideMode,urn,isTarget,fuelLevel,damageCode,mobilityKill,catastrophicKill,communicationsKill,sensorKill,firepowerKill,isPowerPlantOn,isMissionCapableSupply,isMissionCapableMaintenance,isCaptured,isLaserDesignatorOn,isTriggerDepressed,battlesightRange,currentRange | Sort name | Export-Csv '[SANITIZED_00663]' -Force -NoTypeInformation
+  $tceEnt | Select name,releasableTo,timeCreated,latitude,longitude,timeLastModified,timeReceived,timeExpires,source,symbolCode,ownerProducer,priority,id,trid,version,type,classification,boundingLatitude,boundingLongitude | Sort name | Export-Csv '[SANITIZED_00664]' -Force -NoTypeInformation
+                                                                                                                                                                                                                  
+  $lt2Ent | Select name,class,id,disEntityType,entityType,uniqueName,parentOrganization,isFlagBearer,spatialRelationship,damageStateController,exercises,tspiSource,tacticalSymbols,isOutOfComms,tacticalSymbolColor,tacticalSymbolStandardCurrent,gatewayNetworkType,displayOrder,isExcludedFromFireEffects,isExcludedFromDetonationEffects,isRFOutOfComms,isVisible,isHiddenFromExercise,systemsUnderTestData,isReal,percentObscured,isFratricided,xroeViolation,isBDAComplete,instrumentationOverrideMode,urn,isTarget,fuelLevel,damageCode,mobilityKill,catastrophicKill,communicationsKill,sensorKill,firepowerKill,isPowerPlantOn,isMissionCapableSupply,isMissionCapableMaintenance,isCaptured,isLaserDesignatorOn,isTriggerDepressed,battlesightRange,currentRange | Sort name | Export-Csv '[SANITIZED_00665]' -Force -NoTypeInformation
+
+  forEach($file in (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00666]'})){
+    if($file.Name.split('[SANITIZED_00515]')[2] -ne $sessKey){
+      $file | Remove-Item -Force
+    }
+  }
+
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  Write-Host '[SANITIZED_00667]'
+  if($execTime.TotalSeconds -lt 900){
+    Start-Sleep -Milliseconds (900000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+
+  if($runCounter -gt 2){
+    exit
+  }
+  $runCounter++
+}

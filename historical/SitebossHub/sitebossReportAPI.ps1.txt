@@ -1,0 +1,266 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossReportAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00919]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+
+$conn = New-Object System.Data.OleDb.OleDbConnection('[SANITIZED_00920]')
+$conn.Open()
+$cmd = $conn.CreateCommand()
+$dt = New-Object System.Data.DataTable
+$dbnull = [System.DBNull]::Value
+
+function getPackedDT($datTab){
+  if($datTab -ne $null){
+    $allCol = $datTab[0].Columns.ColumnName
+    $selCol = @()
+    forEach($col in $allCol){
+      try{
+        if(($datTab[0].$col)[0] -ne $dbnull){
+          $selCol += $col
+        }
+      }
+      catch{}
+    }
+    $datTabArray = $true
+    if($datTab.($selCol[0]) -isnot [array]){
+      $datTabArray = $false
+    }
+    $packedData = @()
+    if($datTab.($selCol[0]) -is [array]){
+      $len = $datTab.($selCol[0]).Length
+    }
+    else{
+      $len = 1
+    }
+    for($i = 0; $i -lt $len; $i++){
+      $obj = New-Object -TypeName PSCustomObject
+      forEach($prop in $selCol){
+        if($datTabArray){
+          $obj | Add-Member -Name $prop -Value ($datTab.$prop)[$i] -MemberType NoteProperty
+        }
+        else{
+          $obj | Add-Member -Name $prop -Value $datTab.$prop -MemberType NoteProperty
+        }
+      }
+      $packedData += $obj
+    }
+    return $packedData
+  }
+  else{
+    return $null
+  }
+}
+
+$listener = New-Object System.Net.HttpListener
+$listener.Prefixes.Add('[SANITIZED_00921]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+
+do{
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+                                                                                                    
+  '[SANITIZED_00922]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+    
+  switch($request[0]){
+    '[SANITIZED_00923]' {
+      $byteMess = $enc.GetBytes('[SANITIZED_00070]')
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+      break
+    }
+    
+    '[SANITIZED_00784]' {
+      $query = '[SANITIZED_00776]'
+      $cmd.CommandText = $query
+      $rdr = $cmd.ExecuteReader()
+      $dt.Clear() 
+      $dt.Load($rdr) 
+      
+      $excel = New-Object -ComObject excel.application
+                             
+      $null = $excel.Workbooks.Add()
+      $sheet = $excel.Worksheets.Item(1)
+      $sheet.Name = '[SANITIZED_00924]'
+      $data = getPackedDT($dt)
+      $headers = $data[0].PSObject.Properties.Name
+      forEach($row in $data){
+        forEach($col in $headers){
+          if($row.$col -eq '[SANITIZED_00856]'){
+            $row.$col = '[SANITIZED_00264]'
+          }
+        }
+      }
+      for($i = 0; $i -lt $headers.Length; $i++){
+        Switch($headers[$i]){
+          '[SANITIZED_00925]'{
+            $excel.Cells.Item(2,($i + 1)) = '[SANITIZED_00926]'
+          }
+          '[SANITIZED_00927]'{
+            $excel.Cells.Item(2,($i + 1)) = '[SANITIZED_00928]'
+          }
+          default{
+            $excel.Cells.Item(2,($i + 1)) = $headers[$i]
+          }
+        }
+      }
+      $excel.Cells.Item(2,1) = '[SANITIZED_00842]'
+      $cellVals = New-Object '[SANITIZED_00530]' ($data.Length),($headers.Length)
+      for($i = 0; $i -lt $data.Length; $i++){
+        for($ii = 0; $ii -lt $headers.Length; $ii++){
+          switch($headers[$ii]){
+            '[SANITIZED_00925]'{
+              $val = (($data[$i].($headers[$ii])).Replace('[SANITIZED_00929]','[SANITIZED_00264]') -as [int])
+              if($val -ge 90){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              elseIf($val -ge 80){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbOrange
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            '[SANITIZED_00927]'{
+              $val = ($data[$i].($headers[$ii]) -as [int])
+              if($val -ge 85){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              elseIf($val -ge 70){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbOrange
+              }
+              if($data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $cellVals[$i,$ii] = '[SANITIZED_00930]'
+              }
+              else{
+                $cellVals[$i,$ii] = '[SANITIZED_00264]'
+              }
+            }
+            '[SANITIZED_00895]'{
+              if($data[$i].($headers[$ii]) -ne '[SANITIZED_00931]' -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            '[SANITIZED_00529]'{
+              if($data[$i].($headers[$ii]) -ne '[SANITIZED_00932]' -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            '[SANITIZED_00933]'{
+              $val = (($data[$i].($headers[$ii])).Replace('[SANITIZED_00934]','[SANITIZED_00264]') -as [float])
+              if($val -le 100 -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              elseIf($val -le 200 -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbOrange
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            '[SANITIZED_00935]'{
+              if($data[$i].($headers[$ii]) -ne '[SANITIZED_00936]' -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            '[SANITIZED_00863]'{
+              $cellVals[$i,$ii] = (New-TimeSpan -Seconds (($data[$i].($headers[$ii]) -as [int]) / 100)).ToString()
+            }
+            '[SANITIZED_00912]'{
+              if($data[$i].($headers[$ii]) -ne '[SANITIZED_00937]' -and $data[$i].($headers[$ii]) -ne '[SANITIZED_00264]'){
+                $excel.Cells.Item(($i + 3),$($ii + 1)).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbRed
+              }
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+            default{
+              $cellVals[$i,$ii] = $data[$i].($headers[$ii])
+            }
+          }
+        }
+      }
+      $sheet.Range($sheet.Cells.Item(3,1),$sheet.Cells.Item($data.Length + 2,$headers.Length)) = $cellVals
+      $null = $sheet.ListObjects.Add([Microsoft.Office.Interop.Excel.XlListObjectSourceType]::xlSrcRange, $sheet.Range($sheet.Cells.Item(2,1),$sheet.Cells.Item($data.Length + 2,$headers.Length)), $null, [Microsoft.Office.Interop.Excel.XlYesNoGuess]::xlYes)
+      $sheet.ListObjects.Item(1).TableStyle = '[SANITIZED_00533]'
+      $null = ($sheet.UsedRange).EntireColumn.AutoFit()
+      $sheet.Cells.Item(1,1) = '[SANITIZED_00938]'
+      $null = $sheet.Range($sheet.Cells.Item(1,1),$sheet.Cells.Item(1,$headers.Length)).Merge()
+      $sheet.Cells.Item(1,1).Font.Size = 12
+      $sheet.Cells.Item(1,1).Font.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbWhite
+      $sheet.Cells.Item(1,1).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbCornflowerBlue
+      $sheet.Range($sheet.Cells.Item(1,1),$sheet.Cells.Item(1,$headers.Length)).Borders.LineStyle = 1
+      $sheet.Range($sheet.Cells.Item(1,1),$sheet.Cells.Item(1,$headers.Length)).Borders.Weight = [Microsoft.Office.Interop.Excel.XlBorderWeight]::xlThin
+      ($sheet.UsedRange).HorizontalAlignment = [Microsoft.Office.Interop.Excel.XlHAlign]::xlHAlignCenter
+      $sheet.PageSetup.Orientation = [Microsoft.Office.Interop.Excel.XlPageOrientation]::xlLandscape
+      $sheet.PageSetup.Zoom = $false
+      $sheet.PageSetup.FitToPagesTall = 1
+      $sheet.PageSetup.FitToPagesWide = 1
+      $sheet.PageSetup.CenterHorizontally = $true
+      $sheet.PageSetup.CenterVertically = $true
+      $excel.Application.DisplayAlerts = $false
+      $excel.Workbooks.Item(1).SaveAs('[SANITIZED_00939]')
+      $excel.Application.DisplayAlerts = $true
+      $excel.Quit()
+      $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+      $content = [Convert]::ToBase64String($content)
+      $content = $enc.GetBytes($content)
+      $context.Response.OutputStream.Write($content,0,$content.Length)
+      break
+    }
+
+    default{
+      $context.Response.StatusCode = 404;
+    }
+  }
+  $context.Response.Close()
+}
+while($true)
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

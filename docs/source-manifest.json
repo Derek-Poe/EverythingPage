@@ -1,0 +1,354 @@
+﻿[
+    {
+        "OriginalFile":  "AutoServerMonitor/autoServerMonitorAPI.ps1",
+        "OriginalSHA256":  "1EB4AB27863DD9B7E66BD34A24EDF140C8CB1C9AE1F05B5817738A106EDA9C2C",
+        "SanitizedReference":  "historical/AutoServerMonitor/autoServerMonitorAPI.ps1.txt",
+        "SanitizedSHA256":  "E869A753DE8368CCE8CDA2CF8422EFE88A50CAFF17C8F7F070B1622DCEE083B6",
+        "Redactions":  119,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "AutoServerMonitor/resourceDataBuilder.ps1",
+        "OriginalSHA256":  "0D9C76223499A4FAB86E5D3414A5E65DE0B5B72DA6298471A5712437216070F9",
+        "SanitizedReference":  "historical/AutoServerMonitor/resourceDataBuilder.ps1.txt",
+        "SanitizedSHA256":  "B888562CAE2FC3ABF2CC552BB231D3C594CDF93C0850868C0849A78ED0A4F43D",
+        "Redactions":  87,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "AutoServerMonitor/startAutoServMon.ps1",
+        "OriginalSHA256":  "1A78940759833F5E9C3DF723B9E0B192FBB6025DB2E5665AF1334956691C840F",
+        "SanitizedReference":  "historical/AutoServerMonitor/startAutoServMon.ps1.txt",
+        "SanitizedSHA256":  "AD269651F18CEA5854DCE76F7D09FC20B8AB2B39389C4A2E3C76DE066D2BBC0C",
+        "Redactions":  48,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/adAPI.ps1",
+        "OriginalSHA256":  "C23A7C18AE6B0D7CE9A49BD97A6AB08C5BAB408A94B5AC21B50498590F0E97E7",
+        "SanitizedReference":  "historical/HelpDeskHub/adAPI.ps1.txt",
+        "SanitizedSHA256":  "6A3EBBFBE79CF36399FF05F37BDC4E50C30EEB38E3B00AACA1FEE6A9B9363FF7",
+        "Redactions":  305,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/adAPI_runspaceEnabled.ps1",
+        "OriginalSHA256":  "0571C2382A7E0A79EE921BCEEBAF7168846260CBDD42DBF8001124B2497DD3A9",
+        "SanitizedReference":  "historical/HelpDeskHub/adAPI_runspaceEnabled.ps1.txt",
+        "SanitizedSHA256":  "72D1BE4AC9741DC16C4CB02C634B54BEF40A198DA057341EB22696A9812AD67F",
+        "Redactions":  420,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/apiHangCheck.ps1",
+        "OriginalSHA256":  "E1F8BEABC15D084C8235CCB994D87F544744DC1E811F87CF2251FCE6DEAD12B7",
+        "SanitizedReference":  "historical/HelpDeskHub/apiHangCheck.ps1.txt",
+        "SanitizedSHA256":  "5ADB3F5802B374BC2B4E5E3D7D682A1AB8596E734201CC377400F95BEFA91488",
+        "Redactions":  10,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/autoRDPSessionConversion.ps1",
+        "OriginalSHA256":  "91D89B71256E7057A79CD10E80F0BC845DA1191E7F495C307AFBCB6BA5213A65",
+        "SanitizedReference":  "historical/HelpDeskHub/autoRDPSessionConversion.ps1.txt",
+        "SanitizedSHA256":  "47CEE8756EE41EB0477773029940198A102E071541492F1CA765C311791C5B11",
+        "Redactions":  24,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/everythingAPI.ps1",
+        "OriginalSHA256":  "FE40C1E61A498B57A6E939FF6F028AEB6AE636186A328766E05BD812742000AF",
+        "SanitizedReference":  "historical/HelpDeskHub/everythingAPI.ps1.txt",
+        "SanitizedSHA256":  "6496E87B1FF21E2CB94379743B4C76B1A28E066F3B67CE369333D0E73B2DD9D0",
+        "Redactions":  300,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/everythingAlertMonitor.ps1",
+        "OriginalSHA256":  "DCD76DEE0FE7120F8E231972D16CAD54635710F2525CBC5C9A7C2CEF00C16779",
+        "SanitizedReference":  "historical/HelpDeskHub/everythingAlertMonitor.ps1.txt",
+        "SanitizedSHA256":  "D8CAC4AE3778D218F5CDD18430487BC1605DE234DD906B3B6632FEC8D72A16AA",
+        "Redactions":  33,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/everythingChaperone.ps1",
+        "OriginalSHA256":  "26D75F4994957F7B22192935DE2469BEF3158D54F794B90B24AD9D41EA1CAAD2",
+        "SanitizedReference":  "historical/HelpDeskHub/everythingChaperone.ps1.txt",
+        "SanitizedSHA256":  "A93C5D802F427A218E9E8E6A5242E6D818299683A63B0EF0F784D2F230C08163",
+        "Redactions":  56,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/maintAPI.ps1",
+        "OriginalSHA256":  "D3ECD4F47A1490420D4CE040699AFC59F9D24B17DD1B94E296459BD97A3B8150",
+        "SanitizedReference":  "historical/HelpDeskHub/maintAPI.ps1.txt",
+        "SanitizedSHA256":  "F337ED38FC58BDD1C636701573F32DC0B3A270EFC9E542A41BB24427FD926CDE",
+        "Redactions":  179,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/solarwindsAPI.ps1",
+        "OriginalSHA256":  "68DBE2FBBDB5F3C39C1D06A7466C3A30A310736788311B1557024E20134C9475",
+        "SanitizedReference":  "historical/HelpDeskHub/solarwindsAPI.ps1.txt",
+        "SanitizedSHA256":  "CD205377FA6C3077B06CF0C7BAD2CAACC23838E0A1B0B7D86C0FDDE4F671F460",
+        "Redactions":  73,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "HelpDeskHub/tabletLogonTracker.ps1",
+        "OriginalSHA256":  "E1021F886EE2368EF63E1AAA3CC6AE4E1DC10F3883E08BC1A9C0C2A0805550AE",
+        "SanitizedReference":  "historical/HelpDeskHub/tabletLogonTracker.ps1.txt",
+        "SanitizedSHA256":  "65F84CFAD23AAE506CB1895DF4C3118149D7133B7AED247170FA9D77C27B8E4E",
+        "Redactions":  9,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUAPI.ps1",
+        "OriginalSHA256":  "75D0D585C8BFA3E185A7FF7CF60C486B61A020777F2B39A09A26FE66D64BCC96",
+        "SanitizedReference":  "historical/IPU/IPUAPI.ps1.txt",
+        "SanitizedSHA256":  "962E026FDBC4F724B7FDCBF861AF84E4D8884E3DF86F3F491181F80A825689E9",
+        "Redactions":  465,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUAPIChaperone.ps1",
+        "OriginalSHA256":  "EDE84012146FCBC256A5A0D1BD234D2749724BC3C568C2039F3D4139DA46F978",
+        "SanitizedReference":  "historical/IPU/IPUAPIChaperone.ps1.txt",
+        "SanitizedSHA256":  "0F6EB23EB2E600F12D9B951C94B48E93A34EED105AB150B728893E5D7D1EAA77",
+        "Redactions":  73,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUAPIChaperone_2.ps1",
+        "OriginalSHA256":  "1B5A33FA14698183356CBEAD9BB58BA7FEFDD4C679A936903F0B3C2DEA4F1367",
+        "SanitizedReference":  "historical/IPU/IPUAPIChaperone_2.ps1.txt",
+        "SanitizedSHA256":  "805EA254FB3B92933E4B7D34665BF0D4651CD55155475940CF3962473F56CC8C",
+        "Redactions":  31,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUAPIChapperone.ps1",
+        "OriginalSHA256":  "F1945CD6C19E56B3C1C78943EF5EC18116907A4CA1EFC40A57D48AB1DB7ADFC5",
+        "SanitizedReference":  "historical/IPU/IPUAPIChapperone.ps1.txt",
+        "SanitizedSHA256":  "3FF59C7507F9C95FF5D17BCDC0B01209A2670C45A39178C90629FCFA2723E3C2",
+        "Redactions":  0,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUAPI_runspaceEnabled.ps1",
+        "OriginalSHA256":  "8817FE0F3B74023958D7C4DB62CC2BEFDD6AE407A977468E9DF193ACF30BD993",
+        "SanitizedReference":  "historical/IPU/IPUAPI_runspaceEnabled.ps1.txt",
+        "SanitizedSHA256":  "164B5F4814BD90F3D4A7AAC050E61CA4C88CEECD4B06D9861218DA8F6429DA49",
+        "Redactions":  315,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUCompareBuilder.ps1",
+        "OriginalSHA256":  "7019BD9F82D456629A4B4DB40467732AE8701B2B9C123818334DE03CA3D7AED2",
+        "SanitizedReference":  "historical/IPU/IPUCompareBuilder.ps1.txt",
+        "SanitizedSHA256":  "1FE101B1191BADCCA59B932657FF51DE85DC30B27917A825481ACAC8B886BDAE",
+        "Redactions":  107,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTAAuto.ps1",
+        "OriginalSHA256":  "D3ADF02191A02BC0A29AF255A76179E880FBF7E3FB2DBF701D9919854D0A48FC",
+        "SanitizedReference":  "historical/IPU/IPUOTAAuto.ps1.txt",
+        "SanitizedSHA256":  "50F9FB8BB05DD1B39D03841AFA42C42B9C5FC3D0C82061DFE6D0B68C0ACA3D72",
+        "Redactions":  36,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTADataBuilder_multiInstance.ps1",
+        "OriginalSHA256":  "19D62386F2E1215D16CF567DF872724922903CB7BA4ACEB6DD333D99942520FC",
+        "SanitizedReference":  "historical/IPU/IPUOTADataBuilder_multiInstance.ps1.txt",
+        "SanitizedSHA256":  "B42E8511B97ED06B5798D5A18F9CEE4CD4C28A6C810F04945351886C343AC011",
+        "Redactions":  227,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTAResultsAPI.ps1",
+        "OriginalSHA256":  "C8540B78EDA495CA79D821E30E67AD908F2772E3A1965B9368E08342290628C4",
+        "SanitizedReference":  "historical/IPU/IPUOTAResultsAPI.ps1.txt",
+        "SanitizedSHA256":  "4E0DA6FD4EBFE44C5992E2957AF126E182B899F83330042341E0A251A64C097F",
+        "Redactions":  145,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTAServerDataAutoReload.ps1",
+        "OriginalSHA256":  "7690B84D42D5C5EC6D5CA825AD51C85300492122D3D02C6E81AB437CD6D8E843",
+        "SanitizedReference":  "historical/IPU/IPUOTAServerDataAutoReload.ps1.txt",
+        "SanitizedSHA256":  "9CBBC2F7986B584BD1C26656A4A1FCE34E8C5231CDDA60A64B6ECF2D8CD294BB",
+        "Redactions":  8,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTATracker.ps1",
+        "OriginalSHA256":  "EBF1E28B59D07DD761EAA12762649100075694C0D882D8C299BE1EB238CBFCDD",
+        "SanitizedReference":  "historical/IPU/IPUOTATracker.ps1.txt",
+        "SanitizedSHA256":  "6C9EFC439B8D3F7511F07520D3E766C072E9C082FAB48E8C102484D15F5E4A7B",
+        "Redactions":  76,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPUOTA_ResultsBuilder.ps1",
+        "OriginalSHA256":  "077CC1C98D1F80E0C302208552D28D64C81E09F2A1DAA4769B7EEC51EA4CC9C0",
+        "SanitizedReference":  "historical/IPU/IPUOTA_ResultsBuilder.ps1.txt",
+        "SanitizedSHA256":  "236488D8BF846FC3C362A107A140D9DA1A0E06E423AD6537B9384702FDAFC4C0",
+        "Redactions":  13,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/IPURR_DataBuilder.ps1",
+        "OriginalSHA256":  "D8B4AB6195755C85A46006FA2520CB6D7AB51FF1314B182F0B7ACF93FD57CF45",
+        "SanitizedReference":  "historical/IPU/IPURR_DataBuilder.ps1.txt",
+        "SanitizedSHA256":  "4E0C190EC02A3E9DB366E6108E9BAB297A42E08B1DB78D4A059067A6768ACC42",
+        "Redactions":  103,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/OTAWatchlistTestProc.ps1",
+        "OriginalSHA256":  "A6F538EAB9B33AD7A302CC941E84657A892A0F1455052703BACAF7866E36AAD8",
+        "SanitizedReference":  "historical/IPU/OTAWatchlistTestProc.ps1.txt",
+        "SanitizedSHA256":  "C2FAE62682C811504180E8E24B626F9A05DB1059624E29C4B19C5E7C8A580F5D",
+        "Redactions":  8,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/rebuildSQLite.ps1",
+        "OriginalSHA256":  "EA4F69F5282D718DC7DF79D1C96355772223F0526D25BFD93FBC1229082879C3",
+        "SanitizedReference":  "historical/IPU/rebuildSQLite.ps1.txt",
+        "SanitizedSHA256":  "21E399FEE902E64E6DDFE2B9213513E3FCBFC2AB244BFA77792AAE5003A377EF",
+        "Redactions":  9,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/startIPU.ps1",
+        "OriginalSHA256":  "CE1A47C4BE38AFFA90F0CA1C9B1561FEE99435A721B21D778F812123C41CDD1E",
+        "SanitizedReference":  "historical/IPU/startIPU.ps1.txt",
+        "SanitizedSHA256":  "ECDC9EC39A334C69A1F34528574433C19C13A4FF00FE928BB86DF8621E9393F2",
+        "Redactions":  58,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/startIPURR.ps1",
+        "OriginalSHA256":  "6EA46AD5D83679382455649FE8C1C0D457D75E49A6310D31BD554DE601269829",
+        "SanitizedReference":  "historical/IPU/startIPURR.ps1.txt",
+        "SanitizedSHA256":  "B5D30CC90F1DF871EFC8B4DBA1FA55E910997FDE2F3F90905FB1B6263A58DAF7",
+        "Redactions":  48,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "IPU/stompController.ps1",
+        "OriginalSHA256":  "B32BC5CF3E87E690B4C882A68BF8289B9040CE40FAB43CB22B1687C0585EC786",
+        "SanitizedReference":  "historical/IPU/stompController.ps1.txt",
+        "SanitizedSHA256":  "554CE1E67D3271DB8A41095EFE5EBA23CA3D848071FDEC3875CE8F800C4752B5",
+        "Redactions":  124,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossAPI.ps1",
+        "OriginalSHA256":  "2F15BA8CEC3EA5846FF0106B5A3D522AF5D30C32F25BD83B17856789504A962C",
+        "SanitizedReference":  "historical/SitebossHub/sitebossAPI.ps1.txt",
+        "SanitizedSHA256":  "F79539CA505CD0E372D980821F3EB0D4DFC783CF67872E40D10531ED07F318D2",
+        "Redactions":  161,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossAlarmReport.ps1",
+        "OriginalSHA256":  "B3C91438E32DF7723737ACC76991F4E73947CA8E436699AD4EDF09B0C888D017",
+        "SanitizedReference":  "historical/SitebossHub/sitebossAlarmReport.ps1.txt",
+        "SanitizedSHA256":  "E1AD198570FD67A349C5A9EB28CA0DBBFDFD463AE701343D20FE9DC5F8AC86B5",
+        "Redactions":  190,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossAlarmReport_multiInstance.ps1",
+        "OriginalSHA256":  "6236165B2B423865F3B83F4FEF7D1C5379FCE6707D5B89498E0BC17B4F74A7C7",
+        "SanitizedReference":  "historical/SitebossHub/sitebossAlarmReport_multiInstance.ps1.txt",
+        "SanitizedSHA256":  "9894A47FE5F8AF3C398E844324516A46DF13058FF9559B7820A5F564D26489F4",
+        "Redactions":  272,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossConfigureAPI.ps1",
+        "OriginalSHA256":  "127013F8626E5A1119E4D4B4EED2A5EEA28B0CE8480456B7FA2439919FD4CA1A",
+        "SanitizedReference":  "historical/SitebossHub/sitebossConfigureAPI.ps1.txt",
+        "SanitizedSHA256":  "6C75C0BDB561C6EBF36F776D18650224135497FF85A28F9CFA95F6D90AC63F5E",
+        "Redactions":  79,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossHistoryBuilder.ps1",
+        "OriginalSHA256":  "DB27B9CC428D7FAD70156AEC1C4FD9411149E224638E29AADFACCCA5D02BE98C",
+        "SanitizedReference":  "historical/SitebossHub/sitebossHistoryBuilder.ps1.txt",
+        "SanitizedSHA256":  "BA389AF6562C1148294023C5450901A3064C539692754E7754C6CB0C8A62F170",
+        "Redactions":  105,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossHistoryBuilder2.ps1",
+        "OriginalSHA256":  "806231EA199045C336341174928CCD03CF285F4CC95441B6AD4A8AE9F4782AD6",
+        "SanitizedReference":  "historical/SitebossHub/sitebossHistoryBuilder2.ps1.txt",
+        "SanitizedSHA256":  "420C2AFAB8B462B02CE5F495DAA304D429B51F7A76C46A1A333FA610E9B2B7BA",
+        "Redactions":  91,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossHubChaperone.ps1",
+        "OriginalSHA256":  "4541D1B51FC76997504C6660D8C51D7BFFF161CFC47DD706738A1DB6188CC014",
+        "SanitizedReference":  "historical/SitebossHub/sitebossHubChaperone.ps1.txt",
+        "SanitizedSHA256":  "416EFD536342428A5616FF1328B65B9B462F3A417299478352487E0EEA5056D9",
+        "Redactions":  24,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossPoller.ps1",
+        "OriginalSHA256":  "610E5776C12966D92F48431FF03A050F385A7B395B2753F8E8F1F926B02A6F37",
+        "SanitizedReference":  "historical/SitebossHub/sitebossPoller.ps1.txt",
+        "SanitizedSHA256":  "A5AC42D5ED26DAE5DB631C7AB38DD944B659BCBE3BA91DAB75298150123B65E8",
+        "Redactions":  149,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossReportAPI.ps1",
+        "OriginalSHA256":  "F635E59CC1C1E7AE2436C21FC9E74CB4714C38A88C439800B42AEBC8122B3875",
+        "SanitizedReference":  "historical/SitebossHub/sitebossReportAPI.ps1.txt",
+        "SanitizedSHA256":  "56314987A0DF8FF572D1494A3057A250451F267A0BB63523093FDA3DBCD9A9C9",
+        "Redactions":  95,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossSensorScanner.ps1",
+        "OriginalSHA256":  "A35F5B4333F118670BF1972A3A290D534EC6778C9FE2A58C2ECEF1084DF775C6",
+        "SanitizedReference":  "historical/SitebossHub/sitebossSensorScanner.ps1.txt",
+        "SanitizedSHA256":  "3AFC48F503B66D1DEAC16B6AB365A907BF842B9854DA8646192A1459E7589C75",
+        "Redactions":  16,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/sitebossSyslogBuilder.ps1",
+        "OriginalSHA256":  "F1FAD9C3B6F643E7E95CB34E16D1D713C4E70AB819A5024E8B058868D8FF2A83",
+        "SanitizedReference":  "historical/SitebossHub/sitebossSyslogBuilder.ps1.txt",
+        "SanitizedSHA256":  "B7156E19FCE73A0D7F47E7C34CC8811316AEE75F3A90AC9745F83B34272F7668",
+        "Redactions":  65,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "SitebossHub/startSitebossHub.ps1",
+        "OriginalSHA256":  "B573AC335770BD1239801B3B4A7357F7478978323396BF65694AFF4F8A86AF12",
+        "SanitizedReference":  "historical/SitebossHub/startSitebossHub.ps1.txt",
+        "SanitizedSHA256":  "A88A031169954A84D3C81C438F910F7135CAC6E591F36936797B5E4654802E2B",
+        "Redactions":  69,
+        "OriginalParseErrors":  0
+    },
+    {
+        "OriginalFile":  "WebSessionAPI/WebSessionAPI.ps1",
+        "OriginalSHA256":  "19168A7F571C650BD73419021C66F029DA6B15220F56043E4496F8737C338C65",
+        "SanitizedReference":  "historical/WebSessionAPI/WebSessionAPI.ps1.txt",
+        "SanitizedSHA256":  "F3A1CE7EDBBADAFF56F65A763EC2795AD51EBE22F604F6F264114C58775017D7",
+        "Redactions":  110,
+        "OriginalParseErrors":  0
+    }
+]

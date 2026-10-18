@@ -1,0 +1,81 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUOTATracker.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00718]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00719]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00393]'
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+while($true){
+  $startTime = (Get-Date)
+  Write-Host '[SANITIZED_00420]' -NoNewline
+  $watchList = Import-Csv '[SANITIZED]'
+  forEach($ipu in $watchList){
+    $actTS = (New-TimeSpan ([DateTime]::Parse($ipu.Date)) (Get-Date)).TotalMinutes
+    if(($actTS -gt 15) -or ($actTS -gt 10 -and $ipu.Type -ne '[SANITIZED_00565]') -or ($actTS -gt 5 -and $ipu.Complete -eq $true)){
+                                                                                                                                                             
+      $webReq = Invoke-WebRequest '[SANITIZED_00720]'
+    }
+    else{
+      if($ipu.Complete -eq $false){
+        if($ipu.Type -eq '[SANITIZED_00565]'){
+          $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+          $time = $time.Insert(10,'[SANITIZED_00307]')
+          $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+          $check = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00721]'
+          $check = ($check.Content | ConvertFrom-Json).payload.instrumentationList.ipuSoftwareVersion
+          if($check -like '[SANITIZED_00722]'){
+            if($ipu.Goal -eq $check){
+                                                                                                                                                                        
+              $webReq = Invoke-WebRequest '[SANITIZED_00723]'
+            }
+          }
+          else{
+                      
+          }
+        }
+        elseIf($ipu.Type -eq '[SANITIZED_00558]'){
+          $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+          $time = $time.Insert(10,'[SANITIZED_00307]')
+          $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+          $check = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00724]'
+          $check = ($check.Content | ConvertFrom-Json).payload.instrumentationList
+          $check =  '[SANITIZED_00725]'
+          if($check -match '[SANITIZED_00726]'){
+            if($ipu.Goal -eq $check){
+                                                                                                                                                                        
+              $webReq = Invoke-WebRequest '[SANITIZED_00723]'
+            }
+          }
+          else{
+                      
+          }
+        }
+      }
+    }
+  }
+
+                            
+
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  Write-Host '[SANITIZED_00727]'
+  if($execTime.TotalSeconds -lt 5){
+    Start-Sleep -Milliseconds (5000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+}
+

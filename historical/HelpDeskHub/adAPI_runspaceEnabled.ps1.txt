@@ -1,0 +1,998 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: adAPI_runspaceEnabled.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00081]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+
+$listener = New-Object System.Net.HttpListener
+                                                                 
+                                                       
+$apiPort = 1322
+$enc = [System.Text.Encoding]::ASCII
+                                          
+$hostName = '[SANITIZED_00011]'
+$listener.Prefixes.Add('[SANITIZED_00083]')
+$listener.Start()
+
+$main = {
+  Param($con,$enc)
+
+  $dcSession = New-PSSession -ComputerName I-DC-02
+                                                                                  
+  Import-PSSession $dcSession -DisableNameChecking -CommandName Get-ADUser,Set-ADUser,New-ADUser,Set-ADAccountPassword,Move-ADObject,Add-ADGroupMember,Enable-ADAccount,Disable-ADAccount,Unlock-ADAccount | Out-Null
+
+                                                                 
+                                                       
+  $apiKey = '[SANITIZED_00084]'
+  $context = $con
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+                                                                                                    
+  '[SANITIZED_00085]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+                            
+                              
+    
+  if($request[0] -eq $apiKey){
+    switch($request[1]){
+
+      '[SANITIZED_00086]' {
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00087]' {
+          
+                           
+                          
+                         
+                   
+         
+                                                   
+         
+                          
+                                                                                                                                     
+                                                                                               
+          
+
+
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $str = $bodyRead.ReadToEnd()
+        $str = $str.Split('[SANITIZED_00022]')
+        $user = $str[0]
+        $pwd = $str[1]
+        $newPwd = $str[2]
+        $userCheck = $null
+        $userCheck = Get-ADUser -filter {SamAccountName -eq $user} -Properties PasswordExpired,LockedOut -ErrorAction:SilentlyContinue
+        $expCheck = ($userCheck).PasswordExpired
+        $lockCheck = ($userCheck).LockedOut
+        if($userCheck -eq $null){
+          $byteMess = $enc.GetBytes('[SANITIZED_00088]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        elseIf($expCheck -eq $true){
+          $byteMess = $enc.GetBytes('[SANITIZED_00089]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        elseIf($lockCheck -eq $true){
+          $byteMess = $enc.GetBytes('[SANITIZED_00090]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        elseIf($pwd -eq $newPwd){
+          $byteMess = $enc.GetBytes('[SANITIZED_00091]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        else{
+          $setPwd = $null
+                                                                                                                                                  
+                                                                                                                       
+                                                                            
+          
+          $Error[0] = $null
+          $adCheck = New-Object System.DirectoryServices.DirectoryEntry -ArgumentList '[SANITIZED_00023]',$user,$pwd
+          $pCheck = $false
+          if($Error[0] -eq $null){
+            $pCheck = $true
+          }
+          if($pCheck){
+            $pwd = (ConvertTo-SecureString -String $pwd -AsPlainText -Force)
+            $newPwd = (ConvertTo-SecureString -String $newPwd -AsPlainText -Force)
+            $set = Set-ADAccountPassword -Identity $user -NewPassword $newPwd -ErrorAction:SilentlyContinue -ErrorVariable setPwd
+            $pCheck = $false
+            $Error[0] = $null
+            $adCheck = New-Object System.DirectoryServices.DirectoryEntry -ArgumentList '[SANITIZED_00023]',$user,$newPwd
+            $pCheck = $false
+            if($Error[0] -eq $null){
+              $pCheck = $true
+            }
+            if($setPwd -like '[SANITIZED_00092]'){
+              $byteMess = $enc.GetBytes('[SANITIZED_00093]')
+              $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+            }
+            elseIf($pCheck){
+              '[SANITIZED_00094]' | Add-Content -Force -Path '[SANITIZED]'
+              $byteMess = $enc.GetBytes('[SANITIZED_00095]')
+              $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+            }
+            else{
+              $byteMess = $enc.GetBytes('[SANITIZED_00096]')
+              $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+            }
+          }
+          elseIf(!($pCheck)){
+            $byteMess = $enc.GetBytes('[SANITIZED_00088]')
+            $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          }
+          else{
+            $byteMess = $enc.GetBytes('[SANITIZED_00097]')
+            $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          }
+            
+                                                                            
+                                                                            
+                                                                                  
+                                                                                                                                 
+                                                                                                 
+                                                                                                                        
+                                                                             
+                                                                                                                           
+                                                     
+                                                                                
+             
+                                                                                  
+                                                  
+                                                                                
+             
+                 
+                                                     
+                                                                                
+             
+           
+                                                                                  
+                                                  
+                                                                              
+           
+               
+                                                 
+                                                                              
+           
+            
+        }
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00098]' {
+        $users = Get-ADUser -Filter * -Properties SmartcardLogonRequired | Select Surname,GivenName,SamAccountName,SmartcardLogonRequired
+        $xml = $users | Sort SamAccountName | ConvertTo-Xml -NoTypeInformation
+        $byteMess = $enc.GetBytes($xml.OuterXml)
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00099]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $jso = $bodyRead.ReadToEnd()
+        $users = $jso | ConvertFrom-Json
+        $outputData = @()
+        forEach($user in $users){
+          $userAD = Get-ADUser -Identity $user.logon -Properties SmartcardLogonRequired | Select Surname,GivenName,SamAccountName,SmartcardLogonRequired
+          $lname = $userAD.Surname
+          $fname = $userAD.GivenName
+          $logon = $userAD.SamAccountName
+          $origin = $userAD.SmartcardLogonRequired
+          if($user.change -eq $true){
+            Set-ADUser -Identity $user.logon -SmartcardLogonRequired $user.sc
+          }
+          $current = (Get-ADUser -Identity $user.logon -Properties SmartcardLogonRequired).SmartcardLogonRequired
+          if($origin -ne $current){
+            $success = $true
+          }
+          elseIf($origin -eq $current){
+            $success = $false
+          }
+          else{
+            $success = '[SANITIZED_00054]'
+          }
+          $props = [ordered]@{
+            LName = $lname
+            FName = $fname
+            Logon = $logon
+            Origin = $origin
+            Current = $current
+            Success = $success
+          }
+          $dataObj = New-Object -TypeName PSCustomObject -Property $props
+          $outputData += $dataObj
+        }
+        $xml = $outputData | Sort LName | ConvertTo-Xml -NoTypeInformation
+        $byteMess = $enc.GetBytes($xml.OuterXml)
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00100]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $user = $bodyRead.ReadToEnd()
+        $userCheck = Get-ADUser -filter {SamAccountName -eq $user} -Properties PasswordExpired,LockedOut -ErrorAction:SilentlyContinue
+        if($userCheck -eq $null){
+          $byteMess = $enc.GetBytes('[SANITIZED_00101]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00102]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00103]' {
+        
+                                    
+        $exSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri '[SANITIZED]'
+        Import-PSSession $exSession -DisableNameChecking -CommandName Enable-Mailbox,Disable-Mailbox | Out-Null
+        $lySession = New-PSSession -ConnectionUri '[SANITIZED]' -Authentication NegotiateWithImplicitCredential
+        Import-PSSession $lySession -DisableNameChecking -CommandName Get-CsUser,Enable-CsUser,Disable-CsUser | Out-Null
+
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $jso = $bodyRead.ReadToEnd()
+        $buildData = $jso | ConvertFrom-Json
+
+        $buildData.pwd = Get-Content '[SANITIZED]' | ConvertTo-SecureString -Key (Get-Content '[SANITIZED]')
+        $pwdDec = '[SANITIZED_00104]'
+
+        switch($buildData.group){
+          '[SANITIZED_00105]' {
+            $ouSel = '[SANITIZED_00201]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00203]', '[SANITIZED_00204]')
+            break
+          }
+          '[SANITIZED_00110]' {
+            $ouSel = '[SANITIZED_00205]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00110]', '[SANITIZED_00206]')
+            break
+          }
+          '[SANITIZED_00112]' {
+            $ouSel = '[SANITIZED_00207]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00208]', '[SANITIZED_00209]')
+            break
+          }
+          '[SANITIZED_00114]' {
+            $ouSel = '[SANITIZED_00210]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00211]', '[SANITIZED_00212]')
+            break
+          }
+          '[SANITIZED_00116]' {
+            $ouSel = '[SANITIZED_00213]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00214]', '[SANITIZED_00215]')
+            break
+          }
+          '[SANITIZED_00118]' {
+            $ouSel = '[SANITIZED_00216]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00217]', '[SANITIZED_00218]')
+            break
+          }
+          '[SANITIZED_00120]' {
+            $ouSel = '[SANITIZED_00219]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00220]', '[SANITIZED_00221]')
+            break
+          }
+          '[SANITIZED_00122]' {
+            $ouSel = '[SANITIZED_00222]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00223]', '[SANITIZED_00224]', '[SANITIZED_00225]', '[SANITIZED_00226]')
+            break
+          }
+          '[SANITIZED_00124]' {
+            $ouSel = '[SANITIZED_00227]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00228]', '[SANITIZED_00229]', '[SANITIZED_00230]', '[SANITIZED_00134]')
+            break
+          }
+          '[SANITIZED_00126]' {
+            $ouSel = '[SANITIZED_00231]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00232]')
+            break
+          }
+          '[SANITIZED_00128]' {
+            $ouSel = '[SANITIZED_00233]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00234]', '[SANITIZED_00235]')
+            break
+          }
+          '[SANITIZED_00130]' {
+            $ouSel = '[SANITIZED_00236]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00237]', '[SANITIZED_00130]', '[SANITIZED_00238]')
+            break
+          }
+          '[SANITIZED_00132]' {
+            $ouSel = '[SANITIZED_00239]'
+            $grSel = @('[SANITIZED_00107]', '[SANITIZED_00240]', '[SANITIZED_00134]')
+            break
+          }
+        }
+
+        New-ADUser -AccountExpirationDate $buildData.expDate -AccountPassword $buildData.pwd -DisplayName $buildData.dname -GivenName $buildData.fname -Initials $buildData.mi -Surname $buildData.lname -SamAccountName $buildData.logon -Name $buildData.dname -Enabled $buildData.enabled -UserPrincipalName '[SANITIZED_00241]' -PasswordNeverExpires $false -SmartcardLogonRequired $buildData.smartcard
+        
+        $dn = (Get-ADUser -Identity $buildData.logon).DistinguishedName
+        Move-ADObject -Identity $dn -TargetPath $ouSel
+
+        forEach($group in $grSel){
+          if($group -ne '[SANITIZED_00107]'){
+            Add-ADGroupMember -Identity $group -Members $buildData.logon
+          }
+        }
+
+                                                   
+                                                                                                                                   
+                                                                                                  
+                                                                                                                                                
+                                                                                                            
+                                              
+          
+
+        Function waitMB(){
+          $mb = (Get-ADUser -Identity $buildData.logon -Properties mail).mail
+          if($mb -eq $null){
+            if($global:mbCheck -ge 6){
+              return
+            }
+            $global:mbCheck += 1
+            Start-Sleep -Seconds 5
+            waitMB
+          }
+          else{
+            Start-Sleep -Seconds 10
+          }
+        }
+        
+        Function waitLY(){
+          $ly = (Get-CsUser -Identity $buildData.logon -ErrorAction:SilentlyContinue).Enabled
+          if($ly -ne $true){
+            if($global:lyCheck -ge 6){
+              return
+            }
+            $global:lyCheck += 1
+            Start-Sleep -Seconds 5
+            waitLY
+          }
+        }
+
+        Function verifyMBLY(){
+          $success = $true
+          $user = Get-ADUser -Identity $buildData.logon -Properties *
+          $mb = $user.mail
+          if($mb -eq $null){
+            $global:mbVer = '[SANITIZED_00136]'
+          }
+          else{
+            $global:mbVer = '[SANITIZED_00137]'
+          }
+          $ly = (Get-CsUser -Identity $buildData.logon).Enabled
+          if($ly -eq $true){
+            $global:lyVer = '[SANITIZED_00137]'
+          }
+          else{
+            $global:lyVer = '[SANITIZED_00136]'
+          }
+        }
+
+        $enMB = Enable-Mailbox $buildData.logon -ErrorAction:SilentlyContinue
+        waitMB
+        $enLY = enable-csuser -registrarpool '[SANITIZED_00242]' -sipaddresstype emailaddress -sipdomain '[SANITIZED_00243]' -identity $buildData.logon -ErrorAction:SilentlyContinue | Out-Null
+        waitLY
+        verifyMBLY
+
+        $verUser = Get-ADUser -Identity $buildData.logon -Properties *
+        $props = [ordered]@{
+          fname = $verUser.GivenName
+          mi = $verUser.Initials
+          lname = $verUser.Surname
+          dname = $verUser.DisplayName
+          logon = $verUser.SamAccountName
+          expDate = $verUser.AccountExpirationDate.ToString('[SANITIZED_00139]')
+          enabled = $verUser.Enabled
+          smartcard = $verUser.SmartcardLogonRequired
+          group = $buildData.group
+          pwd = $pwdDec
+          mb = $global:mbVer
+          ly = $global:lyVer
+        }
+        $responseData = New-Object -TypeName PSCustomObject -Property $props
+        $responseData = $responseData | ConvertTo-JSON
+        $byteMess = $enc.GetBytes($responseData)
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        $context.Response.Close()
+
+        '[SANITIZED_00140]' | Add-Content -Force -Path '[SANITIZED]'
+        break
+      }
+
+      '[SANITIZED_00141]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $body = $bodyRead.ReadToEnd()
+        $setData = $body.split('[SANITIZED_00022]')
+        $set = Set-ADAccountPassword -Identity $setData[0] -NewPassword (ConvertTo-SecureString -String $setData[1] -AsPlainText -Force) -ErrorAction:SilentlyContinue
+        $context.Response.Close()
+
+        '[SANITIZED_00142]' | Add-Content -Force -Path '[SANITIZED]'
+        break
+      }
+
+      '[SANITIZED_00143]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $body = $bodyRead.ReadToEnd()
+        $user = $body
+        $props = '[SANITIZED_00144]'
+        $props = $props.Split('[SANITIZED_00022]')
+        $users = $null
+        $users = Get-ADUser -Filter * -Properties $props | ? {$_.SamAccountName -like '[SANITIZED_00145]' -or $_.GivenName -like '[SANITIZED_00145]' -or $_.Initials -like '[SANITIZED_00145]' -or $_.Surname -like '[SANITIZED_00145]' -or $_.Description -like '[SANITIZED_00145]' -or $_.DisplayName -like '[SANITIZED_00145]'}
+        if($users -ne $null){
+          $sendData = @()
+          forEach($user in $users){
+            $packingData = New-Object -TypeName PSCustomObject
+            forEach($prop in $props){
+              $packingData | Add-Member -Name $prop -Value $user.($prop) -MemberType NoteProperty
+            }
+            $packingData | Add-Member -Name logon -Value $packingData.SamAccountName -MemberType NoteProperty
+            $packingData | Add-Member -Name fname -Value $packingData.GivenName -MemberType NoteProperty
+            $packingData | Add-Member -Name mi -Value $packingData.Initials -MemberType NoteProperty
+            $packingData | Add-Member -Name lname -Value $packingData.Surname -MemberType NoteProperty
+            $packingData | Add-Member -Name dname -Value $packingData.DisplayName -MemberType NoteProperty
+            $packingData | Add-Member -Name Taskforce -Value $null -MemberType NoteProperty
+            switch -Wildcard ($packingData.DistinguishedName){
+              '[SANITIZED_00146]' {
+                $packingData.Taskforce = '[SANITIZED_00105]'
+                break
+              }
+              '[SANITIZED_00147]' {
+                $packingData.Taskforce = '[SANITIZED_00110]'
+                break
+              }
+              '[SANITIZED_00148]' {
+                $packingData.Taskforce = '[SANITIZED_00112]'
+                break
+              }
+              '[SANITIZED_00149]' {
+                $packingData.Taskforce = '[SANITIZED_00114]'
+                break
+              }
+              '[SANITIZED_00150]' {
+                $packingData.Taskforce = '[SANITIZED_00116]'
+                break
+              }
+              '[SANITIZED_00151]' {
+                $packingData.Taskforce = '[SANITIZED_00118]'
+                break
+              }
+              '[SANITIZED_00152]' {
+                $packingData.Taskforce = '[SANITIZED_00120]'
+                break
+              }
+              '[SANITIZED_00153]' {
+                $packingData.Taskforce = '[SANITIZED_00122]'
+                break
+              }
+              '[SANITIZED_00154]' {
+                $packingData.Taskforce = '[SANITIZED_00124]'
+                break
+              }
+              '[SANITIZED_00155]' {
+                $packingData.Taskforce = '[SANITIZED_00126]'
+                break
+              }
+              '[SANITIZED_00156]' {
+                $packingData.Taskforce = '[SANITIZED_00128]'
+                break
+              }
+              '[SANITIZED_00157]' {
+                $packingData.Taskforce = '[SANITIZED_00130]'
+                break
+              }
+              '[SANITIZED_00158]' {
+                $packingData.Taskforce = '[SANITIZED_00132]'
+                break
+              }
+            }
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00159]')
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00160]')
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00161]')
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00162]')
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00163]')
+            $packingData.PSObject.Properties.Remove('[SANITIZED_00164]')
+            $packedData = New-Object -TypeName PSCustomObject
+            forEach($prop in $packingData.PSObject.Properties){
+              $packedData | Add-Member -Name (($prop.Name).Substring(0,1).ToLower()+($prop.Name).Substring(1,($prop.Name).Length-1)) -Value $packingData.($prop.Name) -MemberType NoteProperty
+            }
+            $packedData = $packedData | Select fname,mi,lname,dname,logon,taskforce,description
+            $sendData += $packedData
+          }
+          $byteMess = $enc.GetBytes(($sendData | ConvertTo-JSON))
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          $context.Response.Close()
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00165]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          $context.Response.Close()
+        }
+        $context.Response.Close()
+        break
+      }
+
+      '[SANITIZED_00166]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $body = $bodyRead.ReadToEnd()
+        $props = '[SANITIZED_00167]'
+        $props = $props.Split('[SANITIZED_00022]')
+        $user = $null
+                                                                                                                          
+        $user = Get-ADUser -Identity $body -Properties $props.Split('[SANITIZED_00022]') -ErrorAction:SilentlyContinue
+        if($user -ne $null){
+          $packingData = New-Object -TypeName PSCustomObject
+          forEach($prop in $props){
+            $packingData | Add-Member -Name $prop -Value $user.($prop) -MemberType NoteProperty
+          }
+          $packingData | Add-Member -Name fname -Value $packingData.GivenName -MemberType NoteProperty
+          $packingData | Add-Member -Name mi -Value $packingData.Initials -MemberType NoteProperty
+          $packingData | Add-Member -Name lname -Value $packingData.Surname -MemberType NoteProperty
+          $packingData | Add-Member -Name dname -Value $packingData.DisplayName -MemberType NoteProperty
+          $packingData | Add-Member -Name expDate -Value $packingData.AccountExpirationDate -MemberType NoteProperty
+          $packingData | Add-Member -Name Exchange -Value $false -MemberType NoteProperty
+          $packingData | Add-Member -Name Lync -Value $false -MemberType NoteProperty
+          $packingData | Add-Member -Name Taskforce -Value $null -MemberType NoteProperty
+          $packingData | Add-Member -Name Logon -Value $packingData.SamAccountName -MemberType NoteProperty
+          $packingData | Add-Member -Name smartcard -Value $packingData.SmartcardLogonRequired -MemberType NoteProperty
+          $packingData.badPasswordTime = ([DateTime]::FromFileTime($packingData.badPasswordTime))
+          $packingData.lastLogonTimestamp = ([DateTime]::FromFileTime($packingData.lastLogonTimestamp))
+          $packingData.LockoutTime = ([DateTime]::FromFileTime($packingData.LockoutTime))
+          $packingData.pwdLastSet = ([DateTime]::FromFileTime($packingData.pwdLastSet))
+          $mb = $user.mail
+          if($mb -ne $null){
+            $packingData.Exchange = $true
+          }
+          if($packingData.'[SANITIZED_00168]'){
+            $packingData.Lync = $true
+          }
+          switch -Wildcard ($packingData.DistinguishedName){
+            '[SANITIZED_00146]' {
+              $packingData.Taskforce = '[SANITIZED_00105]'
+              break
+            }
+            '[SANITIZED_00147]' {
+              $packingData.Taskforce = '[SANITIZED_00110]'
+              break
+            }
+            '[SANITIZED_00148]' {
+              $packingData.Taskforce = '[SANITIZED_00112]'
+              break
+            }
+            '[SANITIZED_00149]' {
+              $packingData.Taskforce = '[SANITIZED_00114]'
+              break
+            }
+            '[SANITIZED_00150]' {
+              $packingData.Taskforce = '[SANITIZED_00116]'
+              break
+            }
+            '[SANITIZED_00151]' {
+              $packingData.Taskforce = '[SANITIZED_00118]'
+              break
+            }
+            '[SANITIZED_00152]' {
+              $packingData.Taskforce = '[SANITIZED_00120]'
+              break
+            }
+            '[SANITIZED_00153]' {
+              $packingData.Taskforce = '[SANITIZED_00122]'
+              break
+            }
+            '[SANITIZED_00154]' {
+              $packingData.Taskforce = '[SANITIZED_00124]'
+              break
+            }
+            '[SANITIZED_00155]' {
+              $packingData.Taskforce = '[SANITIZED_00126]'
+              break
+            }
+            '[SANITIZED_00156]' {
+              $packingData.Taskforce = '[SANITIZED_00128]'
+              break
+            }
+            '[SANITIZED_00157]' {
+              $packingData.Taskforce = '[SANITIZED_00130]'
+              break
+            }
+            '[SANITIZED_00158]' {
+              $packingData.Taskforce = '[SANITIZED_00132]'
+              break
+            }
+          }
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00159]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00160]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00161]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00162]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00169]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00170]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00168]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00163]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00164]')
+          $packingData.PSObject.Properties.Remove('[SANITIZED_00171]')
+          $packedData = New-Object -TypeName PSCustomObject
+          forEach($prop in $packingData.PSObject.Properties){
+            $packedData | Add-Member -Name (($prop.Name).Substring(0,1).ToLower()+($prop.Name).Substring(1,($prop.Name).Length-1)) -Value $packingData.($prop.Name) -MemberType NoteProperty
+          }
+          $packedData = $packedData | Select logon,enabled,lastLogonTimestamp,lockedOut,lockoutTime,badPasswordTime,pwdLastSet,passwordExpired,passwordNeverExpires,cannotChangePassword,expDate,smartcard,fname,mi,lname,dname,description,taskforce,exchange,lync,createTimeStamp,modified
+          $byteMess = $enc.GetBytes(($packedData | ConvertTo-JSON))
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          $context.Response.Close()
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00172]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          $context.Response.Close()
+        }
+        break
+      }
+
+      '[SANITIZED_00173]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $body = $bodyRead.ReadToEnd()
+        $manInfo = $body | ConvertFrom-JSON
+        forEach($prop in $manInfo.PSObject.Properties.Name){
+          if($manInfo.($prop) -eq $null){
+            $manInfo.($prop) = '[SANITIZED_00174]'
+          }
+        }
+        forEach($prop in $manInfo.PSObject.Properties.Name){
+          switch($prop){
+            '[SANITIZED_00175]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -UserPrincipalName '[SANITIZED_00244]' -SamAccountName $manInfo.NewLogon
+              break
+            }
+            '[SANITIZED_00137]'{
+              if($manInfo.Enabled){
+                $en = Enable-ADAccount -Identity $manInfo.Logon
+              }
+              else{
+                $en = Disable-ADAccount -Identity $manInfo.Logon
+              }
+              break
+            }
+            '[SANITIZED_00090]'{
+              if(!($manInfo.Locked)){
+                $lock = Unlock-ADAccount -Identity $manInfo.Logon
+              }
+              break
+            }
+            '[SANITIZED_00177]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -PasswordNeverExpires $manInfo.'[SANITIZED_00178]'
+              break
+            }
+            '[SANITIZED_00179]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -CannotChangePassword $manInfo.'[SANITIZED_00180]'
+              break
+            }
+            '[SANITIZED_00181]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -AccountExpirationDate ([DateTime]::Parse($manInfo.'[SANITIZED_00182]'))
+              break
+            }
+            '[SANITIZED_00183]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -SmartcardLogonRequired $manInfo.'[SANITIZED_00184]'
+              break
+            }
+            '[SANITIZED_00185]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -GivenName $manInfo.'[SANITIZED_00186]'
+              break
+            }
+            '[SANITIZED_00187]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -Initials $manInfo.MI
+              break
+            }
+            '[SANITIZED_00188]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -Surname $manInfo.'[SANITIZED_00189]'
+              break
+            }
+            '[SANITIZED_00190]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -DisplayName $manInfo.'[SANITIZED_00191]'
+              break
+            }
+            '[SANITIZED_00192]'{
+              $set = Set-ADUser -Identity $manInfo.Logon -Description $manInfo.Description
+              break
+            }
+            '[SANITIZED_00193]'{
+              switch($manInfo.Taskforce){
+                '[SANITIZED_00105]' {
+                  $ouSel = '[SANITIZED_00201]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00203]', '[SANITIZED_00204]')
+                  break
+                }
+                '[SANITIZED_00110]' {
+                  $ouSel = '[SANITIZED_00205]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00110]', '[SANITIZED_00206]')
+                  break
+                }
+                '[SANITIZED_00112]' {
+                  $ouSel = '[SANITIZED_00207]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00208]', '[SANITIZED_00209]')
+                  break
+                }
+                '[SANITIZED_00114]' {
+                  $ouSel = '[SANITIZED_00210]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00211]', '[SANITIZED_00212]')
+                  break
+                }
+                '[SANITIZED_00116]' {
+                  $ouSel = '[SANITIZED_00213]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00214]', '[SANITIZED_00215]')
+                  break
+                }
+                '[SANITIZED_00118]' {
+                  $ouSel = '[SANITIZED_00216]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00217]', '[SANITIZED_00218]')
+                  break
+                }
+                '[SANITIZED_00120]' {
+                  $ouSel = '[SANITIZED_00219]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00220]', '[SANITIZED_00221]')
+                  break
+                }
+                '[SANITIZED_00122]' {
+                  $ouSel = '[SANITIZED_00222]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00223]', '[SANITIZED_00224]', '[SANITIZED_00225]', '[SANITIZED_00226]')
+                  break
+                }
+                '[SANITIZED_00124]' {
+                  $ouSel = '[SANITIZED_00227]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00228]', '[SANITIZED_00229]', '[SANITIZED_00230]', '[SANITIZED_00134]')
+                  break
+                }
+                '[SANITIZED_00126]' {
+                  $ouSel = '[SANITIZED_00231]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00202]', '[SANITIZED_00232]')
+                  break
+                }
+                '[SANITIZED_00128]' {
+                  $ouSel = '[SANITIZED_00233]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00234]', '[SANITIZED_00235]')
+                  break
+                }
+                '[SANITIZED_00130]' {
+                  $ouSel = '[SANITIZED_00236]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00237]', '[SANITIZED_00130]', '[SANITIZED_00238]')
+                  break
+                }
+                '[SANITIZED_00132]' {
+                  $ouSel = '[SANITIZED_00239]'
+                  $grSel = @('[SANITIZED_00107]', '[SANITIZED_00240]', '[SANITIZED_00134]')
+                  break
+                }
+              }
+              $dn = (Get-ADUser -Identity $manInfo.Logon).DistinguishedName
+              $move = Move-ADObject -Identity $dn -TargetPath $ouSel
+
+              forEach($group in $grSel){
+                if($group -ne '[SANITIZED_00107]'){
+                  Add-ADGroupMember -Identity $group -Members $manInfo.Logon
+                }
+              }
+
+              break
+            }
+            '[SANITIZED_00194]'{
+              $exSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri '[SANITIZED]'
+              Import-PSSession $exSession -DisableNameChecking -CommandName Enable-Mailbox,Disable-Mailbox | Out-Null
+
+              if($manInfo.Exchange){
+                Function waitMB(){
+                  $mb = (Get-ADUser -Identity $manInfo.Logon -Properties mail).mail
+                  if($mb -eq $null){
+                    if($global:mbCheck -ge 6){
+                      return
+                    }
+                    $global:mbCheck += 1
+                    Start-Sleep -Seconds 5
+                    waitMB
+                  }
+                  else{
+                    Start-Sleep -Seconds 10
+                  }
+                }
+                $enMB = Enable-Mailbox $manInfo.Logon -ErrorAction:SilentlyContinue
+                waitMB
+              }
+              else{
+                $enMB = Disable-Mailbox -Identity $manInfo.Logon -Confirm:$false
+              }
+              break
+            }
+            '[SANITIZED_00195]'{
+              $lySession = New-PSSession -ConnectionUri '[SANITIZED]' -Authentication NegotiateWithImplicitCredential
+              Import-PSSession $lySession -DisableNameChecking -CommandName Get-CsUser,Enable-CsUser,Disable-CsUser | Out-Null
+       
+              if($manInfo.Lync){
+                Function waitLY(){
+                  $ly = (Get-CsUser -Identity $manInfo.Logon -ErrorAction:SilentlyContinue).Enabled
+                  if($ly -ne $true){
+                    if($global:lyCheck -ge 6){
+                      return
+                    }
+                    $global:lyCheck += 1
+                    Start-Sleep -Seconds 5
+                    waitLY
+                  }
+                }
+                $enLY = enable-csuser -registrarpool '[SANITIZED_00242]' -sipaddresstype emailaddress -sipdomain '[SANITIZED_00243]' -identity $manInfo.Logon -ErrorAction:SilentlyContinue | Out-Null
+                waitLY
+              }
+              else{
+                $enLY = Disable-CsUser -Identity $manInfo.Logon -Confirm:$false
+              }
+              break
+            }
+          }
+        }        
+        $context.Response.Close()
+
+        '[SANITIZED_00196]' | Add-Content -Force -Path '[SANITIZED]'
+        break
+      }
+
+      '[SANITIZED_00197]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $user = $null
+        $user = $bodyRead.ReadToEnd()
+        Remove-ADUser -Identity $user -Confirm:$false
+        $context.Response.Close()
+
+        '[SANITIZED_00198]' | Add-Content -Force -Path '[SANITIZED]'
+        break
+      }
+
+      default {
+        $context.Response.Close()
+      }
+    }
+  }
+  else{
+    switch($request[0]){
+
+      '[SANITIZED_00200]' {
+        $context.Response.Close()
+        break
+      }
+
+      default {
+        $context.Response.StatusCode = 404;
+        $context.Response.Close()
+      }
+    }
+  }
+  Get-PSSession | Remove-PSSession
+}
+
+                                
+$maxRun = 8
+$maxRun = [int]$maxRun
+$runspace = [RunSpaceFactory]::CreateRunspacePool(1,$maxRun)
+$runspace.Open()
+$psInst = New-Object -TypeName PSCustomObject
+$props = '[SANITIZED_00245]'
+$availProps = '[SANITIZED_00246]'
+2..$maxRun | % {
+  $props += '[SANITIZED_00247]'
+  $availProps += '[SANITIZED_00248]'
+}
+forEach($prop in @('[SANITIZED_00249]','[SANITIZED_00250]','[SANITIZED_00251]')){
+  $psInst | Add-Member -MemberType NoteProperty -Name $prop -Value ($props | ConvertFrom-StringData)
+}
+$context = New-Object -TypeName PSCustomObject -Property @{CurrentCon=0}
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00252]' -Value ($availProps | ConvertFrom-StringData)
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00253]' -Value ($props | ConvertFrom-StringData)
+function assignContext($conTemp){
+  $maxCap = $true
+  for($i = 1; $i -le $maxRun; $i++){
+    if($context.ConAvail.([String]$i)){
+      $context.CurrentCon = $i
+      $maxCap = $false
+      break
+    }
+  }
+  if($maxCap){
+    $context.CurrentCon = 0
+    $cleanData = cleanup -context $context -psInst $psInst
+    $context = $cleanData.context
+    $psInst = $cleanData.psInst
+    Start-Sleep -Milliseconds 500
+    assignContext
+  }
+  else{
+    $context.ConAvail.([String]$context.CurrentCon) = $false
+    $context.Con.($context.CurrentCon -as [String]) = $conTemp
+  }
+}
+function startRunspace($sblock,$runspace,$enc){
+  $psInst.Inst.([String]$context.CurrentCon) = [PowerShell]::Create()
+  $psInst.Inst.([String]$context.CurrentCon).RunspacePool = $runspace
+                                                            
+  $null = $psInst.Inst.([String]$context.CurrentCon).AddScript($main).`
+          AddArgument($context.Con.([String]$context.CurrentCon)).AddArgument($enc)
+  $psInst.Stat.([String]$context.CurrentCon) = $psInst.Inst.([String]$context.CurrentCon).BeginInvoke()
+}
+function cleanup($context,$psInst){
+  1..$maxRun | % {
+    $i = $_
+    if(!($context.ConAvail.([String]$i))){
+      if($psInst.Stat.([String]$i).IsCompleted){
+        $psInst.Res.([String]$context.CurrentCon) = $psInst.Inst.([String]$context.CurrentCon).EndInvoke($psInst.Stat.([String]$context.CurrentCon))
+        $context.ConAvail.([String]$i) = $true
+      }
+    }
+  }
+  return New-Object -TypeName PSCustomObject -Property @{context=$context;psInst=$psInst}
+}
+
+$cleanCycle = 0
+do{
+  $conTemp = $listener.GetContext()
+  assignContext -conTemp $conTemp
+  startRunspace -sblock $sblock -runspace $runspace -enc $enc
+  if($cleanCycle -ge 2){
+    $cleanCycle = 0
+    $cleanData = cleanup -context $context -psInst $psInst
+    $context = $cleanData.context
+    $psInst = $cleanData.psInst
+  }
+  $cleanCycle++
+}
+while($true)
+
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

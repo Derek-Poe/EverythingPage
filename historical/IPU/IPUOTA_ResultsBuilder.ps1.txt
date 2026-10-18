@@ -1,0 +1,38 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUOTA_ResultsBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00728]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+
+While($true){
+  Write-Host '[SANITIZED_00729]'
+
+  $ct = (Get-Date)
+  $allTasks = Import-Csv '[SANITIZED]'
+  $tasks = @()
+  forEach($ipu in $allTasks){
+    if((New-TimeSpan -Start ([DateTime]::Parse($ipu.Time)) -End $ct).Minutes -le 20){
+      $tasks += $ipu
+    }
+  }
+  
+  $logRead = Get-Content -Tail 1000 '[SANITIZED]'
+  $results = @()
+  forEach($ipu in ($tasks | ? {$_.Task -eq '[SANITIZED_00565]'})){
+    $result = $null
+    $result = $logRead | ? {$_ -like '[SANITIZED_00730]'} | Select -Last 1
+    if($result -ne $null){
+      $results += New-Object PSCustomObject -Property ([Ordered]@{IPU=$ipu.IPU;Result=($ipu.Task).Split('[SANITIZED_00272]')[4].Split('[SANITIZED_00731]')[0].Trim()})
+    }
+  }
+  
+  $tasks | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+  $results | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+
+  Write-Host '[SANITIZED_00732]'
+  Write-Host '[SANITIZED_00733]'
+  Start-Sleep -Seconds 5
+}

@@ -1,0 +1,35 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: OTAWatchlistTestProc.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+'[SANITIZED_00744]
+
+
+
+
+
+
+
+
+
+
+' | Set-Content '[SANITIZED_00745]'
+Start-Sleep -Milliseconds 8000
+$testIPUs = @(); Import-Csv '[SANITIZED_00745]' | % {$testIPUs += $_}
+$testIPUs | % {$_.Complete = $true}
+$testIPUs | Export-Csv '[SANITIZED_00745]' -NoTypeInformation -Force
+Start-Sleep -Milliseconds 5000
+$testIPUs = $testIPUs | ? {([int]$_.ID % 2) -eq 1}
+$testIPUs | Export-Csv '[SANITIZED_00745]' -NoTypeInformation -Force
+Start-Sleep -Milliseconds 5000
+'[SANITIZED_00746]
+
+
+
+
+' | ConvertFrom-Csv | % {$testIPUs += $_}
+$testIPUs | Export-Csv '[SANITIZED_00745]' -NoTypeInformation -Force
+$testIPUs | % {$_.Complete = $true}
+Start-Sleep -Milliseconds 5000
+$testIPUs | Export-Csv '[SANITIZED_00745]' -NoTypeInformation -Force

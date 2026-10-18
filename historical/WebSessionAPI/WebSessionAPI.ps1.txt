@@ -1,0 +1,192 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: WebSessionAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00967]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00968]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00040]'
+
+$sessionTimeout = 480
+$authUsers = @('[SANITIZED_00268]','[SANITIZED_00278]','[SANITIZED_00279]','[SANITIZED_00280]','[SANITIZED_00281]','[SANITIZED_00282]','[SANITIZED_00283]','[SANITIZED_00284]','[SANITIZED_00285]','[SANITIZED_00286]','[SANITIZED_00287]','[SANITIZED_00288]','[SANITIZED_00289]','[SANITIZED_00500]')
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 9740
+                                            
+$hostName = '[SANITIZED_00457]'
+$listener.Prefixes.Add('[SANITIZED_00012]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+function getSessionKey(){
+  $sessKey = '[SANITIZED_00264]'
+  for($i = 0; $i -lt 24; $i++){
+    switch(Get-Random -Minimum 1 -Maximum 4){
+      1 {
+        $sessKey += '[SANITIZED_00291]'
+        break
+      }
+      2 {
+        $sessKey += [char](Get-Random -Minimum 65 -Maximum 91)
+        break
+      }
+      3 {
+         $sessKey += [char](Get-Random -Minimum 97 -Maximum 123)
+         break
+      }
+    }
+  }
+  return $sessKey
+}
+
+do{
+  if((cat '[SANITIZED]' | Select -First 1) -ne '[SANITIZED_00969]'){
+    rm '[SANITIZED]' -Force
+    cp '[SANITIZED]' '[SANITIZED]' -Force
+    ren '[SANITIZED]' '[SANITIZED]' -Force
+  }
+  $apiKey = '[SANITIZED_00970]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+  '[SANITIZED_00504]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+  $reqSess = $null
+  if($request[0] -eq $apiKey){
+    switch($request[1]){
+      '[SANITIZED_00971]' {       
+        $ws = Import-Csv '[SANITIZED]'
+        $userData = $null
+        $session = $null
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $session = $bodyRead.ReadToEnd()
+        $userData = $ws | ? {$_.Session -eq $session}
+        if($userData -ne $null){
+          if((New-TimeSpan -Start ([DateTime]::Parse($userData.Time)) -End (Get-Date)).Seconds -ge 0 -or $session -eq '[SANITIZED_00343]'){
+            $byteMess = $enc.GetBytes('[SANITIZED_00702]')
+          }
+          else{
+            ($ws | ? {$_.Session -eq $session}).Time = ((Get-Date).AddMinutes($sessionTimeout)).ToString('[SANITIZED_00014]')
+            $byteMess = $enc.GetBytes('[SANITIZED_00307]')
+          }
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00702]')
+        }
+        $ws | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break 
+      }
+      '[SANITIZED_00409]'{
+        $ws = Import-Csv '[SANITIZED]'
+        $userData = $null
+        $user = $null
+        $session = $null
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $user = $bodyRead.ReadToEnd()
+        $session = getSessionKey
+        $userData = $ws | ? {$_.User -eq $user}
+        if($userData -ne $null){
+          ($ws | ? {$_.User -eq $user}).Session = $session
+          ($ws | ? {$_.User -eq $user}).Time = ((Get-Date).AddMinutes($sessionTimeout)).ToString('[SANITIZED_00014]')
+          $ws | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+        }
+        else{
+          '[SANITIZED_00972]' | Add-Content '[SANITIZED]' -Force
+        }
+        $byteMess = $enc.GetBytes($session)
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+      '[SANITIZED_00973]'{
+        $ws = Import-Csv '[SANITIZED]'
+        $user = $null
+        $session = $null
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $session = $bodyRead.ReadToEnd()
+        $user = ($ws | ? {$_.Session -eq $session}).User
+        if($user -ne $null){
+          $byteMess = $enc.GetBytes($user)
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00334]')
+        }
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+      default{
+        $context.Response.StatusCode = 404;
+      }  
+    }
+    $context.Response.Close()
+  }
+  else{
+    $context.Response.StatusCode = 404;
+  }
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 100
+}
+while($true)
+
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                          
+                           

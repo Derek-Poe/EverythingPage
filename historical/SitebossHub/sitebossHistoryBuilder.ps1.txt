@@ -1,0 +1,236 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossHistoryBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00860]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00047]'
+
+                                                                                                                                                                                                            
+                                                                                                                                                                                                 
+                                                                                                                                                                                                                       
+                                                                                                                                                                                                                    
+$conn = New-Object System.Data.OleDb.OleDbConnection('[SANITIZED_00771]')
+$conn.Open()
+$cmd = $conn.CreateCommand()
+$dt = New-Object System.Data.DataTable
+$dbnull = [System.DBNull]::Value
+
+function getPackedDT($datTab){
+  if($datTab -ne $null){
+    $allCol = $datTab[0].Columns.ColumnName
+    $selCol = @()
+    forEach($col in $allCol){
+      try{
+        if(($datTab[0].$col)[0] -ne $dbnull){
+          $selCol += $col
+        }
+      }
+      catch{}
+    }
+    $datTabArray = $true
+    if($datTab.($selCol[0]) -isnot [array]){
+      $datTabArray = $false
+    }
+    $packedData = @()
+    if($datTab.($selCol[0]) -is [array]){
+      $len = $datTab.($selCol[0]).Length
+    }
+    else{
+      $len = 1
+    }
+    for($i = 0; $i -lt $len; $i++){
+      $obj = New-Object -TypeName PSCustomObject
+      forEach($prop in $selCol){
+        if($datTabArray){
+          $obj | Add-Member -Name $prop -Value ($datTab.$prop)[$i] -MemberType NoteProperty
+        }
+        else{
+          $obj | Add-Member -Name $prop -Value $datTab.$prop -MemberType NoteProperty
+        }
+      }
+      $packedData += $obj
+    }
+    return $packedData
+  }
+  else{
+    return $null
+  }
+}
+
+function buildTable(){
+                                             
+    '[SANITIZED_00861]' | Add-Content -Force -Path '[SANITIZED]'
+    $query = '[SANITIZED_00862]'
+    $cmd.CommandText = $query
+    $execute = $cmd.ExecuteNonQuery()
+    
+
+  $query = '[SANITIZED_00776]'
+  $cmd.CommandText = $query
+  $rdr = $cmd.ExecuteReader()
+  $dt.Clear() 
+  $dt.Load($rdr)
+  $liveDataRef = getPackedDT($dt)
+
+  forEach($prop in $liveDataRef[0].PSObject.Properties.Name){
+    if($prop -eq '[SANITIZED_00472]' -or $prop -eq '[SANITIZED_00863]' -or $prop -eq '[SANITIZED_00864]'){
+      $liveDataRef[0].PSObject.Properties.Remove($prop)
+    }
+  }
+
+  $colNames = '[SANITIZED_00264]'
+  0..($liveDataRef[0].PSObject.Properties.Name.Length - 1) | % {
+    $i = $_
+    if($liveDataRef[0].PSObject.Properties.Name[$i] -eq '[SANITIZED_00865]'){
+      $colNames += '[SANITIZED_00866]'
+    }
+    else{
+      1..7 | % {
+        $ii = $_
+        $colNames += '[SANITIZED_00867]'
+      }
+    }
+  }
+  $colNames = $colNames.Substring(1)
+
+                                             
+    $query = '[SANITIZED_00868]'
+    $cmd.CommandText = $query
+    $execute = $cmd.ExecuteNonQuery()
+    
+
+  $cols = ($colNames.Replace('[SANITIZED_00869]','[SANITIZED_00264]')).Split('[SANITIZED_00022]')
+  $colNames = '[SANITIZED_00870]'
+  $rowFill = '[SANITIZED_00264]'
+  1..($cols.Length - 1) | % {
+    $i = $_
+    $colNames += '[SANITIZED_00871]'
+    if($i -gt 1){
+      $rowFill += '[SANITIZED_00872]'
+    }
+  }
+  $colNames = '[SANITIZED_00873]'
+                                             
+    0..($liveDataRef.Length-1) | % {
+      $i = $_
+      $query = '[SANITIZED_00874]'
+      $cmd.CommandText = $query
+      $execute = $cmd.ExecuteNonQuery()
+    }
+
+    $Global:sbs = New-Object -TypeName PSCustomObject
+    $props = '[SANITIZED_00264]'
+    1..($cols.Length - 1) | % {
+      $i = $_
+       
+       
+                                       
+       
+       
+      $props += '[SANITIZED_00875]'
+    }
+    $props = $props.Substring(1)
+    0..($liveDataRef.Length-1) | % {
+      $i = $_
+      $Global:sbs | Add-Member -MemberType NoteProperty -Name $liveDataRef[$i].CellSite -Value $null
+      $Global:sbs.($liveDataRef[$i].CellSite) = ($props | ConvertFrom-StringData)
+    }
+                                             
+    Get-Date | Set-Content '[SANITIZED]' -Force
+    
+}
+$Global:currentDay = ([DateTime]::Parse((Get-Content '[SANITIZED]'))).Day
+buildTable
+do{
+  '[SANITIZED_00876]' | Add-Content -Force -Path '[SANITIZED]'
+  if((Get-Date).Day -ne $Global:currentDay){
+    buildTable
+  }
+  $Global:currentDay = ([DateTime]::Parse((Get-Content '[SANITIZED]'))).Day
+
+  $query = '[SANITIZED_00776]'
+  $cmd.CommandText = $query
+  $rdr = $cmd.ExecuteReader()
+  $dt.Clear() 
+  $dt.Load($rdr)
+  $liveData = getPackedDT($dt)
+
+  forEach($liveRow in $liveData){
+    forEach($liveCol in $liveRow.PSObject.Properties.Name){
+      if($liveCol -ne '[SANITIZED_00865]' -and $liveCol -ne '[SANITIZED_00472]' -and $liveCol -ne '[SANITIZED_00863]' -and $liveCol -ne '[SANITIZED_00864]' -and $liveCol -ne '[SANITIZED_00877]'){
+        if($Global:sbs.($($liveRow.CellSite)).'[SANITIZED_00878]' -ne $liveRow.$liveCol){
+          2..7 | % {
+            $i = $_
+            $Global:sbs.($($liveRow.CellSite)).'[SANITIZED_00879]' = $Global:sbs.($($liveRow.CellSite)).'[SANITIZED_00880]'
+          }
+          $Global:sbs.($($liveRow.CellSite)).'[SANITIZED_00878]' = $liveRow.$liveCol
+          $query = '[SANITIZED_00881]
+
+
+
+
+
+
+'
+          $cmd.CommandText = $query
+          $execute = $cmd.ExecuteNonQuery()
+        }
+      }
+    }
+  }
+  
+  $inter = 30
+  '[SANITIZED_00882]' | Add-Content -Force -Path '[SANITIZED]'
+  $inter..1 | % {
+    $i = $_
+    Start-Sleep -Seconds 1
+  }
+}
+while($true)
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

@@ -1,0 +1,213 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: autoServerMonitorAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00000]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+$authUsers = @('[SANITIZED_00001]','[SANITIZED_00002]','[SANITIZED_00003]','[SANITIZED_00004]','[SANITIZED_00005]','[SANITIZED_00006]','[SANITIZED_00007]','[SANITIZED_00008]','[SANITIZED_00009]','[SANITIZED_00010]')
+
+                                                                                                                                                                             
+             
+$listener = New-Object System.Net.HttpListener
+$apiPort = Get-Content '[SANITIZED]'
+$enc = [System.Text.Encoding]::ASCII
+$hostName = '[SANITIZED_00011]'
+$listener.Prefixes.Add('[SANITIZED_00012]')
+
+$listener.Start()
+
+function checkLogin($sessDat,$cmd,$dt){
+  $session = $sessDat
+  $query = '[SANITIZED_00013]'
+  $cmd.CommandText = $query
+  $rdr = $cmd.ExecuteReader()
+  $dt.Clear() 
+  $dt.Load($rdr)
+
+  if($dt.Time.Length -gt 0){
+    $ts = New-TimeSpan -Start (Get-Date) -End ([datetime]::Parse($dt[0].Time))
+                                         
+    if($ts.Seconds -ge 0){
+      $etime = (Get-Date).AddMinutes(30).ToString('[SANITIZED_00014]')
+      $query = '[SANITIZED_00015]'
+      $cmd.CommandText = $query
+      $execute = $cmd.ExecuteNonQuery()
+                                    
+      return '[SANITIZED_00016]'
+    }
+    else{
+      return '[SANITIZED_00017]'
+    }
+  }
+  else{
+    return '[SANITIZED_00017]'
+  }
+}
+
+while($true){
+  $apiKey = Get-Content '[SANITIZED]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+  '[SANITIZED_00018]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+  if($request[0] -eq $apiKey){
+    
+    switch($request[1]){
+
+      '[SANITIZED_00020]' {
+        $byteMess = $enc.GetBytes((Import-Csv '[SANITIZED]' | ConvertTo-JSON))
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+
+      '[SANITIZED_00021]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $cr = ($bodyRead.ReadToEnd()).Split('[SANITIZED_00022]')
+        $pc = $false
+        $adCheck = $null
+        $adCheck = New-Object System.DirectoryServices.DirectoryEntry -ArgumentList '[SANITIZED_00023]',$cr[0],$cr[1]
+        if($adCheck.Name -ne $null){
+          $pc = $true
+        }
+        if($pc -and $cr[0] -in $authUsers){
+          $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+          $context.Response.OutputStream.Write($content,0,$content.Length)
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00024]')
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        }
+        break
+      }
+
+      '[SANITIZED_00025]' {
+        $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+        $proReq = ($bodyRead.ReadToEnd()).Split('[SANITIZED_00022]')
+        if($proReq[0] -eq '[SANITIZED_00026]' -or $proReq[0] -eq '[SANITIZED_00027]'){
+          $pros = $null
+          $pros = @()
+          switch($proReq[1]){
+            '[SANITIZED_00028]' {
+              $pros += '[SANITIZED_00029]'
+              $pros += '[SANITIZED_00030]'
+              $startPro = '[SANITIZED_00031]'
+              break
+            }
+            '[SANITIZED_00032]' {
+              $pros += '[SANITIZED_00033]'
+              $pros += '[SANITIZED_00034]'
+              $startPro = '[SANITIZED_00035]'
+              break
+            }
+            '[SANITIZED_00036]' {
+              $pros += '[SANITIZED_00037]'
+              $pros += '[SANITIZED_00038]'
+              $pros += '[SANITIZED_00039]'
+              $pros += '[SANITIZED_00040]'
+              $startPro = '[SANITIZED_00041]'
+              break
+            }
+            '[SANITIZED_00042]' {
+              $pros += '[SANITIZED_00043]'
+              $startPro = '[SANITIZED_00044]'
+              break
+            }
+            '[SANITIZED_00045]' {
+              $pros += '[SANITIZED_00046]'
+              $pros += '[SANITIZED_00047]'
+              $pros += '[SANITIZED_00048]'
+              $pros += '[SANITIZED_00049]'
+              $startPro = '[SANITIZED_00050]'
+              break
+            }
+          }
+          if($proReq[0] -eq '[SANITIZED_00026]'){
+            forEach($pro in $pros){
+              Get-Process -Id (Get-Content '[SANITIZED_00051]') -ErrorAction SilentlyContinue | Stop-Process
+            }
+          }
+          elseIf($proReq[0] -eq '[SANITIZED_00027]'){
+            if($proReq[1] -eq '[SANITIZED_00032]'){
+              Start-Process '[SANITIZED_00052]' $startPro
+              forEach($pro in $pros){
+                Get-Process -Id (Get-Content '[SANITIZED_00051]') -ErrorAction SilentlyContinue | Stop-Process
+              }          
+            }
+            else{
+              forEach($pro in $pros){
+                Get-Process -Id (Get-Content '[SANITIZED_00051]') -ErrorAction SilentlyContinue | Stop-Process
+              }
+              Start-Sleep -Seconds 5
+              Start-Process '[SANITIZED_00052]' $startPro
+            }
+          }
+          $byteMess = $enc.GetBytes('[SANITIZED_00053]')
+        }
+        else{
+          $byteMess = $enc.GetBytes('[SANITIZED_00054]')        
+        }
+        $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+        break
+      }
+          
+      default{
+        $context.Response.StatusCode = 404;
+      }
+    }
+    $context.Response.Close()
+  }
+  elseIf($request[0] -eq '[SANITIZED_00055]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 500
+}
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

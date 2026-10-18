@@ -1,0 +1,233 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUOTAResultsAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00706]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00707]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00392]'
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 9733
+$listener.Prefixes.Add('[SANITIZED_00083]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+function getIPUID($ipu){
+  $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+  $time = $time.Insert(10,'[SANITIZED_00307]')
+  $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+  $instrData = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00708]'
+  $instrData = ($instrData.Content | ConvertFrom-Json).payload.instrumentationList
+  if($instrData.id.uuid -ne $null){
+    if($instrData.id.uuid -is [array]){
+      return '[SANITIZED_00333]'
+    }
+    else{
+      return $instrData.id.uuid
+    }
+  }
+  else{
+    return '[SANITIZED_00334]'
+  }
+}
+
+while($true){
+  $apiKey = '[SANITIZED_00709]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+                                                                                                                                                   
+  Write-Host -f Yellow '[SANITIZED_00710]'
+  $request = $request.Substring(1,$request.Length-1)
+  $request = $request.split('[SANITIZED_00019]')
+  $reqSess = $null
+  $byteMess = $null
+  $wlCon = @()
+  if($request[0] -eq $apiKey){
+    switch($request[1]){
+      '[SANITIZED_00711]'{
+        if($request[2] -eq '[SANITIZED_00467]'){
+          $watchList = Import-Csv '[SANITIZED]'
+          $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+          $jso = $bodyRead.ReadToEnd()
+          $ipuRx = $jso | ConvertFrom-Json
+          $wlCon += $watchList
+                                                                                                  
+                           
+          $IDs = @()
+                                        
+          $IDs += $watchList.ID
+                                                            
+          $highNum = $null
+          forEach($ipu in $ipuRx){
+            if($ipu.ID -eq '[SANITIZED_00556]'){              
+                         
+                            
+              if($IDs[0] -eq $null){
+                            
+                               
+                            
+
+                $newStartPos = [int](Get-Content '[SANITIZED]') + 1
+                $ipu.ID = $newStartPos
+                $wlCon += $ipu
+                $IDs[0] = $newStartPos
+                if($highNum -eq $null){
+                  $highNum = $newStartPos
+                }
+              }
+              else{
+                if($highNum -eq $null){
+                  $highNum = [int]($IDs | Sort -Descending {[int]$_})[0] + 1
+                }
+                else{
+                  $highNum = [int]$highNum + 1
+                }
+                $ipu.ID = $highNum
+                $IDs += $highNum
+                                                       
+                                                                                                               
+                                                                              
+                                     
+                                       
+                                   
+                          
+                                     
+                    
+                                              
+                                     
+                                   
+                          
+                    
+                  
+                                  
+                                   
+                  
+                      
+                                   
+                  
+                $wlCon += $ipu     
+              }
+            }
+            else{
+              $wlCon += $ipu
+            }
+          }
+          if($highNum -ne $null){
+            $highNum | Set-Content '[SANITIZED]' -Force
+          }
+          $wlCon | Export-Csv -NoTypeInformation -Force '[SANITIZED]'
+        }
+        elseIf($request[2] -eq '[SANITIZED_00468]'){
+          $watchList = Import-Csv '[SANITIZED]'
+          $wlCon += $watchList
+          $wlCon = $wlCon | ? {$_.ID -ne $request[3]}
+          $wlCon | Export-Csv -NoTypeInformation -Force '[SANITIZED]'
+        }
+        break
+      }
+      '[SANITIZED_00712]'{
+        if($request[2] -eq '[SANITIZED_00053]'){
+          $watchList = Import-Csv '[SANITIZED]'
+          ($watchList | ? {$_.ID -eq $request[3]}).Complete = $true
+          ($watchList | ? {$_.ID -eq $request[3]}).Date = (Get-Date)
+          $watchList | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+          $ipuComplete = $watchList | ? {$_.ID -eq $request[3]}
+          '[SANITIZED_00713]' | Add-Content '[SANITIZED]' -Force
+          
+                                                         
+                                                          
+
+
+        }
+        break
+      }
+    
+      default{
+        $context.Response.StatusCode = 404;
+      }
+    }
+  }
+  
+  else{
+    $context.Response.StatusCode = 404;
+  }
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 500
+}
+
+
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                          
+                           

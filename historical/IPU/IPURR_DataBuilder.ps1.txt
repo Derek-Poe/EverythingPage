@@ -1,0 +1,160 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPURR_DataBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00734]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00735]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00037]'
+
+While($true){
+  $startTime = (Get-Date)
+  Write-Host '[SANITIZED_00420]' -NoNewline
+                                                                                        
+                                                                
+  Remove-Item '[SANITIZED]' -Force
+  Copy-Item '[SANITIZED]' '[SANITIZED]' -Force
+                                                                                                                                                                                   
+  $allIpus = Get-Content '[SANITIZED]' -Tail 10000 | ConvertFrom-Csv -Header @('[SANITIZED_00736]','[SANITIZED_00737]','[SANITIZED_00522]','[SANITIZED_00738]','[SANITIZED_00524]','[SANITIZED_00739]','[SANITIZED_00526]','[SANITIZED_00527]','[SANITIZED_00528]','[SANITIZED_00529]')
+  $creationTime = (Get-Date)
+                 
+  $sessKey = '[SANITIZED_00264]'
+  for($i = 0; $i -lt 4; $i++){
+    switch(Get-Random -Minimum 1 -Maximum 4){
+      1 {
+        $sessKey += '[SANITIZED_00291]'
+        break
+      }
+      2 {
+        $sessKey += [char](Get-Random -Minimum 65 -Maximum 91)
+        break
+      }
+      3 {
+        $sessKey += [char](Get-Random -Minimum 97 -Maximum 123)
+        break
+      }
+    }
+  }
+
+    
+                               
+                          
+                                                                                                                                                                              
+                                                          
+   
+    
+  $rates = $allIpus | Select -Unique -ExpandProperty Time
+  $ipus = New-Object PSCustomObject
+  $inComms = @()
+  forEach($rate in $rates){
+    $ipus | Add-Member -MemberType NoteProperty -Name $rate -Value $null
+    $ipuCon = @()
+    $ref = @()
+    forEach($ipu in (($allIpus | ? {$_.Time -eq $rate}) | Sort Created -Descending)){
+                   
+
+                                          
+                                                                  
+        
+
+      if($ipu.IPUName -notin $ref -and (New-TimeSpan -Start ([DateTimeOffset]::FromUnixTimeSeconds($ipu.created)).DateTime -End (($creationTime).ToUniversalTime())).Minutes -le 2){
+        $ipuCon += $ipu
+        $ref += $ipu.IPUName
+        $inComms += $ipu.IPUName
+      }
+    }
+    $ipus.$rate = $ipuCon
+  }
+  '[SANITIZED_00740]' | Set-Content '[SANITIZED]' -Force
+  forEach($prop in $ipus.PSObject.Properties.Name){
+    if($ipus.($prop).Length -eq 0){
+      $ipus.PSObject.Properties.Remove($prop)
+    }
+  }
+  $summaryData = New-Object PSCustomObject
+  forEach($rate in $ipus.PSObject.Properties.Name){
+    $summaryData | Add-Member -MemberType NoteProperty -Name $rate -Value $ipus.($rate).Length
+    $ipus.$rate | Export-Csv '[SANITIZED]'  -Force -NoTypeInformation
+  }
+  $summaryData | Add-Member -MemberType NoteProperty -Name Time -Value $creationTime.ToString('[SANITIZED_00014]')
+  $summaryData | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+
+  forEach($file in (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00741]'})){
+    if($file.Name.split('[SANITIZED_00515]')[2] -ne $sessKey){
+      $file | Remove-Item -Force
+    }
+  }
+                                                                                           
+                                                                 
+  $totalLength = 0
+  forEach($prop in ($summaryData.PSObject.Properties.Name | ? {$_ -ne '[SANITIZED_00739]'})){
+    $totalLength += $summaryData.$prop
+  }
+  Write-Host '[SANITIZED_00742]'
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  '[SANITIZED_00743]' | Add-Content '[SANITIZED]' -Force
+  if($execTime.TotalSeconds -lt 10){
+    Start-Sleep -Milliseconds (10000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+}
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                          
+                           

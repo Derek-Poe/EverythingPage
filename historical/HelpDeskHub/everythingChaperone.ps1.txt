@@ -1,0 +1,94 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: everythingChaperone.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00428]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00429]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00430]'
+
+$authUsers = @('[SANITIZED_00268]','[SANITIZED_00278]','[SANITIZED_00279]','[SANITIZED_00280]','[SANITIZED_00281]','[SANITIZED_00282]','[SANITIZED_00283]','[SANITIZED_00284]','[SANITIZED_00285]','[SANITIZED_00286]','[SANITIZED_00287]','[SANITIZED_00288]','[SANITIZED_00289]')
+if($env:USERNAME -notin $authUsers){
+  Write-Host -f Magenta '[SANITIZED_00431]'
+  Read-Host '[SANITIZED_00432]'
+  exit
+}
+
+forEach($pidFile in (ls '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00059]' -and $_.Name -notlike '[SANITIZED_00433]'}).FullName){
+  ps -Id (cat $pidFile) -ErrorAction SilentlyContinue | kill -Force
+  ps -Id 7777777 -ErrorAction SilentlyContinue | kill -Force
+  '[SANITIZED_00434]' | Set-Content $pidFile -Force
+}
+
+$pidwl = @(
+  '[SANITIZED_00033]',
+  '[SANITIZED_00435]',
+  '[SANITIZED_00436]',
+  '[SANITIZED_00437]',
+  '[SANITIZED_00040]',
+  '[SANITIZED_00065]',
+  '[SANITIZED_00397]',
+  '[SANITIZED_00277]',
+  '[SANITIZED_00398]',
+  '[SANITIZED_00260]',
+  '[SANITIZED_00256]',
+  '[SANITIZED_00438]'
+)
+$timeCounter = 0
+$everythingAPIReset = 60
+$firstRun = $true
+Write-Host '[SANITIZED_00439]'
+while($true){
+  if((Import-Csv '[SANITIZED]').Everything -eq $true){
+    continue
+  }
+  forEach($pro in $pidwl){
+    $proCheck = (Get-Process -Id (Get-Content '[SANITIZED_00390]') -ErrorAction SilentlyContinue)
+    if($proCheck -ne $null){
+      if($firstRun){
+        Write-Host -f Magenta '[SANITIZED_00440]'
+        $proCheck = $null
+      }
+    }
+    else{
+      Write-Host -f Yellow '[SANITIZED_00441]'
+    }
+    if($proCheck -eq $null){
+      switch($pro){
+        '[SANITIZED_00436]' {
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00442]'
+          Start-Sleep -Seconds 3
+          break
+        }
+        '[SANITIZED_00437]' {
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00443]'
+          Start-Sleep -Seconds 3
+          break
+        }
+        '[SANITIZED_00033]' {
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00444]'
+          Start-Sleep -Seconds 3
+          break
+        }
+        '[SANITIZED_00040]' {
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00445]'
+          Start-Sleep -Seconds 3
+          break
+        }
+        default {
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00446]'
+          Start-Sleep -Seconds 3
+        }
+      }
+    }
+  }
+  if($timeCounter -ge ((60 * $everythingAPIReset) / 5)){
+    Start-Process '[SANITIZED_00078]' '[SANITIZED_00447]'
+    $timeCounter = 0
+  }
+  $timeCounter++
+  $firstRun = $false
+  Start-Sleep -Seconds 5
+}

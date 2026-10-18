@@ -1,0 +1,234 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossHistoryBuilder2.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+function getPackedDT($datTab){
+  if($datTab -ne $null){
+    $allCol = $datTab[0].Columns.ColumnName
+    $selCol = @()
+    forEach($col in $allCol){
+      try{
+        if(($datTab[0].$col)[0] -ne $dbnull){
+          $selCol += $col
+        }
+      }
+      catch{}
+    }
+    $datTabArray = $true
+    if($datTab.($selCol[0]) -isnot [array]){
+      $datTabArray = $false
+    }
+    $packedData = @()
+    if($datTab.($selCol[0]) -is [array]){
+      $len = $datTab.($selCol[0]).Length
+    }
+    else{
+      $len = 1
+    }
+    for($i = 0; $i -lt $len; $i++){
+      $obj = New-Object -TypeName PSCustomObject
+      forEach($prop in $selCol){
+        if($datTabArray){
+          $obj | Add-Member -Name $prop -Value ($datTab.$prop)[$i] -MemberType NoteProperty
+        }
+        else{
+          $obj | Add-Member -Name $prop -Value $datTab.$prop -MemberType NoteProperty
+        }
+      }
+      $packedData += $obj
+    }
+    return $packedData
+  }
+  else{
+    return $null
+  }
+}
+
+function buildTable($liveDataRef){
+  Write-Host -f Yellow '[SANITIZED_00883]'
+  $query = '[SANITIZED_00884]'
+  $cmd.CommandText = $query
+  $execute = $cmd.ExecuteNonQuery()
+
+  forEach($prop in $liveDataRef[0].PSObject.Properties.Name){
+    if($prop -eq '[SANITIZED_00472]' -or $prop -eq '[SANITIZED_00863]' -or $prop -eq '[SANITIZED_00864]'){
+      $liveDataRef[0].PSObject.Properties.Remove($prop)
+    }
+  }
+
+  $colNames = '[SANITIZED_00264]'
+  0..($liveDataRef[0].PSObject.Properties.Name.Length - 1) | % {
+    $i = $_
+    if($liveDataRef[0].PSObject.Properties.Name[$i] -eq '[SANITIZED_00865]'){
+      $colNames += '[SANITIZED_00866]'
+    }
+    else{
+      $colNames += '[SANITIZED_00866]'
+    }
+  }
+  $colNames += '[SANITIZED_00885]'
+  $colNames += '[SANITIZED_00886]'
+  $colNames = $colNames.Substring(1)
+
+  $query = '[SANITIZED_00887]'
+  $cmd.CommandText = $query
+  $execute = $cmd.ExecuteNonQuery()
+
+  $query = '[SANITIZED_00888]'
+  $cmd.CommandText = $query
+  $execute = $cmd.ExecuteNonQuery()
+
+}
+                            
+                           
+  
+function buildObjects($liveDataRef){
+                                                    
+  $Global:liveDataObj = New-Object -TypeName PSCustomObject
+  $cols = $liveDataRef[0].PSObject.Properties.Name                         
+  $props = '[SANITIZED_00264]'
+  1..($cols.Length - 1) | % {
+    $i = $_
+    $props += '[SANITIZED_00875]'
+  }
+  $props = $props.Substring(1)
+  0..($liveDataRef.Length-1) | % {
+    $i = $_
+                                                                                                   
+                                                                                
+    $Global:liveDataObj | Add-Member -MemberType NoteProperty -Name $liveDataRef[$i].CellSite -Value $null
+    $Global:liveDataObj.($liveDataRef[$i].CellSite) = ($props | ConvertFrom-StringData)
+  }
+                             
+
+                                                                                                        
+}
+
+
+$conn = New-Object System.Data.OleDb.OleDbConnection('[SANITIZED_00771]')
+$conn.Open()
+$cmd = $conn.CreateCommand()
+$dt = New-Object System.Data.DataTable
+$dbnull = [System.DBNull]::Value
+
+$query = '[SANITIZED_00776]'
+$cmd.CommandText = $query
+$rdr = $cmd.ExecuteReader()
+$dt.Clear() 
+$dt.Load($rdr)
+$liveDataRef = getPackedDT($dt)
+
+                            
+                           
+  
+
+buildObjects($liveDataRef)
+$placeHoldersRemoved = $false
+
+while($true){
+  Write-Host -f DarkYellow '[SANITIZED_00889]'
+  
+  $query = '[SANITIZED_00776]'
+  $cmd.CommandText = $query
+  $rdr = $cmd.ExecuteReader()
+  $dt.Clear() 
+  $dt.Load($rdr)
+  $liveData = getPackedDT($dt)
+
+  forEach($liveRow in $liveData){
+    $changeType = '[SANITIZED_00264]'
+    forEach($liveCol in $liveRow.PSObject.Properties.Name){
+                                                       
+      $Global:liveDataObj.($liveRow.CellSite).ChangeTime = $liveRow.LastUpdated
+      if($liveCol -ne '[SANITIZED_00865]' -and $liveCol -ne '[SANITIZED_00472]' -and $liveCol -ne '[SANITIZED_00863]' -and $liveCol -ne '[SANITIZED_00864]'){
+                                                           
+        if($Global:liveDataObj.($($liveRow.CellSite)).($liveCol) -ne $liveRow.$liveCol){ 
+                                                                                        
+          $changeType += '[SANITIZED_00890]'
+          $Global:liveDataObj.($($liveRow.CellSite)).($liveCol) = $liveRow.$liveCol
+        }
+      }
+    }
+    
+    if($changeType -ne '[SANITIZED_00264]'){
+      $changeType = $changeType.Substring(1)
+
+      $query = '[SANITIZED_00891]'
+      $cmd.CommandText = $query
+      $execute = $cmd.ExecuteNonQuery()
+      
+      
+      if(!($placeHoldersRemoved)){
+        $query = '[SANITIZED_00892]'
+        $cmd.CommandText = $query
+        $execute = $cmd.ExecuteNonQuery()
+        $placeHoldersRemoved = $true
+      }
+      
+    }
+    
+  }
+  
+  $inter = 30
+  Write-Host -f DarkYellow '[SANITIZED_00893]'
+  $inter..1 | % {
+    $i = $_
+    Start-Sleep -Seconds 1
+  }
+}
+
+$site = '[SANITIZED_00894]'
+$type = '[SANITIZED_00895]'
+$histLen = 7
+$query = '[SANITIZED_00896]'
+$cmd.CommandText = $query
+$rdr = $cmd.ExecuteReader()
+$dt.Clear() 
+$dt.Load($rdr)
+$test = getPackedDT($dt) | Select ID,CellSite,$type
+getPackedDT($dt) | Select ID,CellSite,$type
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

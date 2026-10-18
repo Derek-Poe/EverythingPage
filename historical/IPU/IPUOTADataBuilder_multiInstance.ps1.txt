@@ -1,0 +1,369 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUOTADataBuilder_multiInstance.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00681]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00682]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00039]'
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 1482
+$hostName = '[SANITIZED_00457]'
+$listener.Prefixes.Add('[SANITIZED_00458]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+
+$checkLength = {
+  Param($in)
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+$main = {
+  Param($con,$enc,$currentRS,$checkLength,$enableWebRequests,$recordSize,$startPos,$recordChunk,$recordChunks,$instType)
+                                                                                          
+  if($instType -eq '[SANITIZED_00683]'){
+                                                                                                         
+    ([ScriptBlock]::Create($enableWebRequests)).Invoke()
+    Try{
+      $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+      $time = $time.Insert(10,'[SANITIZED_00307]')
+      $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+      $instrData = $instrData = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00684]'
+      $instrData = ($instrData.Content | ConvertFrom-Json).payload.instrumentationList
+      $instrData = $instrData  | Select * -ExcludeProperty class
+                                                                                                                   
+      '[SANITIZED_00685]' | Set-Content '[SANITIZED_00686]' -Force
+      $ICIPU = Import-Csv '[SANITIZED]'
+      $instrData = $instrData | ? {$_.serialNumber -in $ICIPU.ICIPU}
+                                                                  
+      forEach($ipu in $instrData){
+        $ipu.actualTimeReportingRate = $ipu.actualTimeReportingRate -as [int]; 
+        $ipu.actualDistanceReportingRate = $ipu.actualDistanceReportingRate -as [int]
+      }
+      $instrData | Export-Csv '[SANITIZED_00687]' -Force -NoTypeInformation
+    }
+    Catch{
+      '[SANITIZED_00622]' | Set-Content '[SANITIZED_00687]'
+    }
+    $contFiles = (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00688]'})
+    if($contFiles.Length -ge $recordChunks -and $contFiles -is [Array]){
+      '[SANITIZED_00689]' | Add-Content '[SANITIZED]' -Force
+      $in = Invoke-WebRequest '[SANITIZED]'
+    }
+  }
+  elseIf($instType -eq '[SANITIZED_00690]'){
+    $allCont = '[SANITIZED_00691]'
+    forEach($chunk in (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00688]' | Sort Name}).FullName){
+      $allCont += Get-Content $chunk -Delimiter `n | Select -Skip 1
+    }
+    $inCount = 0
+    $outCount = 0
+    forEach($chunk in ((Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00692]'})).FullName){
+      $chunk = Import-Csv $chunk
+      $inCount += [int]$chunk.In
+      $outCount += [int]$chunk.Out
+    }
+    '[SANITIZED_00693]' | Set-Content '[SANITIZED]' -Force
+     
+                                                             
+    $allCont = $allCont | ConvertFrom-Csv | Select serialNumber,actualDistanceReportingRate,actualTimeReportingRate,ipuSoftwareVersion
+    $allCont | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+     
+                                                                  
+                                                                                                                                                                     
+    (Get-Date).ToString('[SANITIZED_00014]') | Set-Content '[SANITIZED]' -Force
+                                                                                         
+    $in = Invoke-WebRequest '[SANITIZED]'
+                                                                                       
+  }
+  exit
+                        
+}
+
+                                
+$maxRun = 100
+$maxRun = [int]$maxRun
+$runspace = [RunSpaceFactory]::CreateRunspacePool(1,$maxRun)
+$runspace.Open()
+$psInst = New-Object -TypeName PSCustomObject
+$props = '[SANITIZED_00245]'
+$availProps = '[SANITIZED_00246]'
+2..$maxRun | % {
+  $props += '[SANITIZED_00247]'
+  $availProps += '[SANITIZED_00248]'
+}
+forEach($prop in @('[SANITIZED_00249]','[SANITIZED_00250]','[SANITIZED_00251]')){
+  $psInst | Add-Member -MemberType NoteProperty -Name $prop -Value ($props | ConvertFrom-StringData)
+}
+$context = New-Object -TypeName PSCustomObject -Property @{CurrentCon=0}
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00252]' -Value ($availProps | ConvertFrom-StringData)
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00253]' -Value ($props | ConvertFrom-StringData)
+function assignContext($conTemp){
+  $maxCap = $true
+  for($i = 1; $i -le $maxRun; $i++){
+    if($context.ConAvail.([String]$i)){
+      $context.CurrentCon = $i
+      $maxCap = $false
+      break
+    }
+  }
+  if($maxCap){
+    $context.CurrentCon = 0
+    $cleanData = cleanup -context $context -psInst $psInst
+    $context = $cleanData.context
+    $psInst = $cleanData.psInst
+    Start-Sleep -Milliseconds 500
+    assignContext
+  }
+  else{
+    $context.ConAvail.([String]$context.CurrentCon) = $false
+    $context.Con.($context.CurrentCon -as [String]) = $conTemp
+  }
+}
+function startRunspace($runspace,$enc,$recordSize,$startPos,$recordChunk,$recordChunks,$instType){
+  $psInst.Inst.([String]$context.CurrentCon) = [PowerShell]::Create()
+  $psInst.Inst.([String]$context.CurrentCon).RunspacePool = $runspace
+  $null = $psInst.Inst.([String]$context.CurrentCon).AddScript($main).`
+          AddArgument($context.Con.([String]$context.CurrentCon)).AddArgument($enc).`
+          AddArgument([String]$context.CurrentCon).AddArgument($checkLength).AddArgument($enableWebRequests).`
+          AddArgument($recordSize).AddArgument($startPos).AddArgument($recordChunk).AddArgument($recordChunks).AddArgument($instType)
+  $psInst.Stat.([String]$context.CurrentCon) = $psInst.Inst.([String]$context.CurrentCon).BeginInvoke()
+}
+function cleanup($context,$psInst){
+                             
+  1..$maxRun | % {
+    $i = $_
+                                
+    if(!($context.ConAvail.([String]$i))){
+                              
+      if($psInst.Stat.([String]$i).IsCompleted){
+                                 
+                                        
+              
+                                                                                                                                                     
+                                             
+        $context.ConAvail.([String]$i) = $true
+      }
+    }
+  }
+  return New-Object -TypeName PSCustomObject -Property @{context=$context;psInst=$psInst}
+}
+
+$runningCollect = $false
+$cleanCycle = 0
+do{
+  $conTemp = $listener.GetContext()
+  '[SANITIZED_00694]' | Add-Content '[SANITIZED]' -Force
+  if(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[1] -eq '[SANITIZED_00695]'){
+    if(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00696]' -and $runningCollect -eq $false){
+                                                                                               
+      $startTime = (Get-Date)
+      Write-Host '[SANITIZED_00420]' -NoNewline
+      $startCon = $conTemp
+      $runningCollect = $true
+      Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00697]'} | Remove-Item -Force
+      Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00692]'} | Remove-Item -Force
+      Get-ChildItem '[SANITIZED]' | ? {$_.Name -eq '[SANITIZED_00698]'} | Remove-Item -Force
+      Copy-Item '[SANITIZED]' -Destination '[SANITIZED]' -Force
+      $inCommsCount = (Import-Csv '[SANITIZED]').Length
+      $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+      $time = $time.Insert(10,'[SANITIZED_00307]')
+      $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+      $instrDataSample = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00699]' -ErrorVariable webError
+      $instrDataRecordCount = ($instrDataSample.Content | ConvertFrom-Json).payload.totalCount -as [int]
+      '[SANITIZED_00700]' | Add-Content '[SANITIZED]' -Force
+      if($inCommsCount -ge 3000){
+        $recordSize = 300
+      }
+      elseIf($inCommsCount -ge 2000){
+        $recordSize = 750
+      }
+      elseIf($inCommsCount -ge 1000){
+        $recordSize = 1500
+      }
+      elseIf($inCommsCount -ge 500){
+        $recordSize = 2500
+      }
+      else{
+        $recordSize = 5000
+      }
+      $recordChunks = [Math]::Ceiling(($instrDataRecordCount / $recordSize))
+      $startPos = 0
+      $recordChunk = 0
+      for($i = 0; $i -lt $recordChunks; $i++){
+                                                                                           
+        assignContext                   
+        startRunspace -runspace $runspace -enc $enc -instType '[SANITIZED_00683]' -recordSize $recordSize -startPos $startPos -recordChunk $recordChunk -recordChunks $recordChunks
+        $startPos += $recordSize
+        $recordChunk++
+      }
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00701]'){
+      assignContext                   
+      startRunspace -runspace $runspace -enc $enc -instType '[SANITIZED_00690]' 
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00702]'){
+      '[SANITIZED_00703]' | Add-Content '[SANITIZED]' -Force
+      $instrDataFinal = (Import-Csv '[SANITIZED]') 
+      if($instrDataFinal -is [Array]){
+        $instrDataFinal.Length | Set-Content '[SANITIZED]' -Force
+      }
+      elseIf($instrDataFinal -eq 0 -or $instrDataFinal -eq $null){
+        0 | Set-Content '[SANITIZED]' -Force
+      }
+      else{
+        1 | Set-Content '[SANITIZED]' -Force
+      }
+      $startCon.Response.Close()
+      $runningCollect = $false
+      Write-Host '[SANITIZED_00704]'
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00696]' -and $runningCollect){
+      $byteMess = $enc.GetBytes('[SANITIZED_00705]')
+      $conTemp.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+      $conTemp.Response.Close()
+    }
+    else{
+      $byteMess = $enc.GetBytes('[SANITIZED_00054]')
+      $conTemp.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+      $conTemp.Response.Close()
+    }
+
+    if($cleanCycle -ge 2){
+      $cleanCycle = 0
+      $cleanData = cleanup -context $context -psInst $psInst
+      $context = $cleanData.context
+      $psInst = $cleanData.psInst
+    }
+    $cleanCycle++
+  }
+}
+while($true)
+
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                          
+                           

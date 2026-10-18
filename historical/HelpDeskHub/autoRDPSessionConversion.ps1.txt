@@ -1,0 +1,46 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: autoRDPSessionConversion.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Stop-Process -Id (Get-Content '[SANITIZED_00259]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00260]'
+
+while(1){
+  try{
+                                                                                                                   
+    $quser = ((((quser).Trim() -replace '[SANITIZED_00261]','[SANITIZED_00262]') -replace '[SANITIZED_00263]','[SANITIZED_00264]') -split '[SANITIZED_00265]') | Select -Skip 1
+    $users = @()
+    forEach($user in $quser){
+      $user = $user -split '[SANITIZED_00262]'
+      if($user.Length -eq 8){
+        $users += New-Object PSCustomObject -Property ([ordered]@{Username=$user[0];SessionName=$user[1];ID=$user[2];State=$user[3];IdleTime=$user[4];LoginTime='[SANITIZED_00266]';})
+      }
+      else{
+        $users += New-Object PSCustomObject -Property ([ordered]@{Username=$user[0];SessionName='[SANITIZED_00264]';ID=$user[1];State=$user[2];IdleTime=$user[3];LoginTime='[SANITIZED_00267]';})
+      }
+    }
+    $sID = ($users | ? {$_.Username -eq '[SANITIZED_00268]'}).ID
+    $idle = ($users | ? {$_.Username -eq '[SANITIZED_00268]'}).IdleTime
+    if($idle -ne '[SANITIZED_00269]' -and $idle -ne '[SANITIZED_00270]'){
+      if($idle.Contains('[SANITIZED_00271]')){
+        $time = [TimeSpan]::Parse(($idle).Replace('[SANITIZED_00271]','[SANITIZED_00269]'))
+      }
+      elseIf($idle.Contains('[SANITIZED_00272]')){
+        $time = [TimeSpan]::Parse($idle)
+      }
+      else{
+        $time = [TimeSpan]::Parse('[SANITIZED_00273]')
+      }
+                                   
+      if($time.TotalMinutes -ge 3){
+        tscon /DEST:console $sID
+      }
+    }
+  }
+  catch{
+    Write-Host -f DarkYellow '[SANITIZED_00274]'
+  }
+ sleep 1800
+}

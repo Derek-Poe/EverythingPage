@@ -1,0 +1,128 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUAPIChaperone.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00608]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+
+while($true){
+  $iv = $null
+  $iv = Invoke-WebRequest -UseBasicParsing '[SANITIZED]' -TimeoutSec 120
+  if($iv -eq $null){
+    Write-Host -f Yellow '[SANITIZED_00609]'
+    Get-Process -Id (Get-Content '[SANITIZED]') | Stop-Process
+    Get-Process -Id (Get-Content '[SANITIZED]') | Stop-Process
+    Get-Process -Id (Get-Content '[SANITIZED]') | Stop-Process
+    Get-Process -Id (Get-Content '[SANITIZED]') | Stop-Process
+    Start-Process '[SANITIZED_00078]' '[SANITIZED_00610]'
+    Start-Sleep -Seconds 2
+    Start-Process '[SANITIZED_00078]' '[SANITIZED_00611]'
+    Start-Sleep -Seconds 2
+    Start-Process '[SANITIZED_00078]' '[SANITIZED_00612]'
+    Start-Sleep -Seconds 2
+    Start-Process '[SANITIZED_00078]' '[SANITIZED_00613]'
+    Start-Sleep -Seconds 60
+  }
+  Start-Sleep -Seconds 30
+}
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

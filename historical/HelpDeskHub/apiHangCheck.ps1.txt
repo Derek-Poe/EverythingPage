@@ -1,0 +1,25 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: apiHangCheck.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00254]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00255]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00256]'
+
+while($true){
+  $startTime = (Get-Date)
+  $err = $null
+                                                                                                                       
+  $in = Invoke-WebRequest '[SANITIZED]' -TimeoutSec 120 -ErrorVariable err
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  if($execTime.TotalMinutes -gt 3 -or $err[0].Message -eq '[SANITIZED_00257]'){
+    ps -id (cat '[SANITIZED]') | kill
+    '[SANITIZED_00258]' | Add-Content -Force -Path '[SANITIZED]'
+  }
+  if($execTime.TotalSeconds -lt 30){
+    Start-Sleep -Milliseconds (30000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+}

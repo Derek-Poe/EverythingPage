@@ -1,0 +1,164 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: resourceDataBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00056]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00057]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00033]'
+
+$auto2Session = New-PSSession '[SANITIZED]'
+While($true){
+  $startTime = (Get-Date)
+  $stats = New-Object PSCustomObject
+  $stats | Add-Member -MemberType NoteProperty -Name Auto1_CPU -Value (GWMI win32_processor | Measure LoadPercentage -Average | Select Average).Average
+  $mems = GWMI win32_operatingsystem; $stats | Add-Member -MemberType NoteProperty -Name Auto1_RAM -Value ([Math]::Round((((($mems.TotalVisibleMemorySize - $mems.FreePhysicalMemory) * 100) / $mems.TotalVisibleMemorySize)),0))
+  $storage = Get-Volume c
+  $stats | Add-Member -MemberType NoteProperty -Name Auto1_Storage -Value ([Math]::Round(($storage.SizeRemaining / $storage.Size), 2) * 100)
+                                                                            
+  $auto2Stats = Invoke-Command -Session $auto2Session -ScriptBlock {
+    $mems = GWMI win32_operatingsystem
+    $storage = Get-Volume c
+    return @((GWMI win32_processor | Measure LoadPercentage -Average | Select Average).Average, [Math]::Round((((($mems.TotalVisibleMemorySize - $mems.FreePhysicalMemory) * 100) / $mems.TotalVisibleMemorySize)),0), ([Math]::Round(($storage.SizeRemaining / $storage.Size), 2) * 100))
+  }
+  $stats | Add-Member -MemberType NoteProperty -Name Auto2_CPU -Value $auto2Stats[0]
+  $stats | Add-Member -MemberType NoteProperty -Name Auto2_RAM -Value $auto2Stats[1]
+  $stats | Add-Member -MemberType NoteProperty -Name Auto2_Storage -Value $auto2Stats[2]
+  forEach($compPID in (Get-ChildItem '[SANITIZED_00058]' | ? {$_.Name -like '[SANITIZED_00059]'})){
+    $name = $null
+    switch($compPID.Name.Split('[SANITIZED_00060]')[0]){
+      '[SANITIZED_00034]' {
+        $name = '[SANITIZED_00061]'
+        break
+      }
+      '[SANITIZED_00049]' {
+        $name = '[SANITIZED_00062]'
+        break
+      }
+      '[SANITIZED_00029]' {
+        $name = '[SANITIZED_00063]'
+        break
+      }
+      '[SANITIZED_00043]' {
+        $name = '[SANITIZED_00043]'
+        break
+      }
+      '[SANITIZED_00033]' {
+        $name = '[SANITIZED_00064]'
+        break
+      }
+      '[SANITIZED_00030]' {
+        $name = '[SANITIZED_00065]'
+        break
+      }
+      '[SANITIZED_00037]' {
+        $name = '[SANITIZED_00066]'
+        break
+      }
+      '[SANITIZED_00038]' {
+        $name = '[SANITIZED_00038]'
+        break
+      }
+      '[SANITIZED_00047]' {
+        $name = '[SANITIZED_00067]'
+        break
+      }
+      '[SANITIZED_00046]' {
+        $name = '[SANITIZED_00068]'
+        break
+      }
+      '[SANITIZED_00048]' {
+        $name = '[SANITIZED_00069]'
+        break
+      }
+      default {
+        $name = $compPID.Name.Split('[SANITIZED_00060]')[0]
+      }
+    }
+    $proCheck = $null
+    $proCheck = Get-Process -Id (Get-Content $compPID.FullName) -ErrorAction SilentlyContinue
+    if($proCheck -ne $null){
+      $stats | Add-Member -Force -MemberType NoteProperty -Name $name -Value '[SANITIZED_00070]'
+    }
+    else{
+      $stats | Add-Member -Force -MemberType NoteProperty -Name $name -Value '[SANITIZED_00071]'
+    }
+  }
+  forEach($folder in (Get-ChildItem '[SANITIZED]' | ? {$_.PSIsContainer})){
+    $size = ((Get-ChildItem -Path $folder.FullName -Recurse) | Measure-Object -Property Length -Sum).Sum
+    if($size -ge 1000000000000){
+      $size /= 1TB
+      $size = '[SANITIZED_00072]'
+    }
+    elseIf($size -ge 1000000000){
+      $size /= 1GB
+      $size = '[SANITIZED_00073]'
+    }
+    elseIf($size -ge 1000000){
+      $size /= 1MB
+      $size = '[SANITIZED_00074]'
+    }
+    elseIf($size -ge 1000){
+      $size /= 1KB
+      $size = '[SANITIZED_00075]'
+    }
+    elseIf($size -lt 1000){
+      $size = '[SANITIZED_00076]'
+    }
+    $stats | Add-Member -MemberType NoteProperty -Name $folder.Name -Value $size
+  }
+  $stats | Add-Member -MemberType NoteProperty -Name Time -Value (Get-Date)
+  $stats | Export-Csv -NoTypeInformation -Force '[SANITIZED]'
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  Write-Host '[SANITIZED_00077]'
+  if($execTime.TotalSeconds -lt 5){
+    Start-Sleep -Milliseconds (5000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+                         
+}
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

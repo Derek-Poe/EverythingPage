@@ -1,0 +1,85 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: IPUOTAAuto.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00668]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00669]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00394]'
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+$webSess = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$aC = New-Object System.Net.Cookie; $ac.Name = '[SANITIZED_00341]'; $aC.Value = '[SANITIZED_00343]'; $aC.Domain = '[SANITIZED_00670]'
+$webSess.Cookies.Add($aC)
+
+while($true){
+  $startTime = (Get-Date)
+  Write-Host '[SANITIZED_00420]' -NoNewline
+  $instrData = $null
+  $queue = @()
+  Import-Csv '[SANITIZED]' | % {$queue += $_}
+  if((Import-Csv '[SANITIZED]').'[SANITIZED_00671]' -ne $false){
+    if((New-TimeSpan ([DateTime]::Parse((Get-Content '[SANITIZED]'))) (Get-Date)).TotalMinutes -ge 10){
+      $watchlist = Import-Csv '[SANITIZED]'
+      $instrData = Import-Csv '[SANITIZED]' | ? {!($_.actualDistanceReportingRate -eq 10 -and $_.actualTimeReportingRate -eq 300) -and !($_.actualDistanceReportingRate -eq 25 -and $_.actualTimeReportingRate -eq 600)} | ? {$_.serialNumber -notin $watchlist.IPU}
+      if($instrData -ne $null){
+        $jsonString = '[SANITIZED_00672]'
+        forEach($sn in $instrData.serialNumber){
+          $jsonString += '[SANITIZED_00673]'
+          '[SANITIZED_00674]' | Add-Content -Force -Path '[SANITIZED]'
+        }
+        $jsonString = $jsonString.Remove($jsonString.Length - 1)
+        $jsonString += '[SANITIZED_00675]'
+        $webReq = Invoke-WebRequest '[SANITIZED_00676]' -Method PUT -Body $jsonString -WebSession $webSess
+      }
+      (Get-Date) | Set-Content '[SANITIZED]' -Force
+    }
+  }
+  if((Import-Csv '[SANITIZED]').SWUP -ne $false){
+    $watchlist = Import-Csv '[SANITIZED]'
+    $instrData = Import-Csv '[SANITIZED]' | ? {$_.ipuSoftwareVersion -eq '[SANITIZED_00677]'} | ? {$_.serialNumber -notin $watchlist.IPU -and $_.serialNumber -notin $queue.IPU}
+    if($instrData -ne $null){
+      forEach($sn in $instrData.serialNumber){
+        $queue += New-Object PSCustomObject -Property ([ordered]@{IPU=$sn;Target='[SANITIZED_00566]';StartTime=(((Get-Date).AddMinutes(3)).ToString('[SANITIZED_00014]'))})
+      }
+    }
+  }
+  $sendCount = 0
+  $removalList = @()
+  $jsonString = '[SANITIZED_00678]'
+  forEach($entry in $queue){
+    if((Get-Date) -ge [DateTime]::Parse($entry.StartTime)){
+      $jsonString += '[SANITIZED_00679]'
+      $removalList += $entry.IPU
+      '[SANITIZED_00680]' | Add-Content -Force -Path '[SANITIZED]'
+      $sendCount++
+    }
+  }
+  $jsonString = $jsonString.Remove($jsonString.Length - 1)
+  $jsonString += '[SANITIZED_00675]'
+  if($sendCount -gt 0){
+    $webReq = Invoke-WebRequest '[SANITIZED_00676]' -Method PUT -Body $jsonString -WebSession $webSess
+  }
+  $queue = $queue | ? {$_.IPU -notin $removalList}
+  $queue | Export-Csv -NoTypeInformation -Force '[SANITIZED]'
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+                                                                                                   
+  Write-Host '[SANITIZED_00667]'
+  if($execTime.TotalSeconds -lt 10){
+    Start-Sleep -Milliseconds (10000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+}
+

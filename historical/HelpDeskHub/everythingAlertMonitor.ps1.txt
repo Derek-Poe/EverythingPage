@@ -1,0 +1,141 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: everythingAlertMonitor.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00418]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00419]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00398]'
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+While($true){
+  $startTime = (Get-Date)
+  Write-Host '[SANITIZED_00420]' -NoNewline
+                                                                                        
+                                                                                                              
+  $generateSWAlertData = Invoke-WebRequest '[SANITIZED]'
+  $SWAlertData = Import-Csv '[SANITIZED]'
+  $activeSWAlertsObjects = Import-Csv '[SANITIZED]'
+  $alertsStatus = Import-Csv '[SANITIZED]'
+  $exempt = Import-Csv '[SANITIZED]'
+  if($alertsStatus.ID.Length -eq 0){
+    $alertsStatus = @() ; $alertsStatus += New-Object PSCustomObject -Property ([ordered]@{AlertID='[SANITIZED_00421]';AlertObjectId='[SANITIZED_00421]';Silenced=$true})
+  }
+  $comp = Compare-Object $SWAlertData.AlertActiveID $alertsStatus.AlertID
+  $addIDs = ($comp | ? {$_.SideIndicator -eq '[SANITIZED_00422]'}).InputObject -join '[SANITIZED_00022]'
+  $removeIDs = ($comp | ? {$_.SideIndicator -eq '[SANITIZED_00423]'}).InputObject -join '[SANITIZED_00022]'
+  $exempts = @()
+  forEach($ID in $addIDs){
+    $addAlert = $SWAlertData | ? {$_.AlertActiveID -eq $ID}
+    $addObj = $activeSWAlertsObjects | ? {$_.AlertObjectID -eq $addAlert.AlertObjectID}
+    Write-Host -f Cyan $addObj.RelatedNodeCaption
+    if($SWAlertData -ne $oldSWAlertData){
+      forEach($ex in $exempt){
+        if($addAlert.TriggeredMessage -like $ex.Alert){
+          $color = '[SANITIZED_00424]'
+        }
+        else{
+          $color = '[SANITIZED_00425]'
+        }
+        Write-Host -f $color $ex.Alert -NoNewline; Write-Host '[SANITIZED_00426]' -NoNewline 
+        if($addObj.EntityCaption -like $ex.Object){
+          $color = '[SANITIZED_00424]'
+        }
+        else{
+          $color = '[SANITIZED_00425]'
+        }
+        Write-Host -f $color $ex.Object -NoNewline; Write-Host '[SANITIZED_00426]' -NoNewline 
+        if($addObj.RelatedNodeCaption -like $ex.Node){
+          $color = '[SANITIZED_00424]'
+        }
+        else{
+          $color = '[SANITIZED_00425]'
+        }
+        Write-Host -f $color $ex.Node
+
+        if($addAlert.TriggeredMessage -like $ex.Alert -and $addObj.EntityCaption -like $ex.Object -and $addObj.RelatedNodeCaption -like $ex.Node){
+          $exempts += $ID
+        }
+      }
+    }
+  }
+  $oldSWAlertData = $SWAlertData
+  if(!([String]::IsNullOrWhiteSpace($addIDs))){
+    $null = Invoke-WebRequest '[SANITIZED]' -Method PUT -Body $addIDs
+  }
+  if($exempts.Length -gt 0){
+    $null = Invoke-WebRequest '[SANITIZED]' -Method PUT -Body ($exempts -join '[SANITIZED_00022]')
+  }
+  if(!([String]::IsNullOrWhiteSpace($addIDs))){
+    $null = Invoke-WebRequest '[SANITIZED]' -Method PUT -Body $removeIDs
+  }
+
+            
+                                                                                               
+                                                                                                             
+                                                                                           
+                       
+                                              
+                                                                                                    
+                                                    
+                                                                                              
+                                       
+                                                                                                
+             
+                                            
+                                                                           
+             
+                 
+                                                     
+             
+                                              
+                            
+             
+                 
+                         
+             
+                                
+                                                                                                                                                                                                 
+                                                                                                          
+                                                 
+                                                    
+                                          
+                                                                                 
+                                                                                                        
+                                           
+                                                    
+                                         
+                                              
+                                                                                                               
+                            
+                                                                                                 
+             
+                                                                 
+           
+                                                                
+
+                                                                                                  
+                                                                                                                                     
+            
+
+          $null = Invoke-WebRequest '[SANITIZED]'
+
+  $execTime = (New-TimeSpan -Start $startTime -End (Get-Date))
+  Write-Host '[SANITIZED_00427]'
+  if($execTime.TotalSeconds -lt 30){
+    Start-Sleep -Milliseconds (30000 - [Math]::Round($execTime.TotalMilliseconds))
+  }
+}

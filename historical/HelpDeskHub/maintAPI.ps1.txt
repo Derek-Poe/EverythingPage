@@ -1,0 +1,447 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: maintAPI.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00448]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00449]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00435]'
+
+$sessionTimeout = 30
+$authUsers = @('[SANITIZED_00268]','[SANITIZED_00278]','[SANITIZED_00279]','[SANITIZED_00280]','[SANITIZED_00281]','[SANITIZED_00282]','[SANITIZED_00283]','[SANITIZED_00284]','[SANITIZED_00285]','[SANITIZED_00286]','[SANITIZED_00287]','[SANITIZED_00288]','[SANITIZED_00289]')
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 1327
+                                            
+                        
+$hostName = '[SANITIZED_00290]'
+                                                      
+$listener.Prefixes.Add('[SANITIZED_00012]')
+                                                    
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+  
+                                                                                        
+                                                                                                                                             
+            
+                            
+                                      
+
+
+                              
+                        
+                                           
+                 
+                             
+                                           
+                       
+       
+     
+                        
+                                            
+                           
+     
+                     
+                                         
+                                        
+     
+         
+              
+     
+                                   
+                                                
+                                
+                         
+                                                                                           
+         
+             
+                                                                                     
+         
+       
+                         
+     
+                      
+   
+       
+                
+   
+ 
+  
+
+function checkLength($in){
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+function getSessionKey(){
+  $sessKey = '[SANITIZED_00264]'
+  for($i = 0; $i -lt 24; $i++){
+    switch(Get-Random -Minimum 1 -Maximum 4){
+      1 {
+        $sessKey += '[SANITIZED_00291]'
+        break
+      }
+      2 {
+        $sessKey += [char](Get-Random -Minimum 65 -Maximum 91)
+        break
+      }
+      3 {
+         $sessKey += [char](Get-Random -Minimum 97 -Maximum 123)
+         break
+      }
+    }
+  }
+  '[SANITIZED_00292]' | Add-Content '[SANITIZED]' -Force
+  return $sessKey
+}
+
+function checkCredentials($u,$p){
+  $adCheck = $null
+  $adCheck = New-Object System.DirectoryServices.DirectoryEntry -ArgumentList '[SANITIZED_00293]',$u,$p
+  if($adCheck.name -ne $null -and $u -in $authUsers){
+    return $true
+  }
+  return $false
+}
+
+  
+                                        
+                   
+                                                            
+                           
+                             
+              
+                
+                              
+                          
+                                                                                          
+                            
+                                                                                                              
+                             
+                                
+   
+       
+                                                                                          
+                            
+                                                                                                         
+                             
+                                
+   
+                 
+ 
+
+                                            
+                   
+                                                                  
+                           
+                             
+              
+                
+                              
+                                                                                                                     
+                          
+                                                                                                              
+                   
+     
+         
+                                                                                            
+                                                                                     
+                               
+                                  
+                  
+     
+   
+               
+ 
+  
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+
+function loginUser($user){
+                                                                                                         
+  return $enc.GetString((Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00305]' -Method POST -Body $user).Content)
+}
+
+function checkLogin($session){
+                                                                                                                  
+  $result = $enc.GetString((Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00306]' -Method POST -Body $session).Content)
+  if($result -eq '[SANITIZED_00307]'){
+    return $true
+  }
+  else{
+    return $false
+  }
+}
+
+function getSessionUser($session){
+  return $enc.GetString((Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00308]' -Method POST -Body $session).Content)
+}
+
+function getIPUID($ipu){
+  $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+  $time = $time.Insert(10,'[SANITIZED_00307]')
+  $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+  $instrData = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00332]'
+  $instrData = ($instrData.Content | ConvertFrom-Json).payload.instrumentationList
+  if($instrData.id.uuid -ne $null){
+    if($instrData.id.uuid -is [array]){
+      return '[SANITIZED_00333]'
+    }
+    else{
+      return $instrData.id.uuid
+    }
+  }
+  else{
+    return '[SANITIZED_00334]'
+  }
+}
+
+function getIPUSW($ipu){
+  $time = ((Get-Date).ToUniversalTime()).ToString('[SANITIZED_00309]')
+  $time = $time.Insert(10,'[SANITIZED_00307]')
+  $time = $time.Insert($time.Length,'[SANITIZED_00310]')
+  $instrData = Invoke-WebRequest -UseBasicParsing -Uri '[SANITIZED_00311]' -Method '[SANITIZED_00312]' -Headers @{'[SANITIZED_00313]'='[SANITIZED_00314]'; '[SANITIZED_00315]'='[SANITIZED_00316]'; '[SANITIZED_00317]'='[SANITIZED_00318]'; '[SANITIZED_00319]'='[SANITIZED_00320]'; '[SANITIZED_00321]'='[SANITIZED_00322]'; '[SANITIZED_00323]'='[SANITIZED_00324]'; '[SANITIZED_00325]'='[SANITIZED_00326]'; '[SANITIZED_00327]'='[SANITIZED_00328]'; '[SANITIZED_00329]'='[SANITIZED_00314]'; '[SANITIZED_00330]'='[SANITIZED_00311]';} -ContentType '[SANITIZED_00331]' -Body '[SANITIZED_00335]'
+  $instrData = ($instrData.Content | ConvertFrom-Json).payload.instrumentationList
+  if($instrData.ipuSoftwareVersion -ne $null){
+    if($instrData.ipuSoftwareVersion -is [array]){
+      return '[SANITIZED_00333]'
+    }
+    else{
+      return $instrData.ipuSoftwareVersion
+    }
+  }
+  else{
+    return '[SANITIZED_00334]'
+  }
+}
+
+function TFToED($in){
+  if($in -eq $true){
+    return '[SANITIZED_00137]'  
+  }
+  elseIf($in -eq $false){
+    return '[SANITIZED_00336]'
+  }
+  else{
+    return '[SANITIZED_00054]'
+  }
+}
+
+while($true){
+  $apiKey = '[SANITIZED_00450]'
+  $context = $listener.GetContext()
+  $requester = $context.Request.RemoteEndPoint
+  $request = $context.Request.RawUrl
+  '[SANITIZED_00451]' | Add-Content -Force -Path '[SANITIZED]'
+  $request = $request.Substring(1,$request.Length-1)
+  if($request -like '[SANITIZED_00339]'){
+    $request = $request -split '[SANITIZED_00340]'
+  }
+  $request = $request.split('[SANITIZED_00019]')
+  if($request -isnot [array]){
+    $request = @($request)
+  }
+  $reqSess = $null
+  $byteMess = $null
+  if(($context.Request.Cookies | ? {$_.Name -eq '[SANITIZED_00341]'}) -ne $null){
+    $reqSess = ($context.Request.Cookies | ? {$_.Name -eq '[SANITIZED_00341]'}).Value.Trim()
+  }
+                                                             
+  if($request[0] -eq $apiKey){
+    if((checkLogin $reqSess)){
+                                                       
+      switch($request[1]){
+
+        '[SANITIZED_00350]' {
+          $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+          $context.Response.OutputStream.Write($content,0,$content.Length)
+          break
+        }
+
+        '[SANITIZED_00384]' {
+          $byteMess = $enc.GetBytes((Import-Csv '[SANITIZED]' | ConvertTo-JSON))
+          $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+          break
+        }
+
+        '[SANITIZED_00386]' {
+                                                                                                  
+          ps powershell | ? {$_.Id -ne $PID} | kill -f
+          Start-Process '[SANITIZED_00078]' '[SANITIZED_00387]'
+          break
+        }
+
+        '[SANITIZED_00388]' {
+          $pidwl = @(
+            '[SANITIZED_00046]',
+            '[SANITIZED_00049]',
+            '[SANITIZED_00047]',
+            '[SANITIZED_00389]'
+          )
+          forEach($pro in $pidwl){
+            ps -Id (cat '[SANITIZED_00390]') | kill -Force
+          }
+          break
+        }
+
+        '[SANITIZED_00391]' {
+          $pidwl = @(
+            '[SANITIZED_00037]',
+            '[SANITIZED_00040]',
+            '[SANITIZED_00038]',
+            '[SANITIZED_00039]',
+            '[SANITIZED_00392]',
+            '[SANITIZED_00393]',
+            '[SANITIZED_00394]',
+            '[SANITIZED_00395]'
+          )
+          forEach($pro in $pidwl){
+            ps -Id (cat '[SANITIZED_00390]') | kill -Force
+          }
+          break
+        }
+
+        '[SANITIZED_00396]' {
+          $pidwl = @(
+            '[SANITIZED_00033]',
+            '[SANITIZED_00277]',
+            '[SANITIZED_00065]',
+            '[SANITIZED_00397]',     
+            '[SANITIZED_00398]',   
+            '[SANITIZED_00260]',
+            '[SANITIZED_00256]',
+            '[SANITIZED_00438]',
+            '[SANITIZED_00435]'
+          )
+          forEach($pro in $pidwl){
+            ps -Id (cat '[SANITIZED_00390]') | kill -Force
+          }
+          break
+        }
+
+        '[SANITIZED_00399]' {
+          shutdown -r -t 0 -f
+          break
+        }
+
+        default{
+          $context.Response.StatusCode = 404;
+        }
+      }
+    }
+    else{
+      $byteMess = $enc.GetBytes('[SANITIZED_00024]')
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+                              
+  }
+  elseIf($request[0] -eq '[SANITIZED_00411]'){
+    $bodyRead = New-Object System.IO.StreamReader($context.Request.InputStream, $context.Request.ContentEncoding)
+    $cr = ($bodyRead.ReadToEnd()).Split('[SANITIZED_00022]')
+    if(checkCredentials $cr[0].Trim() $cr[1].Trim()){
+      $byteMess = $enc.GetBytes((loginUser ($cr[0].Trim())))
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+    else{
+      $byteMess = $enc.GetBytes('[SANITIZED_00412]')
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+  }
+  elseIf($request[0] -eq '[SANITIZED_00408]'){
+    if(checkLogin $reqSess){
+      $byteMess = $enc.GetBytes('[SANITIZED_00409]')
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+    else{
+      $byteMess = $enc.GetBytes('[SANITIZED_00410]')
+      $context.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+    }
+  }
+  elseIf($request[0] -eq '[SANITIZED_00452]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+                                       
+                                        
+                                                                                                  
+                                                                     
+    
+                                        
+                                                                                                                 
+                                                                     
+    
+                                       
+  elseIf($request[0] -eq '[SANITIZED_00200]'){
+    $content = Get-Content -Encoding Byte -Path '[SANITIZED]'
+                                                   
+    $context.Response.OutputStream.Write($content,0,$content.Length)
+  }
+  else{
+    $context.Response.StatusCode = 404;
+  }
+  $context.Response.Close()
+  Start-Sleep -Milliseconds 50
+}

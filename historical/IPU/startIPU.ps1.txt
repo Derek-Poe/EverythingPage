@@ -1,0 +1,62 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: startIPU.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00610]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00611]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00612]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00613]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00755]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00756]'
+Start-Sleep -Seconds 2
+Start-Process '[SANITIZED_00078]' '[SANITIZED_00757]'
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

@@ -1,0 +1,443 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossAlarmReport_multiInstance.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00812]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+
+$listener = New-Object System.Net.HttpListener
+$apiPort = 1483
+$hostName = '[SANITIZED_00457]'
+$listener.Prefixes.Add('[SANITIZED_00458]')
+$listener.Start()
+$enc = [System.Text.Encoding]::ASCII
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+
+$checkLength = {
+  Param($in)
+  if($in -is [Array]){
+    return $in.Length
+  }
+  elseIf($in -isnot [Array] -and $in -ne $null){
+    return 1
+  }
+  else{
+    return 0
+  }
+}
+
+$main = {
+  Param($con,$enc,$currentRS,$checkLength,$enableWebRequests,$reportChunk,$reportChunksLength,$instType,$u,$pp,$urlsChunk,$totalSites)
+                                                                              
+  if($instType -eq '[SANITIZED_00683]'){
+    ([ScriptBlock]::Create($enableWebRequests)).Invoke()
+                                                                                    
+                                                                                            
+         
+                    
+      forEach($site in $urlsChunk){
+        $url = '[SANITIZED_00813]'
+                                                                                           
+        $login = Invoke-WebRequest -Uri '[SANITIZED_00814]' -Headers @{'[SANITIZED_00317]' = '[SANITIZED_00815]';'[SANITIZED_00319]' = '[SANITIZED_00320]';'[SANITIZED_00321]' = '[SANITIZED_00322]';'[SANITIZED_00323]' = '[SANITIZED_00816]';'[SANITIZED_00817]' = '[SANITIZED_00818]';'[SANITIZED_00327]' = '[SANITIZED_00819]';'[SANITIZED_00330]' = '[SANITIZED_00820]';'[SANITIZED_00821]' = '[SANITIZED_00822]'} -Body @{username='[SANITIZED_00823]';password='[SANITIZED_00824]'} -SessionVariable sess
+                                                                                                  
+        $sess.Cookies.SetCookies($url,$sess.Cookies.GetCookieHeader('[SANITIZED_00814]'))
+                                                                                                                                              
+        $xmlData = (Invoke-WebRequest -Uri '[SANITIZED_00825]' -Headers @{'[SANITIZED_00826]' = '[SANITIZED_00827]';'[SANITIZED_00323]' = '[SANITIZED_00816]';'[SANITIZED_00327]' = '[SANITIZED_00828]';'[SANITIZED_00319]' = '[SANITIZED_00320]';'[SANITIZED_00321]' = '[SANITIZED_00322]'} -WebSession $sess).Content
+        
+        $report = @()
+        $sb = [xml]($xmlData)
+        $name = $sb.Unit.Unit_Sitename
+                                                                                        
+                                                                               
+                                   
+                                   
+                                       
+     
+        $sbPingResult = '[SANITIZED_00054]'
+        $siteNum = $site.site
+                                                                                                                   
+                                                                                                             
+                    
+                                             
+                                                                
+                              
+            
+                
+                  
+            
+          
+                                               
+                                  
+                                  
+                                                         
+                                               
+                                      
+          
+                                   
+                                  
+          
+              
+                                        
+          
+                        
+        forEach($es in $sb.Unit.EventSensor){
+          $exReport = @()
+          if($es.ES_State -eq '[SANITIZED_00829]' -and $es.ES_Name -ne '[SANITIZED_00830]'){
+            $props = [ordered]@{
+              Site = $siteNum
+              SiteName = $name
+              SensorName = $es.ES_Name
+              SensorStatus = '[SANITIZED_00829]'
+              SensorReading = '[SANITIZED_00577]'
+                                   
+                                   
+                                       
+                                   
+            }
+            $obj = New-Object -TypeName PSCustomObject -Property $props
+            $report += $obj
+          }
+          $esNum = $es.ES_Number
+          ForEach($sensor in ($sb.Unit.EventSensor | ? {$_.ES_Number -eq $esNum}).Sensor){
+            if($sensor.Sensor_Status_String -ne '[SANITIZED_00831]' -and $sensor.Sensor_Status_String -ne '[SANITIZED_00832]' -and $sensor.Sensor_Status_Value -ne '[SANITIZED_00264]'){
+              $props = [ordered]@{
+                Site = $siteNum
+                SiteName = $name
+                SensorName = $sensor.Sensor_Name
+                SensorStatus = $sensor.Sensor_Status_String
+                SensorReading = $sensor.Sensor_Value_String
+                                     
+                                     
+                                         
+                                     
+              }
+            $obj = New-Object -TypeName PSCustomObject -Property $props
+            $report += $obj
+            }
+            if($sensor.Sensor_Name -ne '[SANITIZED_00833]'){
+                                                                                                                                                                                                                                                                                              
+              $exReport += New-Object PSCustomObject -Property ([Ordered]@{Site=$siteNum;ES=$esNum;Number=$sensor.Sensor_Number;Name=$sensor.Sensor_Name;Enabled=$sensor.Sensor_Enabled})
+            }
+          }
+                                                                                                                                                                            
+          $exReport | Export-Csv '[SANITIZED_00834]' -Force -NoTypeInformation
+        }
+                                                   
+                                
+                                                                                    
+          
+        $report | % {$_.Site = $_.Site -as [int]}
+        $report = $report | Sort Site
+        $report | Export-Csv '[SANITIZED_00835]' -Force -NoTypeInformation
+                                                                                                                                                                   
+      }   
+      
+           
+                                                                                                         
+      
+    $contFiles = (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00836]'})
+    if($contFiles.Length -ge $totalSites -and $contFiles -is [Array]){
+      $in = Invoke-WebRequest '[SANITIZED]'
+    } 
+  }
+  elseIf($instType -eq '[SANITIZED_00690]'){
+    $sbs = Import-Csv '[SANITIZED]'
+    $allCont = '[SANITIZED_00837]'
+    forEach($chunk in (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00836]' | Sort Name})){
+      $cont = Get-Content $chunk.FullName -Delimiter `n | Select -Skip 1
+      if($cont -ne $null){
+        $allCont += $cont
+      }
+      else{
+        $sbIP = ($sbs | ? {$_.site -eq $chunk.Name.Split('[SANITIZED_00515]')[2]}).ip
+        $ping = ping -n 1 -w 1000 $sbIP
+        if($ping -like '[SANITIZED_00838]'){
+                                                                                                                                        
+        }
+        else{
+          $allCont += '[SANITIZED_00839]'
+        }
+      }
+    }
+    $allCont | Set-Content '[SANITIZED]' -Force
+    (Get-Date).ToString('[SANITIZED_00014]') | Set-Content '[SANITIZED]' -Force
+
+    $report = $allCont | ConvertFrom-Csv
+    $report | % {$_.Site = $_.Site -as [int]}
+    $report | Sort Site
+    $creationDate = [Datetime]::Parse((Get-Content '[SANITIZED]'))
+    $excel = New-Object -ComObject excel.application
+                           
+    $null = $excel.Workbooks.Add()    
+    $excel.Worksheets.Item(1).Name = '[SANITIZED_00840]'
+    $excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1) = '[SANITIZED_00841]'
+    $headers = @('[SANITIZED_00842]','[SANITIZED_00843]','[SANITIZED_00844]','[SANITIZED_00845]','[SANITIZED_00846]')
+    $headersLength  = $headers.Length
+    $reportLength = $report.Length
+    $dataArray = New-Object '[SANITIZED_00530]' $reportLength,$headersLength
+    for($i = 0; $i -lt $reportLength; $i++){
+      for($ii = 0; $ii -lt $headersLength; $ii++){
+       $dataArray[$i,$ii] = $report[$i].(($report[$i].PSObject.Properties.Name)[$ii])
+      }
+    }
+                                                                                          
+                                                                                                
+    $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(2,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(2,$headersLength)) = $headers
+    $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(3,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item($reportLength + 2, $headersLength)) = $dataArray
+    $null = $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,$headersLength)).Merge()
+    $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item($reportLength + 2, $headersLength)).HorizontalAlignment = [Microsoft.Office.Interop.Excel.XlHAlign]::xlHAlignCenter
+    $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item($reportLength + 2, $headersLength)).Borders.LineStyle = 1
+    $null = $excel.Worksheets.Item('[SANITIZED_00840]').ListObjects.Add([Microsoft.Office.Interop.Excel.XlListObjectSourceType]::xlSrcRange, $excel.Worksheets.Item('[SANITIZED_00840]').Range($excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(2,1),$excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item($reportLength + 2, $headersLength)), $null, [Microsoft.Office.Interop.Excel.XlYesNoGuess]::xlYes)
+    $excel.Worksheets.Item('[SANITIZED_00840]').ListObjects.Item(1).TableStyle = '[SANITIZED_00533]'
+                                                                                                   
+                                                                                                 
+    $excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1).Font.Size = 12
+    $excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1).Font.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbWhite
+    $excel.Worksheets.Item('[SANITIZED_00840]').Cells.Item(1,1).Interior.Color = [Microsoft.Office.Interop.Excel.XlRgbColor]::rgbCornflowerBlue
+    $null = ($excel.Worksheets.Item('[SANITIZED_00840]').UsedRange).EntireColumn.AutoFit()
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.Orientation = [Microsoft.Office.Interop.Excel.XlPageOrientation]::xlLandscape
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.Zoom = $false
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.FitToPagesTall = 10000
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.FitToPagesWide = 1
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.CenterHorizontally = $true
+    $excel.Worksheets.Item('[SANITIZED_00840]').PageSetup.CenterVertically = $true
+    $excel.Application.DisplayAlerts = $false
+    Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00847]'} | Remove-Item -Force
+    $reportDate = $creationDate.ToString('[SANITIZED_00535]')
+    $excel.Workbooks.Item(1).SaveAs('[SANITIZED_00848]')
+                                             
+    $excel.Quit() 
+    Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00847]'} | Remove-Item -Force
+    Copy-Item '[SANITIZED_00848]' -Destination '[SANITIZED_00849]' -Force
+
+    $in = Invoke-WebRequest '[SANITIZED]'
+  }
+  exit
+}
+
+$maxRun = 80
+$maxRun = [int]$maxRun
+$runspace = [RunSpaceFactory]::CreateRunspacePool(1,$maxRun)
+$runspace.Open()
+$psInst = New-Object -TypeName PSCustomObject
+$props = '[SANITIZED_00245]'
+$availProps = '[SANITIZED_00246]'
+2..$maxRun | % {
+  $props += '[SANITIZED_00247]'
+  $availProps += '[SANITIZED_00248]'
+}
+forEach($prop in @('[SANITIZED_00249]','[SANITIZED_00250]','[SANITIZED_00251]')){
+  $psInst | Add-Member -MemberType NoteProperty -Name $prop -Value ($props | ConvertFrom-StringData)
+}
+$context = New-Object -TypeName PSCustomObject -Property @{CurrentCon=0}
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00252]' -Value ($availProps | ConvertFrom-StringData)
+$context | Add-Member -MemberType NoteProperty -Name '[SANITIZED_00253]' -Value ($props | ConvertFrom-StringData)
+function assignContext($conTemp){
+  $maxCap = $true
+  for($i = 1; $i -le $maxRun; $i++){
+    if($context.ConAvail.([String]$i)){
+      $context.CurrentCon = $i
+      $maxCap = $false
+      break
+    }
+  }
+  if($maxCap){
+    $context.CurrentCon = 0
+    $cleanData = cleanup -context $context -psInst $psInst
+    $context = $cleanData.context
+    $psInst = $cleanData.psInst
+    Start-Sleep -Milliseconds 500
+    assignContext
+  }
+  else{
+    $context.ConAvail.([String]$context.CurrentCon) = $false
+    $context.Con.($context.CurrentCon -as [String]) = $conTemp
+  }
+}
+function startRunspace($runspace,$enc,$reportChunk,$reportChunksLength,$instType,$u,$pp,$urlsChunk,$enableWebRequests,$totalSites){
+  $psInst.Inst.([String]$context.CurrentCon) = [PowerShell]::Create()
+  $psInst.Inst.([String]$context.CurrentCon).RunspacePool = $runspace
+  $null = $psInst.Inst.([String]$context.CurrentCon).AddScript($main).`
+          AddArgument($context.Con.([String]$context.CurrentCon)).AddArgument($enc).`
+          AddArgument([String]$context.CurrentCon).AddArgument($checkLength).AddArgument($enableWebRequests).`
+          AddArgument($reportChunk).AddArgument($reportChunksLength).AddArgument($instType).`
+          AddArgument($u).AddArgument($pp).AddArgument($urlsChunk).AddArgument($totalSites)
+  $psInst.Stat.([String]$context.CurrentCon) = $psInst.Inst.([String]$context.CurrentCon).BeginInvoke()
+}
+function cleanup($context,$psInst){
+  1..$maxRun | % {
+    $i = $_
+    if(!($context.ConAvail.([String]$i))){
+      if($psInst.Stat.([String]$i).IsCompleted){
+        $context.ConAvail.([String]$i) = $true
+      }
+    }
+  }
+  return New-Object -TypeName PSCustomObject -Property @{context=$context;psInst=$psInst}
+}
+
+$k = Get-Content '[SANITIZED]'
+$u = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content '[SANITIZED]' | ConvertTo-SecureString -Key $k)))
+$pp = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((Get-Content '[SANITIZED]' | ConvertTo-SecureString -Key $k)))
+
+$runningCollect = $false
+$chunkSize = 1
+$cleanCycle = 0
+do{
+  $conTemp = $listener.GetContext()
+  if(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[1] -eq '[SANITIZED_00850]'){
+    if(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00696]' -and $runningCollect -eq $false){
+      $startTime = (Get-Date)
+      Write-Host '[SANITIZED_00420]' -NoNewline
+      $startCon = $conTemp
+      $runningCollect = $true
+      Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00851]'} | Remove-Item -Force
+      Get-ChildItem '[SANITIZED]' | ? {$_.Name -eq '[SANITIZED_00852]'} | Remove-Item -Force
+      Copy-Item '[SANITIZED]' -Destination '[SANITIZED]' -Force
+      $sbs = Import-Csv '[SANITIZED]'
+      $totalSites = $sbs.Length
+      $reportChunksLength = [Math]::Ceiling(($sbs.Length / $chunkSize))
+      $startPos = 0
+      $reportChunk = 0
+      for($i = 0; $i -lt $reportChunksLength; $i++){
+        assignContext                   
+        startRunspace -runspace $runspace -enc $enc -enableWebRequests $enableWebRequests -instType '[SANITIZED_00683]' -u $u -pp $pp -reportChunk $reportChunk -reportChunksLength $reportChunksLength -totalSites $totalSites -urlsChunk ($sbs | Select site,ip -First $chunkSize -Skip $startPos)
+        $startPos += $chunkSize
+        $reportChunk++
+      }
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00701]'){
+      assignContext                   
+      startRunspace -runspace $runspace -enc $enc -instType '[SANITIZED_00690]' 
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00702]'){
+      $startCon.Response.Close()
+      $runningCollect = $false
+      Write-Host '[SANITIZED_00853]'
+       
+        $listener.Close()
+        break
+       
+    }
+    elseIf(($conTemp.Request.RawUrl).Split('[SANITIZED_00019]')[2] -eq '[SANITIZED_00696]' -and $runningCollect){
+      $byteMess = $enc.GetBytes('[SANITIZED_00705]')
+      $conTemp.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+      $conTemp.Response.Close()
+    }
+    else{
+      $byteMess = $enc.GetBytes('[SANITIZED_00054]')
+      $conTemp.Response.OutputStream.Write($byteMess,0,$byteMess.Length)
+      $conTemp.Response.Close()
+    }
+
+    if($cleanCycle -ge 2){
+      $cleanCycle = 0
+      $cleanData = cleanup -context $context -psInst $psInst
+      $context = $cleanData.context
+      $psInst = $cleanData.psInst
+    }
+    $cleanCycle++
+  }
+}
+while($true)
+
+                             
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                      
+                           

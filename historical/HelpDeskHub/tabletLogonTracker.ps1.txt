@@ -1,0 +1,24 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: tabletLogonTracker.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00493]'
+
+Stop-Process -Id (Get-Content '[SANITIZED_00494]') -ErrorAction SilentlyContinue
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00438]'
+
+$dcSess = New-PSSession -ComputerName I-DC-02
+$null = Import-PSSession -Session $dcSess -CommandName '[SANITIZED_00495]' -DisableNameChecking -AllowClobber
+
+while(1){
+  $rotData = Import-Csv '[SANITIZED]'
+  if((Get-Date) -le ([DateTime]::Parse($rotData.RotationEnd))){
+    $allComps = @()
+    Get-ADComputer -Filter * -Properties lastLogon | ? {$_.Name -like '[SANITIZED_00496]'} | % {$allComps += (New-Object PSCustomObject -Property ([ordered]@{Name=$_.Name;LastLogon=([DateTime]::FromFileTime($_.lastLogon))}))}
+    $rotLogons = $allComps | ? {$_.LastLogon -ge ([DateTime]::Parse($rotData.RotationStart)) -and $_.LastLogon -le ([DateTime]::Parse($rotData.RotationEnd))}
+    '[SANITIZED_00497]' | Set-Content '[SANITIZED]' -Force
+  }
+  sleep (60 * 60)
+}

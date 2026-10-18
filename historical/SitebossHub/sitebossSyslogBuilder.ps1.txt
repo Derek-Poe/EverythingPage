@@ -1,0 +1,134 @@
+# Historical source reference - inert text, not a runnable deployment.
+# Original file: sitebossSyslogBuilder.ps1
+# Operational strings and comments were sanitized; numeric algorithms and control flow are retained.
+# See README.md and docs/SANITIZATION.md before interpreting placeholders.
+
+Write-Host -f Cyan '[SANITIZED_00945]'
+
+$PID | Set-Content '[SANITIZED]' -Force
+$host.UI.RawUI.WindowTitle = '[SANITIZED_00389]'
+
+$enableWebRequests = {
+  function Set-UseUnsafeHeaderParsing(){
+    param(
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00294]')]
+      [switch]$Enable,
+      [Parameter(Mandatory,ParameterSetName='[SANITIZED_00295]')]
+      [switch]$Disable
+    )
+    $shouldEnable = $PSCmdlet.ParameterSetName -eq '[SANITIZED_00294]'
+    $netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
+    if($netAssembly){
+      $bindingFlags = [Reflection.BindingFlags]'[SANITIZED_00296]'
+      $settingsType = $netAssembly.GetType('[SANITIZED_00297]')
+      $instance = $settingsType.InvokeMember('[SANITIZED_00298]', $bindingFlags, $null, $null, @())   
+      if($instance){
+        $bindingFlags = '[SANITIZED_00299]','[SANITIZED_00300]'
+        $useUnsafeHeaderParsingField = $settingsType.GetField('[SANITIZED_00301]', $bindingFlags)
+        if($useUnsafeHeaderParsingField){
+          $useUnsafeHeaderParsingField.SetValue($instance,$shouldEnable)
+        }
+      }
+    }
+  }
+  Set-UseUnsafeHeaderParsing -Enable
+
+  function Ignore-SSLCertificates{
+      $Provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+      $Compiler = $Provider.CreateCompiler()
+      $Params = New-Object System.CodeDom.Compiler.CompilerParameters
+      $Params.GenerateExecutable = $false
+      $Params.GenerateInMemory = $true
+      $Params.IncludeDebugInformation = $false
+      $Params.ReferencedAssemblies.Add('[SANITIZED_00302]') > $null
+      $TASource='[SANITIZED_00303]
+
+
+
+
+
+
+
+
+
+
+' 
+      $TAResults=$Provider.CompileAssemblyFromSource($Params,$TASource)
+      $TAAssembly=$TAResults.CompiledAssembly
+                                                                                   
+      $TrustAll = $TAAssembly.CreateInstance('[SANITIZED_00304]')
+      [System.Net.ServicePointManager]::CertificatePolicy = $TrustAll
+  }
+  Ignore-SSLCertificates
+}
+([ScriptBlock]::Create($enableWebRequests)).Invoke()
+$enc = [System.Text.Encoding]::ASCII
+
+while($true){
+  $entsCol = (Get-Content -Tail 10000 (Get-ChildItem '[SANITIZED]' | ? {$_.Name -like '[SANITIZED_00946]'} | Sort LastWriteTime -Descending | Select -First 1).FullName).Split('[SANITIZED_00265]')
+  $ents = @()
+  forEach($ent in $entsCol){
+    if($ent -like '[SANITIZED_00947]'){
+      $ents += New-Object PSCustomObject -Property ([ordered]@{Date=[DateTime]::Parse(($ent -replace '[SANITIZED_00948]','[SANITIZED_00262]' -replace '[SANITIZED_00949]','[SANITIZED_00262]').Split('[SANITIZED_00262]')[0]);Site='[SANITIZED_00950]';Alarm='[SANITIZED_00951]';Severity='[SANITIZED_00553]';Status='[SANITIZED_00952]'})
+    }
+    else{
+      $ent = ($ent -replace '[SANITIZED_00948]','[SANITIZED_00262]' -replace '[SANITIZED_00949]','[SANITIZED_00262]').Split('[SANITIZED_00262]')
+      if(!($ent[2] -like '[SANITIZED_00796]')){
+        $ents += New-Object PSCustomObject -Property ([ordered]@{Date=[DateTime]::Parse($ent[0]);Site='[SANITIZED_00953]';                                                                                   Alarm=$ent[6];Severity=$ent[7];Status=$ent[8]})
+      }
+      else{
+        $ents += New-Object PSCustomObject -Property ([ordered]@{Date=[DateTime]::Parse($ent[0]);Site='[SANITIZED_00954]';Alarm=$ent[6];Severity=$ent[1].Split('[SANITIZED_00269]')[1];Status=$ent[7]})
+      }
+    }
+  }
+  $ents = $ents | Sort Date -Descending
+  $genMess = $ents | ? {$_.Alarm -like '[SANITIZED_00955]' -and $_.Site -notlike '[SANITIZED_00796]'} | Sort Status,Site
+  $genRunsFC = Import-Csv '[SANITIZED]'
+  $genRuns = @()
+  $genRunsFC | % {$genRuns += $_}
+  $altered = @()
+  forEach($mess in $genMess){
+    if($mess.Status -like '[SANITIZED_00956]'){
+      if((($genRuns | ? {$_.Site -eq $mess.Site}).GenON_Time -like '[SANITIZED_00856]') -or ([DateTime]::Parse($mess.Date) -gt [DateTime]::Parse(($genRuns | ? {$_.Site -eq $mess.Site}).GenON_Time))){
+        ($genRuns | ? {$_.Site -eq $mess.Site}).GenON_Time = $mess.Date
+        ($genRuns | ? {$_.Site -eq $mess.Site}).GenON_Propane = ($enc.GetString((Invoke-WebRequest '[SANITIZED_00957]').Content) | ConvertFrom-JSON).Propane
+        $altered += $mess.Site
+      }
+    }
+    elseIf($mess.Status -like '[SANITIZED_00958]'){
+      if((($genRuns | ? {$_.Site -eq $mess.Site}).GenON_Time -like '[SANITIZED_00856]') -or ([DateTime]::Parse($mess.Date) -gt [DateTime]::Parse(($genRuns | ? {$_.Site -eq $mess.Site}).GenOFF_Time))){
+        ($genRuns | ? {$_.Site -eq $mess.Site}).GenOFF_Time = $mess.Date
+        ($genRuns | ? {$_.Site -eq $mess.Site}).GenOFF_Propane = ($enc.GetString((Invoke-WebRequest '[SANITIZED_00957]').Content) | ConvertFrom-JSON).Propane
+        $altered += $mess.Site
+      }
+    }
+  }
+  $altered = $altered | Select -Unique
+  forEach($site in $altered){
+    if(($genRuns | ? {$_.Site -eq $site}).GenON_Propane -notlike '[SANITIZED_00959]'){
+      if((($genRuns | ? {$_.Site -eq $mess.Site}).GenOFF_Time -like '[SANITIZED_00959]') -or ([DateTime]::Parse(($genRuns | ? {$_.Site -eq $site}).GenOFF_Time) -lt [DateTime]::Parse(($genRuns | ? {$_.Site -eq $site}).GenON_Time))){
+        $lost = '[SANITIZED_00960]'
+      }
+      else{
+        $lost = [float](($genRuns | ? {$_.Site -eq $site}).GenON_Propane -split '[SANITIZED_00174]')[0] - [float](($genRuns | ? {$_.Site -eq $site}).GenOFF_Propane -split '[SANITIZED_00174]')[0]
+        if($lost -eq 0){
+          $lost = '[SANITIZED_00961]'
+        }
+        else{
+          $lost = '[SANITIZED_00962]'
+        }
+      }
+      ($genRuns | ? {$_.Site -eq $site}).PropaneLost = $lost
+    }
+  }
+                              
+                                
+                                 
+                              
+    
+  (Get-Date).ToString('[SANITIZED_00014]') | Set-Content '[SANITIZED]' -Force
+  $genRuns | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+  $ents | Export-Csv '[SANITIZED]' -Force -NoTypeInformation
+  Start-Sleep -Seconds 10
+}
+                                                                                                                            
